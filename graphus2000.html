@@ -6,108 +6,151 @@
     <title>The Randomizer Grapho 2000</title>
     <meta name="description" content="Random Graph Generator">
     <meta name="author" content="David">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
     <style>
+        #panel {
+            width: 25%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 0;
+        }
+
         #cy {
             width: 100%;
             height: 100%;
             position: absolute;
             top: 0px;
             left: 0px;
+            z-index: -1;
         }
     </style>
 </head>
 <body>
+    <div id="panel" class="card shadow">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold">Hofstad Random Graph Model</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Times (<p class="font-italic d-inline">t</p>)</label>
+                        <input id="times" type="number" class="form-control" />
+                        <small class="form-text text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">delta (<p class="font-italic d-inline">&delta; &ge; -1</p>)</label>
+                        <input id="delta" type="number" class="form-control" />
+                        <small class="form-text text-muted">Etiam hendrerit nisl vitae magna blandit tempor.</small>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn btn-outline-dark btn-lg btn-block" onclick="generate()">
+                <span class="icon text-white-50">
+                    <i class="fa fa-cogs"></i>
+                </span>
+                <span class="text">Generate</span>
+            </button>
+        </div>
+    </div>
+
     <div id="cy">
         
     </div>
 
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/cytoscape.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/popper.min.js"></script>
 
     <script type="text/javascript">
-        $(function() {
-            var cy = cytoscape({
-                container: $('#cy'), // container to render in
+        var cy = cytoscape({
+            container: $('#cy'), // container to render in
 
-                elements: undefined,
+            elements: undefined,
 
-                style: [ // the stylesheet for the graph
-                    {
-                        selector: 'node',
-                        style: {
-                            'background-color': '#666',
-                            'label': 'data(id)'
-                        }
-                    },
-
-                    {
-                    selector: 'edge',
-                        style: {
-                            'width': 3,
-                            'line-color': '#ccc',
-                            'target-arrow-color': '#ccc',
-                            'target-arrow-shape': 'triangle'
-                        }
+            style: [ // the stylesheet for the graph
+                {
+                    selector: 'node',
+                    style: {
+                        'background-color': '#666',
+                        'label': 'data(id)'
                     }
-                ]
-            });
-            var layout = cy.layout({name: 'null'});
+                },
 
-            function calcProbs(t, delta) {
-                var probs = [];
-
-                for (var i = 1; i <= t; i++) {
-                    var prob = {};
-                    prob.v = 'v'+i;
-
-                    if (i == t) {
-                        prob.p = (1+delta)/((t-1)*(2+delta)+(1+delta));
-                    } else {
-                        prob.p = (cy.$('#v'+i).degree()+delta)/((t-1)*(2+delta)+(1+delta));
+                {
+                selector: 'edge',
+                    style: {
+                        'width': 3,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'triangle'
                     }
-                    probs.push(prob);
                 }
-
-                probs.sort(function(a, b){
-                    if(a.p < b.p) return -1;
-                    if(a.p > b.p) return 1;
-                    return 0;
-                });
-
-                return probs;
-            }
-
-            function hofstadRandomGraph() {
-                var m = 1;
-                var times = 100;
-                var delta = 1;
-
-                layout.stop(); 
-                for (var t = 1; t <= times; t++) {
-                    var probs = calcProbs(t, delta);
-                    var rand = Math.random();
-
-                    var sump = 0;
-                    for (var i = 0; i < probs.length; i++) {
-                        sump += probs[i].p;
-                        if (rand <= sump) {
-                            cy.add([
-                              { group: 'nodes', data: { id: 'v'+t }, position: { x: 100*t, y: 100*t } },
-                              { group: 'edges', data: { id: 'e'+t, source: 'v'+t, target: probs[i].v } }
-                            ]);
-                            break;
-                        }
-                    }
-
-                    
-                }
-                layout = cy.elements().makeLayout({name: 'circle'}); 
-                layout.run();
-            }
-            console.log(cy);
-
-            setTimeout(function(){ hofstadRandomGraph(); }, 500);
+            ]
         });
+        var layout = cy.layout({name: 'null'});
+
+        function calcProbs(t, delta) {
+            var probs = [];
+
+            for (var i = 1; i <= t; i++) {
+                var prob = {};
+                prob.v = 'v'+i;
+
+                if (i == t) {
+                    prob.p = (1+delta)/((t-1)*(2+delta)+(1+delta));
+                } else {
+                    prob.p = (cy.$('#v'+i).degree()+delta)/((t-1)*(2+delta)+(1+delta));
+                }
+                probs.push(prob);
+            }
+
+            probs.sort(function(a, b){
+                if(a.p < b.p) return -1;
+                if(a.p > b.p) return 1;
+                return 0;
+            });
+
+            return probs;
+        }
+
+        function generate() {
+            var times = parseInt($('#times').val());
+            var delta = parseInt($('#delta').val());
+            hofstadRandomGraph(times, delta);
+        }
+
+        function hofstadRandomGraph(times, delta) {
+            cy.elements().remove();
+            var m = 1;
+
+            layout.stop(); 
+            for (var t = 1; t <= times; t++) {
+                var probs = calcProbs(t, delta);
+                var rand = Math.random();
+
+                var sump = 0;
+                for (var i = 0; i < probs.length; i++) {
+                    sump += probs[i].p;
+                    if (rand <= sump) {
+                        cy.add([
+                          { group: 'nodes', data: { id: 'v'+t }, position: { x: 100*t, y: 100*t } },
+                          { group: 'edges', data: { id: 'e'+t, source: 'v'+t, target: probs[i].v } }
+                        ]);
+                        break;
+                    }
+                }
+
+                
+            }
+            layout = cy.elements().makeLayout({name: 'circle'}); 
+            layout.run();
+        }
     </script>
 </body>
 </html>
