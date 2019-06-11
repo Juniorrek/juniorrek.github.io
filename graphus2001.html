@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>The Randomizer Grapho 2000</title>
+    <meta name="description" content="Random Graph Generator">
+    <meta name="author" content="David">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <style>
+        .panelConfig {
+            width: 25%;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 0;
+        }
+
+        #cy {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: -1;
+        }
+
+        #histogramBtn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            z-index: -1;
+            border-radius: 100%;
+            justify-content: center;
+        }
+
+        #layouts {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 0;
+            border-radius: 100%;
+            justify-content: center;
+        }
+
+        #loading {
+          position: fixed;
+          z-index: 999;
+          width: 100%;
+          height: 100%;
+          overflow: visible;
+          margin: auto;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          opacity: 0.7;
+          background-color: #000;
+          display: none;
+        }
+        #loadingImg {
+          position: fixed;
+          z-index: 999;
+          top: calc(50% - 72px);
+          left: calc(50% - 233px);
+          display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="panelHofstad" class="panelConfig card shadow">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold d-inline">Hofstad Random Graph Model</h6>
+            <button class="btn btn-dark btn-circle pull-right btn-sm" onclick="changePanel();">
+                <i class="fa fa-refresh"></i>
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Times (<p class="font-italic d-inline">t</p>)</label>
+                        <input id="times" type="number" class="form-control" />
+                        <!-- <small class="form-text text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small> -->
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">delta (<p class="font-italic d-inline">&delta; &ge; -1</p>)</label>
+                        <input id="delta" type="number" class="form-control" />
+                        <!-- <small class="form-text text-muted">Etiam hendrerit nisl vitae magna blandit tempor.</small> -->
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Edges/t (<p class="font-italic d-inline">m &ge; 1</p>)</label>
+                        <input id="edges" type="number" class="form-control" />
+                        <!-- <small class="form-text text-muted">Etiam hendrerit nisl vitae magna blandit tempor.</small> -->
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn btn-outline-dark btn-lg btn-block" onclick="generate()">
+                <span class="icon text-white-50">
+                    <i class="fa fa-cogs"></i>
+                </span>
+                <span class="text">Generate</span>
+            </button>
+        </div>
+    </div>
+    <div id="panelBollobas" class="panelConfig card shadow" style="display: none;">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold d-inline">Bollobás Random Graph Model</h6>
+            <button class="btn btn-dark btn-circle pull-right btn-sm" onclick="changePanel();">
+                <i class="fa fa-refresh"></i>
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Times (<p class="font-italic d-inline">t</p>)</label>
+                        <input id="timesB" type="number" class="form-control" />
+                        <small class="form-text text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn btn-outline-dark btn-lg btn-block" onclick="generateBollobas()">
+                <span class="icon text-white-50">
+                    <i class="fa fa-cogs"></i>
+                </span>
+                <span class="text">Generate</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="cy">
+        
+    </div>
+
+    <button id="histogramBtn" class="btn btn-dark btn-circle btn-lg" data-toggle="modal" data-target="#modalHistogram">
+        <i class="fa fa-bar-chart-o"></i>
+    </button>
+
+    <div class="modal fade" id="modalHistogram" tabindex="-1" role="dialog"aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Histograma</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="histogram"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="layouts" class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-dark" onclick="changeLayout('circle')"><i class="fa fa-circle-o"></i></button>
+        <button type="button" class="btn btn-dark" onclick="changeLayout('random')"><i class="fa fa-random"></i></button>
+        <button type="button" class="btn btn-dark" onclick="changeLayout('grid')"><i class="fa fa-th"></i></button>
+        <button type="button" class="btn btn-dark" onclick="changeLayout('concentric')"><i class="fa fa-bullseye"></i></button>
+        <button type="button" class="btn btn-dark" onclick="changeLayout('breadthfirst')"><i class="fa fa-sitemap"></i></button>
+        <button type="button" class="btn btn-dark" onclick="changeLayout('cose')"><i class="fa fa-object-group"></i></button>
+    </div>
+
+    <div id="loading"><img id="loadingImg" src="media/loading_natal_2.gif"></div>
+
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/cytoscape.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/d3.min.js"></script>
+
+    <script type="text/javascript">
+        var lay = 'circle';
+        var cy = cytoscape({
+            container: $('#cy'), // container to render in
+
+            elements: undefined,
+
+            style: [ // the stylesheet for the graph
+                {
+                    selector: 'node',
+                    style: {
+                        'background-color': '#666',
+                        'label': 'data(id)'
+                    }
+                },
+
+                {
+                selector: 'edge',
+                    style: {
+                        'width': 3,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'triangle'
+                    }
+                }
+            ]
+        });
+        var layout = cy.layout({name: 'null'});
+
+        function calcProbs(t, delta) {
+            var probs = [];
+
+            for (var i = 1; i <= t; i++) {
+                var prob = {};
+                prob.v = 'v'+i;
+
+                if (i == t) {
+                    prob.p = (1+delta)/((t-1)*(2+delta)+(1+delta));
+                } else {
+                    prob.p = (cy.$('#v'+i).degree()+delta)/((t-1)*(2+delta)+(1+delta));
+                }
+
+                probs.push(prob);
+            }
+
+            probs.sort(function(a, b){
+                if(a.p < b.p) return -1;
+                if(a.p > b.p) return 1;
+                return 0;
+            });
+
+            return probs;
+        }
+
+        function calcProb(t, delta) {
+            var probs = [];
+
+            for (var i = 1; i <= t; i++) {
+                var prob = {};
+                prob.v = 'v'+i;
+
+                if (i == t) {
+                    prob.p = (1+delta)/((t-1)*(2+delta)+(1+delta));
+                } else {
+                    prob.p = (cy.$('#v'+i).degree()+delta)/((t-1)*(2+delta)+(1+delta));
+                }
+
+                probs.push(prob);
+            }
+
+            probs.sort(function(a, b){//crescente
+                if(a.p < b.p) return -1;
+                if(a.p > b.p) return 1;
+                return 0;
+            });
+
+            return prob;
+        }
+
+        function generate() {
+            var times = parseInt($('#times').val());
+            var delta = parseInt($('#delta').val());
+            var edges = parseInt($('#edges').val());
+            hofstadRandomGraph(times, delta, edges);
+        }
+
+        function hofstadRandomGraph(times, delta, edges) {
+            iniciaLoading();
+            cy.elements().remove();
+
+            var m = edges;
+
+            layout.stop(); 
+
+            var chunk = 100;
+            var index = 1;
+            function doChunk() {
+                var cnt = chunk;
+                while (cnt-- && index <= m * times) {
+                    // process array[index] here
+                    var t = index;
+                    var probs = calcProbs(t, delta);
+                    var rand = Math.random();
+
+                    var sump = 0;
+                    for (var i = 0; i < probs.length; i++) {
+                        sump += probs[i].p;
+                        if (rand <= sump) {
+                            cy.add([
+                              { group: 'nodes', data: { id: 'v'+t }, position: { x: 100, y: 100 } },
+                              { group: 'edges', data: { id: 'e'+t, source: 'v'+t, target: probs[i].v } }
+                            ]);
+                            break;
+                        }
+                    }
+
+                    ++index;
+                }
+                if (index <= m * times) {
+                    // set Timeout for async iteration
+                    console.log("Processou "+(index-1));
+                    setTimeout(doChunk, 1);
+                } else {//finalizou
+                    console.log("Finalizou");
+                    if (edges != 1) {
+                        var i = 1;
+                        var j = 0;
+                        var auxNodes = [];
+                        var auxNode = {};
+                        auxNode.edges = [];
+
+                        cy.nodes().forEach(function(v, k) {
+                            v.connectedEdges().forEach(function(vv, kk) {
+                                auxNode.edges.push(vv);
+                            });
+                            j++;
+
+                            if (j == edges) {
+                                auxNode.id = 'v' + i;
+                                auxNodes.push(auxNode);
+                                auxNode = {};
+                                auxNode.edges = [];
+                                j = 0;
+                                i++;
+                            }
+                        });
+
+                        cy.elements().remove();
+
+                        auxNodes.forEach(function(v, k) {
+                            cy.add({ group: 'nodes', data: { id: v.id }, position: { x: 100*t, y: 100*t } });
+                        });
+                        auxNodes.forEach(function(v, k) {
+                            v.edges.forEach(function(vv, kk) {
+                                if (cy.$('#'+vv.id()).length == 0) {
+                                    var source = vv.data("source").match(/\d+/);
+                                    var target = vv.data("target").match(/\d+/);
+                                    var newSource = Math.ceil(source/edges);
+                                    var newTarget = Math.ceil(target/edges);
+                                    cy.add({ group: 'edges', data: { id: vv.id(), source: 'v'+newSource, target: 'v'+newTarget } });
+                                }
+                            });
+                        });
+                    }
+
+                    layout = cy.elements().makeLayout({name: lay}); 
+                    layout.run();
+                    generateHistogram(times, 'Hofstad', delta, edges);
+                    paraLoading();
+                }
+            } 
+            doChunk();
+        }
+
+        function changePanel() {
+            if ($('#panelHofstad').is(":hidden")) {
+                $('#panelBollobas').slideUp(250);
+                setTimeout(function(){ $('#panelHofstad').slideDown(250); }, 250);
+            } else {
+                $('#panelHofstad').slideUp(250);
+                setTimeout(function(){ $('#panelBollobas').slideDown(250); }, 250);
+            }
+        }
+
+        function generateBollobas() {
+            var times = parseInt($('#timesB').val());
+            bollobasRandomGraph(times, delta);
+        }
+
+        function calcProbsB(t) {
+            var probs = [];
+
+            for (var i = 1; i <= t; i++) {
+                var prob = {};
+                prob.v = 'v'+i;
+
+                if (i == t) {
+                    prob.p = 1/(2*t-1);
+                } else {
+                    prob.p = cy.$('#v'+i).degree()/(2*t-1);
+                }
+                probs.push(prob);
+            }
+
+            probs.sort(function(a, b){
+                if(a.p < b.p) return -1;
+                if(a.p > b.p) return 1;
+                return 0;
+            });
+
+            return probs;
+        }
+
+        function bollobasRandomGraph(times) {
+            iniciaLoading();
+            setTimeout(function(){ 
+                cy.elements().remove();
+                var m = 1;
+
+                layout.stop(); 
+                var chunk = 100;
+                var index = 1;
+                function doChunk() {
+                    var cnt = chunk;
+                    while (cnt-- && index <= m * times) {
+                        // process array[index] here
+                        var t = index;
+                        var probs = calcProbsB(t);
+                        var rand = Math.random();
+
+                        var sump = 0;
+                        for (var i = 0; i < probs.length; i++) {
+                            sump += probs[i].p;
+                            if (rand <= sump) {
+                                cy.add([
+                                  { group: 'nodes', data: { id: 'v'+t }, position: { x: 100*t, y: 100*t } },
+                                  { group: 'edges', data: { id: 'e'+t, source: 'v'+t, target: probs[i].v } }
+                                ]);
+                                break;
+                            }
+                        }
+
+                        ++index;
+                    }
+                    if (index <= m * times) {
+                        // set Timeout for async iteration
+                        console.log("Processou "+(index-1));
+                        setTimeout(doChunk, 1);
+                    } else {//finalizou
+                        console.log("Finalizou");
+                        layout = cy.elements().makeLayout({name: lay}); 
+                        layout.run();
+                        generateHistogram(times, 'Bollobas', null, null);
+                        
+                        paraLoading();
+                    }
+                } 
+                doChunk();
+            }, 500);
+        }
+
+        function changeLayout(l) {
+            iniciaLoading();
+            setTimeout(function(){ 
+                lay = l;
+                layout.stop(); 
+                layout = cy.elements().makeLayout({name: lay}); 
+                layout.run();
+            }, 1000);
+            paraLoading();
+        }
+
+        var aux = 1;
+        function iniciaLoading() {
+            aux = 1;
+            $('#loading').show();
+            $('#loadingImg').show();
+            /*$('#loading').fadeIn(500);
+            setTimeout(function(){ 
+                if (aux == 1)
+                    $('#loadingImg').fadeIn(500);
+            }, 3000);*/
+        }
+        function paraLoading() {
+            aux = 2;
+            $('#loading').hide();
+            $('#loadingImg').hide();
+            /*setTimeout(function(){ 
+                $('#loading').fadeOut(500); 
+                $('#loadingImg').fadeOut(500); 
+            }, 500);*/
+            
+        }
+    </script>
+
+    <script type="text/javascript">
+        function generateHistogram(total, modelo, delta, edges) {
+            var data = [];
+            cy.nodes().forEach(function(v, k) {
+                var obj = {};
+                obj.degree = v.degree();
+                data.push(obj);
+            });
+
+                // set the dimensions and margins of the graph
+                var margin = {top: 10, right: 30, bottom: 30, left: 40},
+                    width = 460 - margin.left - margin.right,
+                    height = 400 - margin.top - margin.bottom;
+
+                // append the svg object to the body of the page
+                var svg = d3.select("#histogram")
+                  .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                  .append("g")
+                    .attr("transform",
+                          "translate(" + margin.left + "," + margin.top + ")");
+
+                  // X axis: scale and draw:
+                  var x = d3.scaleLinear()
+                      .domain([0, d3.max(data, function(d) { return d.degree })+1])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.degree })
+                      .range([0, width]);
+                  svg.append("g")
+                      .attr("transform", "translate(0," + height + ")")
+                      .call(d3.axisBottom(x));
+                  svg.append("text")
+                        .attr("class", "x label")
+                        .attr("text-anchor", "end")
+                        .attr("x", width)
+                        .attr("y", height + 25)
+                        .text("grau");
+
+                  // set the parameters for the histogram
+                  var histogram = d3.histogram()
+                      .value(function(d) { return d.degree; })   // I need to give the vector of value
+                      .domain(x.domain())  // then the domain of the graphic
+                      .thresholds(x.ticks(70)); // then the numbers of bins
+
+                  // And apply this function to data to get the bins
+                  var bins = histogram(data);
+
+                  // Y axis: scale and draw:
+                  var y = d3.scaleLinear()
+                      .range([height, 0]);
+                      y.domain([0, d3.max(bins, function(d) { return d.length; })]);
+                  svg.append("g")
+                      .call(d3.axisLeft(y));
+
+                  // append the bar rectangles to the svg element
+                  svg.selectAll("rect")
+                      .data(bins)
+                      .enter()
+                      .append("rect")
+                        .attr("x", 1)
+                        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+                        .attr("width", function(d) { return x(d.x1) - x(d.x0) /*-1*/ ; })
+                        .attr("height", function(d) { return height - y(d.length); })
+                        .style("fill", "#69b3a2");
+
+                svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .attr("y", 6)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text("vértices");
+
+                var titulo = modelo + " (t="+total + (modelo == "Hofstad" ? ",delta =" + delta + ", m = "+edges+")" : ")")
+                    svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 20 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .style("text-decoration", "underline")  
+        .text(titulo);
+        }
+    </script>
+</body>
+</html>
