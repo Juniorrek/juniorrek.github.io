@@ -232,6 +232,15 @@
             return probs;
         }
 
+        function calcProb(i, t, delta) {
+            var prob = {};
+            prob.v = 'v'+i;
+            var aux = i == t ? 1 : cy.$('#v'+i).degree();
+            prob.p = (aux+delta)/((t-1)*(2+delta)+(1+delta));
+
+            return prob;
+        }
+
         function generate() {
             var times = parseInt($('#times').val());
             var delta = parseInt($('#delta').val());
@@ -246,8 +255,22 @@
 
             layout.stop(); 
             for (var t = 1; t <= m * times; t++) {
-                var probs = calcProbs(t, delta);
                 var rand = Math.random();
+
+                var sump = 0;
+                for (var x = 1; x <= t; x++) {
+                    var prob = calcProb(x, t, delta);
+                    sump += prob.p;
+                    if (rand <= sump) {
+                        cy.add([
+                          { group: 'nodes', data: { id: 'v'+t }, position: { x: 100*t, y: 100*t } },
+                          { group: 'edges', data: { id: 'e'+t, source: 'v'+t, target: prob.v } }
+                        ]);
+                        break;
+                    }
+                };
+
+                /*var probs = calcProbs(t, delta);
 
                 var sump = 0;
                 for (var i = 0; i < probs.length; i++) {
@@ -259,7 +282,7 @@
                         ]);
                         break;
                     }
-                }
+                }*/
 
                 
             }
