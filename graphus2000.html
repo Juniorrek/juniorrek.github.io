@@ -43,6 +43,29 @@
             border-radius: 100%;
             justify-content: center;
         }
+
+        #loading {
+          position: fixed;
+          z-index: 999;
+          width: 100%;
+          height: 100%;
+          overflow: visible;
+          margin: auto;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          opacity: 0.7;
+          background-color: #000;
+          display: none;
+        }
+        #loadingImg {
+          position: fixed;
+          z-index: 999;
+          top: calc(50% - 72px);
+          left: calc(50% - 233px);
+          display: none;
+        }
     </style>
 </head>
 <body>
@@ -55,18 +78,25 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Times (<p class="font-italic d-inline">t</p>)</label>
                         <input id="times" type="number" class="form-control" />
-                        <small class="form-text text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
+                        <!-- <small class="form-text text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small> -->
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="exampleInputEmail1">delta (<p class="font-italic d-inline">&delta; &ge; -1</p>)</label>
                         <input id="delta" type="number" class="form-control" />
-                        <small class="form-text text-muted">Etiam hendrerit nisl vitae magna blandit tempor.</small>
+                        <!-- <small class="form-text text-muted">Etiam hendrerit nisl vitae magna blandit tempor.</small> -->
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Edges/t (<p class="font-italic d-inline">m &ge; 1</p>)</label>
+                        <input id="edges" type="number" class="form-control" />
+                        <!-- <small class="form-text text-muted">Etiam hendrerit nisl vitae magna blandit tempor.</small> -->
                     </div>
                 </div>
             </div>
@@ -140,6 +170,8 @@
         <button type="button" class="btn btn-dark" onclick="changeLayout('cose')"><i class="fa fa-object-group"></i></button>
     </div>
 
+    <div id="loading"><img id="loadingImg" src="media/loading_natal_2.gif"></div>
+
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/cytoscape.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -187,6 +219,7 @@
                 } else {
                     prob.p = (cy.$('#v'+i).degree()+delta)/((t-1)*(2+delta)+(1+delta));
                 }
+
                 probs.push(prob);
             }
 
@@ -202,15 +235,17 @@
         function generate() {
             var times = parseInt($('#times').val());
             var delta = parseInt($('#delta').val());
-            hofstadRandomGraph(times, delta);
+            var edges = parseInt($('#edges').val());
+            hofstadRandomGraph(times, delta, edges);
         }
 
-        function hofstadRandomGraph(times, delta) {
+        function hofstadRandomGraph(times, delta, edges) {
             cy.elements().remove();
-            var m = 1;
+
+            var m = edges;
 
             layout.stop(); 
-            for (var t = 1; t <= times; t++) {
+            for (var t = 1; t <= m * times; t++) {
                 var probs = calcProbs(t, delta);
                 var rand = Math.random();
 
@@ -228,9 +263,51 @@
 
                 
             }
+
+            if (edges != 1) {
+                var i = 1;
+                var j = 0;
+                var auxNodes = [];
+                var auxNode = {};
+                auxNode.edges = [];
+
+                cy.nodes().forEach(function(v, k) {
+                    v.connectedEdges().forEach(function(vv, kk) {
+                        auxNode.edges.push(vv);
+                    });
+                    j++;
+
+                    if (j == edges) {
+                        auxNode.id = 'v' + i;
+                        auxNodes.push(auxNode);
+                        auxNode = {};
+                        auxNode.edges = [];
+                        j = 0;
+                        i++;
+                    }
+                });
+
+                cy.elements().remove();
+
+                auxNodes.forEach(function(v, k) {
+                    cy.add({ group: 'nodes', data: { id: v.id }, position: { x: 100*t, y: 100*t } });
+                });
+                auxNodes.forEach(function(v, k) {
+                    v.edges.forEach(function(vv, kk) {
+                        if (cy.$('#'+vv.id()).length == 0) {
+                            var source = vv.data("source").match(/\d+/);
+                            var target = vv.data("target").match(/\d+/);
+                            var newSource = Math.ceil(source/edges);
+                            var newTarget = Math.ceil(target/edges);
+                            cy.add({ group: 'edges', data: { id: vv.id(), source: 'v'+newSource, target: 'v'+newTarget } });
+                        }
+                    });
+                });
+            }
+
             layout = cy.elements().makeLayout({name: lay}); 
             layout.run();
-            generateHistogram(times, 'Hofstad', delta);
+            generateHistogram(times, 'Hofstad', delta, edges);
         }
 
         function changePanel() {
@@ -297,19 +374,41 @@
             }
             layout = cy.elements().makeLayout({name: lay}); 
             layout.run();
-            generateHistogram(times, 'Bollobas', null);
+            generateHistogram(times, 'Bollobas', null, null);
         }
 
         function changeLayout(l) {
-            lay = l;
-            layout.stop(); 
-            layout = cy.elements().makeLayout({name: lay}); 
-            layout.run();
+            iniciaLoading();
+            setTimeout(function(){ 
+                lay = l;
+                layout.stop(); 
+                layout = cy.elements().makeLayout({name: lay}); 
+                layout.run();
+            }, 500);
+            paraLoading();
+        }
+
+        var aux = 1;
+        function iniciaLoading() {
+            aux = 1;
+            $('#loading').fadeIn(500);
+            setTimeout(function(){ 
+                if (aux == 1)
+                    $('#loadingImg').fadeIn(500);
+            }, 3000);
+        }
+        function paraLoading() {
+            aux = 2;
+            setTimeout(function(){ 
+                $('#loading').fadeOut(500); 
+                $('#loadingImg').fadeOut(500); 
+            }, 500);
+            
         }
     </script>
 
     <script type="text/javascript">
-        function generateHistogram(total, modelo, delta) {
+        function generateHistogram(total, modelo, delta, edges) {
             var data = [];
             cy.nodes().forEach(function(v, k) {
                 var obj = {};
@@ -380,7 +479,7 @@
     .attr("transform", "rotate(-90)")
     .text("vértices");
 
-                var titulo = modelo + " (t="+total + (modelo == "Hofstad" ? ",delta =" + delta + ")" : ")")
+                var titulo = modelo + " (t="+total + (modelo == "Hofstad" ? ",delta =" + delta + ", m = "+edges+")" : ")")
                     svg.append("text")
         .attr("x", (width / 2))             
         .attr("y", 20 - (margin.top / 2))
