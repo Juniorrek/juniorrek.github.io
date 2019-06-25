@@ -200,7 +200,7 @@
                 },
 
                 {
-                selector: 'edge',
+                    selector: 'edge',
                     style: {
                         'width': 3,
                         'line-color': '#ccc',
@@ -614,9 +614,39 @@
 
             var cliques = almete.BronKerbosch(data);
             var map = new Map();
+
+            cliques.sort(function(a, b){
+                if(a.length < b.length) return -1;
+                if(a.length > b.length) return 1;
+                return 0;
+            })
+            
             cliques.forEach(function(v, k) {
                 if (v.length > 2) {
                     var k = 'k' + v.length;
+
+                    var cor= '#666';
+                    if (v.length == 3) { cor = 'red'; }
+                    else if (v.length == 4) { cor = 'blue'; }
+                    else if (v.length == 5) { cor = 'green'; }
+                    else if (v.length == 6) { cor = 'yellow'; }
+
+                    //COR
+                    for (var i = 0; i < v.length; i++) {
+                        var uu = cy.$id('v'+v[i]);
+                        uu.style({'background-color': cor});
+                        for (var j = i; j < v.length; j++) {
+                            if (i != j) {
+                                var vv = cy.$id('v'+v[j]);
+                                uu.edgesWith(vv).style({'line-color': cor});
+                                uu.edgesWith(vv).style({'target-arrow-color': cor});
+                            }
+                        }
+                    }
+                    
+
+
+
                     var qnt = map.get(k) == undefined ? 0 : map.get(k);
                     map.set(k, ++qnt);
                 }
