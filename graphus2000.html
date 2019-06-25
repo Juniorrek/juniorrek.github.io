@@ -153,8 +153,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-sm-6"><div id="histogram"></div></div>
-                        <div class="col-sm-6"><div id="indexDegree"></div></div>
+                        <div class="col-sm-5"><div id="histogram"></div></div>
+                        <div class="col-sm-5"><div id="indexDegree"></div></div>
+                        <div class="col-sm-2"><div id="cliques"></div></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -180,6 +181,7 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/d3.min.js"></script>
+    <script src="js/almete.BronKerbosch.js"></script>
 
     <script type="text/javascript">
         var lay = 'circle';
@@ -335,6 +337,7 @@
             layout.run();
             generateHistogram(times, 'Hofstad', delta, edges);
             indexDegree();
+            btnCliques();
         }
 
         function changePanel() {
@@ -403,6 +406,7 @@
             layout.run();
             generateHistogram(times, 'Bollobas', null, null);
             indexDegree();
+            btnCliques();
         }
 
         function changeLayout(l) {
@@ -525,7 +529,6 @@
                 obj.degree = v.degree();
                 data.push(obj);
             });
-                console.log(cy.nodes());
 
             // set the dimensions and margins of the graph
             var margin = {top: 10, right: 30, bottom: 30, left: 40},
@@ -586,6 +589,45 @@
                 .attr("x", width)
                 .attr("y", height + 25)
                 .text("vértice");
+        }
+
+        var ci = 0;
+        function btnCliques() {
+            ci++;
+            $('.cis').prop('disabled', 'true');
+            $('#cliques').append('<div id="ci'+ci+'" style="height:400px;" class="d-flex align-items-center"><button onclick="bronKerbosch()" class="btn btn-dark btn-circle cis" style="margin: 0 auto;">Cliques</button></div>');
+        }
+
+        function bronKerbosch() {
+            var data = [];
+            cy.edges().forEach(function(v, k) {
+                var obj = [];
+                var source = parseInt(v.data('source').match(/\d+/));
+                var target = parseInt(v.data('target').match(/\d+/));
+                if (source != target) {//remove loops
+                    obj.push(source);
+                    obj.push(target);
+
+                    data.push(obj);
+                }
+            });
+
+            var cliques = almete.BronKerbosch(data);
+            var map = new Map();
+            cliques.forEach(function(v, k) {
+                if (v.length > 2) {
+                    var k = 'k' + v.length;
+                    var qnt = map.get(k) == undefined ? 0 : map.get(k);
+                    map.set(k, ++qnt);
+                }
+            });
+            
+            var html = '<ul>';
+            map.forEach(function(v, k) {
+                html += '<li>' + k + ': ' + v + '</li>';
+            });
+            html += '</ul>';
+            $('#ci'+ci).html(html);
         }
     </script>
 </body>
