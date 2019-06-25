@@ -152,7 +152,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div id="histogram"></div>
+                    <div class="row">
+                        <div class="col-sm-6"><div id="histogram"></div></div>
+                        <div class="col-sm-6"><div id="indexDegree"></div></div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -331,6 +334,7 @@
             layout = cy.elements().makeLayout({name: lay}); 
             layout.run();
             generateHistogram(times, 'Hofstad', delta, edges);
+            indexDegree();
         }
 
         function changePanel() {
@@ -398,6 +402,7 @@
             layout = cy.elements().makeLayout({name: lay}); 
             layout.run();
             generateHistogram(times, 'Bollobas', null, null);
+            indexDegree();
         }
 
         function changeLayout(l) {
@@ -495,21 +500,92 @@
                         .style("fill", "#69b3a2");
 
                 svg.append("text")
-    .attr("class", "y label")
-    .attr("text-anchor", "end")
-    .attr("y", 6)
-    .attr("dy", ".75em")
-    .attr("transform", "rotate(-90)")
-    .text("vértices");
+                    .attr("class", "y label")
+                    .attr("text-anchor", "end")
+                    .attr("y", 6)
+                    .attr("dy", ".75em")
+                    .attr("transform", "rotate(-90)")
+                    .text("vértices");
 
                 var titulo = modelo + " (t="+total + (modelo == "Hofstad" ? ",delta =" + delta + ", m = "+edges+")" : ")")
-                    svg.append("text")
-        .attr("x", (width / 2))             
-        .attr("y", 20 - (margin.top / 2))
-        .attr("text-anchor", "middle")  
-        .style("font-size", "16px") 
-        .style("text-decoration", "underline")  
-        .text(titulo);
+                svg.append("text")
+                    .attr("x", (width / 2))             
+                    .attr("y", 20 - (margin.top / 2))
+                    .attr("text-anchor", "middle")  
+                    .style("font-size", "16px") 
+                    .style("text-decoration", "underline")  
+                    .text(titulo);
+        }
+
+        function indexDegree() {
+            var data = [];
+            cy.nodes().forEach(function(v, k) {
+                var obj = {};
+                obj.node = k+1;
+                obj.degree = v.degree();
+                data.push(obj);
+            });
+                console.log(cy.nodes());
+
+            // set the dimensions and margins of the graph
+            var margin = {top: 10, right: 30, bottom: 30, left: 40},
+                    width = 460 - margin.left - margin.right,
+                    height = 400 - margin.top - margin.bottom;
+
+
+            // append the svg object to the body of the page
+            var svg = d3.select("#indexDegree")
+              .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+                .attr("transform",
+                      "translate(" + margin.left + "," + margin.top + ")");
+
+            // X axis
+            var x = d3.scaleBand()
+              .range([ 0, width ])
+              .domain(data.map(function(d) { return d.node; }))
+              .padding(0.2);
+            svg.append("g")
+              .attr("transform", "translate(0," + height + ")")
+              .call(d3.axisBottom(x))
+              .selectAll("text")
+                .attr("transform", "translate(-10,0)rotate(-45)")
+                .style("text-anchor", "end");
+
+            // Add Y axis
+            var y = d3.scaleLinear()
+              .domain([0, cy.nodes().maxDegree()])
+              .range([ height, 0]);
+            svg.append("g")
+              .call(d3.axisLeft(y));
+
+            // Bars
+            svg.selectAll("mybar")
+              .data(data)
+              .enter()
+              .append("rect")
+                .attr("x", function(d) { return x(d.node); })
+                .attr("y", function(d) { return y(d.degree); })
+                .attr("width", x.bandwidth())
+                .attr("height", function(d) { return height - y(d.degree); })
+                .attr("fill", "#69b3a2");
+
+            svg.append("text")
+                .attr("class", "y label")
+                .attr("text-anchor", "end")
+                .attr("y", 6)
+                .attr("dy", ".75em")
+                .attr("transform", "rotate(-90)")
+                .text("grau");
+
+            svg.append("text")
+                .attr("class", "x label")
+                .attr("text-anchor", "end")
+                .attr("x", width)
+                .attr("y", height + 25)
+                .text("vértice");
         }
     </script>
 </body>
