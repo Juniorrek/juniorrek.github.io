@@ -246,6 +246,7 @@
             return prob;
         }
 
+        var old_time = new Date();
         function generate() {
             var times = parseInt($('#times').val());
             var delta = parseInt($('#delta').val());
@@ -254,90 +255,94 @@
         }
 
         function hofstadRandomGraph(times, delta, edges) {
+            cy.startBatch();
             cy.elements().remove();
 
             var m = edges;
 
             layout.stop(); 
-            for (var t = 1; t <= m * times; t++) {
-                var rand = Math.random();
+            var t = 1;
 
-                var sump = 0;
-                for (var x = 1; x <= t; x++) {
-                    var prob = calcProb(x, t, delta);
-                    sump += prob.p;
-                    if (rand <= sump) {
-                        cy.add([
-                          { group: 'nodes', data: { id: 'v'+t }, position: { x: 100*t, y: 100*t } },
-                          { group: 'edges', data: { id: 'e'+t, source: 'v'+t, target: prob.v } }
-                        ]);
-                        break;
-                    }
-                };
-
-                /*var probs = calcProbs(t, delta);
-
-                var sump = 0;
-                for (var i = 0; i < probs.length; i++) {
-                    sump += probs[i].p;
-                    if (rand <= sump) {
-                        cy.add([
-                          { group: 'nodes', data: { id: 'v'+t }, position: { x: 100*t, y: 100*t } },
-                          { group: 'edges', data: { id: 'e'+t, source: 'v'+t, target: probs[i].v } }
-                        ]);
-                        break;
-                    }
-                }*/
-
-                
-            }
-
-            if (edges != 1) {
-                var i = 1;
-                var j = 0;
-                var auxNodes = [];
-                var auxNode = {};
-                auxNode.edges = [];
-
-                cy.nodes().forEach(function(v, k) {
-                    v.connectedEdges().forEach(function(vv, kk) {
-                        auxNode.edges.push(vv);
-                    });
-                    j++;
-
-                    if (j == edges) {
-                        auxNode.id = 'v' + i;
-                        auxNodes.push(auxNode);
-                        auxNode = {};
-                        auxNode.edges = [];
-                        j = 0;
-                        i++;
-                    }
-                });
-
-                cy.elements().remove();
-
-                auxNodes.forEach(function(v, k) {
-                    cy.add({ group: 'nodes', data: { id: v.id }, position: { x: 100*t, y: 100*t } });
-                });
-                auxNodes.forEach(function(v, k) {
-                    v.edges.forEach(function(vv, kk) {
-                        if (cy.$('#'+vv.id()).length == 0) {
-                            var source = vv.data("source").match(/\d+/);
-                            var target = vv.data("target").match(/\d+/);
-                            var newSource = Math.ceil(source/edges);
-                            var newTarget = Math.ceil(target/edges);
-                            cy.add({ group: 'edges', data: { id: vv.id(), source: 'v'+newSource, target: 'v'+newTarget } });
+            /*function now() {
+                return new Date().getTime();
+            }*/
+            function doChunk () {
+                //var startTime = now();
+                var cnt = 100;
+                //while (t <= m * times && (now() - startTime) <= 200) {
+                while (t <= m * times && cnt--) {
+                    var rand = Math.random();
+                    //if (t == 1000) debugger;
+                    var sump = 0;
+                    for (var x = 1; x <= t; x++) {
+                        var prob = calcProb(x, t, delta);
+                        sump += prob.p;
+                        if (rand <= sump) {
+                            cy.add([
+                              { group: 'nodes', data: { id: 'v'+t }, position: { x: 100*t, y: 100*t } },
+                              { group: 'edges', data: { id: 'e'+t, source: 'v'+t, target: prob.v } }
+                            ]);
+                            break;
                         }
-                    });
-                });
-            }
+                    };
 
-            layout = cy.elements().makeLayout({name: lay}); 
-            layout.run();
-            generateHistogram(times, 'Hofstad', delta, edges);
-            indexDegree();
-            btnCliques();
+                    ++t;
+                }
+                if (t <= m * times) {
+                    setTimeout(doChunk, 1);
+                } else {
+                    if (edges != 1) {
+                        var i = 1;
+                        var j = 0;
+                        var auxNodes = [];
+                        var auxNode = {};
+                        auxNode.edges = [];
+
+                        cy.nodes().forEach(function(v, k) {
+                            v.connectedEdges().forEach(function(vv, kk) {
+                                auxNode.edges.push(vv);
+                            });
+                            j++;
+
+                            if (j == edges) {
+                                auxNode.id = 'v' + i;
+                                auxNodes.push(auxNode);
+                                auxNode = {};
+                                auxNode.edges = [];
+                                j = 0;
+                                i++;
+                            }
+                        });
+
+                        cy.elements().remove();
+
+                        auxNodes.forEach(function(v, k) {
+                            cy.add({ group: 'nodes', data: { id: v.id }, position: { x: 100*t, y: 100*t } });
+                        });
+                        auxNodes.forEach(function(v, k) {
+                            v.edges.forEach(function(vv, kk) {
+                                if (cy.$('#'+vv.id()).length == 0) {
+                                    var source = vv.data("source").match(/\d+/);
+                                    var target = vv.data("target").match(/\d+/);
+                                    var newSource = Math.ceil(source/edges);
+                                    var newTarget = Math.ceil(target/edges);
+                                    cy.add({ group: 'edges', data: { id: vv.id(), source: 'v'+newSource, target: 'v'+newTarget } });
+                                }
+                            });
+                        });
+                    }
+
+                    layout = cy.elements().makeLayout({name: lay}); 
+                    layout.run();
+                    generateHistogram(times, 'Hofstad', delta, edges);
+                    indexDegree();
+                    btnCliques();
+                    var new_time = new Date();
+                    alert(new_time - old_time);
+                    cy.endBatch();
+                }
+            } 
+            doChunk();
         }
 
         function changePanel() {
