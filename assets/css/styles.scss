@@ -1,0 +1,156 @@
+---
+---
+
+@import "timeline";
+
+$sb-w: 27%;
+
+body {
+	margin: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.sidebar {
+	position: fixed;
+    left: 0px;
+    top: 0px;
+	width: $sb-w;
+	height: 100%;
+	padding: 3rem;
+	background-color: #2a2f4a;
+    color: #fff;
+}
+
+.rounded-circle {
+    border-radius: 50%;
+}
+
+.heading {
+    font-size: 38px;
+	font-weight: 800;
+	text-transform: uppercase;
+}
+
+.text-muted {
+    color: rgba(255,255,255,.7);
+}
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+    a {
+    	font-size: 18px;
+    	text-decoration: none;
+    	color: rgba(255,255,255,.7);
+    }
+}
+
+.main-content {
+    width: 100% - $sb-w;
+    margin-left: $sb-w;
+    position: relative;
+}
+
+.bg-pgreen {
+    background-color: #aaffa7;
+}
+
+.bg-pblue {
+	background-color: #cadfdf;
+}
+
+.bg-pbeige {
+    background-color: #fdead2;
+}
+
+.bg-pred {
+	background-color: #ff9999;
+}
+
+.progress-bar {
+    background-color: #7cbf7a;
+}
+
+section {
+	padding: 10%;
+}
+
+@media (max-width: 767px){
+	.sidebar {
+	    position: static;
+	    width: 100%;
+	    padding-left: 65px;
+	}
+	.main-content{
+		width: 100%;
+    	margin-left: 0%;
+	}
+
+	.timeline {
+	    margin: 30px;
+	    padding: 0px;
+	    width: 90%;
+	    &:before {
+	      left: 0;
+	    }
+
+    .timeline-item{
+      .timeline-content {
+        width: 90%;
+        float: right;
+        text-align: left;
+
+        &:before,
+        .right:before{
+          left: 10%;
+          margin-left: -6px;
+          border-left: 0;
+          border-right: 7px solid #ee4d4d;
+        }
+      }
+      .timeline-icon {
+        left: 0;
+      }
+    }
+  }
+}
+
+.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #fff;
+    display: inline-block;
+    letter-spacing: .25em;
+    line-height: 3.5em;
+    padding: 0 1.75em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.social{
+  &:hover{
+    a{
+      color: rgba(255,255,255,255.4);
+    }
+  }
+
+  a{
+    color: rgba(255,255,255,1);
+    font-size: 28px;
+    margin-right: 12px;
+    transition: all 0.3s ease;
+
+    &:hover{
+      color: rgba(255,255,255,1);
+      i{
+        transform: scale(1.3);
+      }
+    }
+  }
+}
+
+@font-face { font-family: f8bit; src: url('assets/fonts/slkscr.ttf'); } 
+@font-face { font-family: f8bit; font-weight: bold; src: url('../fonts/slkscr.ttf');}
+
+.f8bit {
+	font-family: f8bit, sans-serif;
+}
