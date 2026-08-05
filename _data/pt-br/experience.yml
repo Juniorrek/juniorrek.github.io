@@ -1,0 +1,49 @@
+- period: 2018 - 2026
+  role: Desenvolvedor Java Full Stack Sênior
+  org: FUNPAR - UFPR
+  location: 
+  summary: >-
+    Plataformas de gestão de bolsas e auxílios para a Universidade Federal do
+    Paraná (UFPR), incluindo o sistema de Iniciação Científica utilizado por
+    ~1.000 professores e mais de 2.500 candidatos a bolsa por ano.
+  highlights:
+    - Reconstrução do sistema de Iniciação Científica do zero, substituindo uma aplicação legada por uma stack moderna Java/Spring e Vue.js, do levantamento de requisitos à entrega em produção.
+    - Construção de APIs REST com Java/Spring e front-ends responsivos com Vue.js.
+    - Integração de sistemas com a base Lattes do CNPq, processando o XML dos pesquisadores para automatizar a pontuação de produções no rankeamento de bolsas.
+    - Desenvolvimento de integrações REST entre sistemas para buscar e validar dados de bolsas entre plataformas da universidade.
+    - Levantamento de requisitos e estimativa de esforço para sistemas e módulos ligados aos editais de bolsas da universidade.
+    - Modelagem e otimização de esquemas de bancos de dados relacionais (Oracle, MySQL).
+  tech: [Java, Spring, Vue.js, JavaScript, APIs REST, Oracle, MySQL]
+
+- period: 2025 - 2026
+  role: Especialista em Treinamento e Avaliação de IA
+  org: Revelo (Projetos de Treinamento de IA)
+  summary: >-
+    Avaliação e melhoria de respostas de modelos de linguagem de grande escala em
+    tarefas de engenharia de software.
+  highlights:
+    - Avaliação e melhoria de respostas de modelos de linguagem em tarefas de código em Python, Java e JavaScript, revisando correção, qualidade e segurança.
+    - Aplicação de julgamento de engenharia de software para avaliar código e raciocínio gerados por IA, contribuindo para o treinamento e alinhamento dos modelos.
+  tech: [LLMs, Python, Java, JavaScript]
+
+- period: 2017 - 2018
+  role: Programador Júnior
+  org: Núcleo de Concursos - UFPR
+  location: 
+  summary: >-
+    Sistemas de apoio às provas de concurso e ao processo de validação de cotas
+    de ingresso da universidade.
+  highlights:
+    - Construção de um sistema de gestão do processo de validação de cotas de ingresso da universidade - gravação das entrevistas dos candidatos pelo próprio sistema, revisão assíncrona pelas bancas avaliadoras e geração do resultado final (Java puro, JSP/Servlets).
+    - Desenvolvimento de funcionalidades para os sistemas de provas de concurso da universidade.
+  tech: [Java, JSP/Servlets, JavaScript, Oracle]
+
+- period: 2017
+  role: Estagiário
+  org: Langowski
+  location: Curitiba, Brasil
+  summary: >-
+    Primeira experiência profissional em uma base de código em produção.
+  highlights:
+    - Desenvolvimento e manutenção de funcionalidades de aplicações web com PHP, Vue.js e JavaScript.
+  tech: [PHP, Vue.js, JavaScript, MySQL]

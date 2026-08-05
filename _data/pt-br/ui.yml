@@ -1,0 +1,31 @@
+# Textos de interface do site em português. A prosa pessoal fica em profile.yml -
+# aqui só rótulos, títulos de seção e textos de botão.
+
+nav:
+  about: Sobre
+  experience: Experiência
+  projects: Projetos
+  skills: Competências
+  education: Formação
+  contact: Contato
+
+sections:
+  experience: Experiência profissional
+  projects: Projetos
+  skills: Competências técnicas
+  education: Formação &amp; pesquisa
+  courses: Cursos &amp; certificados
+  languages: Idiomas
+  contact: Contato
+
+actions:
+  download_resume: Baixar currículo
+  resume_pdf: Currículo (PDF)
+  email_me: Enviar e-mail
+  more_github: Mais no GitHub
+  lattes: Currículo Lattes
+  lattes_title: Currículo Lattes na plataforma do CNPq
+
+a11y:
+  sections_nav: Seções
+  language_nav: Idioma

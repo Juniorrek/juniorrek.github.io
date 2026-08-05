@@ -1,0 +1,68 @@
+# Each degree carries the work produced during it. Software built for a degree
+# is described in projects.yml and linked from here with a "#projects" anchor,
+# so nothing is written twice.
+
+intro: >-
+
+items:
+  - period: 2024 - 2025
+    degree: Specialization in Applied Artificial Intelligence
+    org: Universidade Federal do Paraná (UFPR)
+    work:
+      label: Final project
+      name: NLP as a bridge between AI and Linguistics
+      summary: >-
+        A study of natural language processing at the meeting point of
+        artificial intelligence and linguistics, exploring the impact of large
+        language models.
+      tech: [NLP, LLMs, Linguistics]
+      links:
+        - label: Read the paper
+          url: https://acervodigital.ufpr.br/handle/1884/99842
+
+  - period: 2023 - 2024
+    degree: Specialization in Agile Software Development
+    org: Universidade Federal do Paraná (UFPR)
+    work:
+      label: Final project
+      name: Price Comparison App (Papa Preço)
+      summary: >-
+        Applied Scrum practices to the design and delivery of a full product,
+        from backlog to release.
+      links:
+        - label: See the app in Projects
+          url: "#projects"
+
+  - period: 2018 - 2020
+    degree: Master's Degree in Computer Science
+    org: Universidade Federal do Paraná (UFPR)
+    work:
+      label: Dissertation
+      name: Maximum clique in power-law graphs
+      summary: >-
+        Graph theory, combinatorial optimization and probabilistic analysis of
+        greedy algorithms on power-law graphs.
+      tech: [Graph Theory, Combinatorial Optimization, Probability, Algorithms]
+      links:
+        - label: Read the dissertation
+          url: https://acervodigital.ufpr.br/handle/1884/70774
+        - label: See the visualiser in Projects
+          url: "#projects"
+
+  - period: 2015 - 2017
+    degree: Degree in Systems Analysis and Development
+    org: Universidade Federal do Paraná (UFPR)
+    work:
+      label: Final project
+      name: Artemis - text mining for research articles
+      summary: >-
+        Automatic term extraction, summarization and
+        similarity grouping over a corpus of scientific articles, and the
+        evaluation of how well those techniques actually help a researcher read
+        less and find more. Registered software.
+      tech: [Text Mining, NLP, Information Retrieval]
+      links:
+        - label: Read the paper
+          url: https://acervodigital.ufpr.br/handle/1884/54046
+        - label: See the software in Projects
+          url: "#projects"

@@ -1,0 +1,14 @@
+{%- if include.links and include.links != empty -%}
+<ul class="item-links">
+    {%- for link in include.links %}
+    {%- assign first_char = link.url | slice: 0 -%}
+    <li>
+        {%- if first_char == '#' -%}
+        <a href="{{ link.url }}">{{ link.label }} <span aria-hidden="true">&darr;</span></a>
+        {%- else -%}
+        <a href="{{ link.url | relative_url }}" target="_blank" rel="noopener">{{ link.label }} <span aria-hidden="true">&rarr;</span></a>
+        {%- endif -%}
+    </li>
+    {%- endfor %}
+</ul>
+{%- endif -%}

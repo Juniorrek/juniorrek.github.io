@@ -1,0 +1,7 @@
+{%- if include.tech and include.tech != empty -%}
+<ul class="tag-list tag-list-sm">
+    {%- for item in include.tech %}
+    <li class="tag">{{ item }}</li>
+    {%- endfor %}
+</ul>
+{%- endif -%}

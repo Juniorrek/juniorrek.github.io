@@ -1,0 +1,31 @@
+# Interface chrome for the English site. Personal prose lives in profile.yml -
+# this file is only labels, headings and button text.
+
+nav:
+  about: About
+  experience: Experience
+  projects: Projects
+  skills: Skills
+  education: Education
+  contact: Contact
+
+sections:
+  experience: Professional experience
+  projects: Projects
+  skills: Skills
+  education: Education &amp; research
+  courses: Courses &amp; certificates
+  languages: Languages
+  contact: Contact
+
+actions:
+  download_resume: Download résumé
+  resume_pdf: Résumé (PDF)
+  email_me: Email me
+  more_github: More on GitHub
+  lattes: Lattes CV
+  lattes_title: Brazilian national academic CV registry (CNPq)
+
+a11y:
+  sections_nav: Sections
+  language_nav: Language

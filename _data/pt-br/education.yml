@@ -1,0 +1,68 @@
+# Cada formação carrega o trabalho produzido nela. O software feito para uma
+# formação é descrito em projects.yml e apenas referenciado aqui por uma âncora
+# "#projects", para nada ser escrito duas vezes.
+
+intro: >-
+
+items:
+  - period: 2024 - 2025
+    degree: Especialização em Inteligência Artificial Aplicada
+    org: Universidade Federal do Paraná (UFPR)
+    work:
+      label: Trabalho de conclusão
+      name: PLN como ponte entre IA e Linguística
+      summary: >-
+        Um estudo do processamento de linguagem natural no encontro entre
+        inteligência artificial e linguística, explorando o impacto dos modelos
+        de linguagem de grande escala.
+      tech: [PLN, LLMs, Linguística]
+      links:
+        - label: Ler o trabalho
+          url: https://acervodigital.ufpr.br/handle/1884/99842
+
+  - period: 2023 - 2024
+    degree: Especialização em Desenvolvimento Ágil de Software
+    org: Universidade Federal do Paraná (UFPR)
+    work:
+      label: Trabalho de conclusão
+      name: Aplicativo de Comparação de Preços (Papa Preço)
+      summary: >-
+        Aplicação de práticas Scrum na concepção e entrega de um produto
+        completo, do backlog à release.
+      links:
+        - label: Ver o app em Projetos
+          url: "#projects"
+
+  - period: 2018 - 2020
+    degree: Mestrado em Informática
+    org: Universidade Federal do Paraná (UFPR)
+    work:
+      label: Dissertação
+      name: Clique máxima em grafos lei de potência
+      summary: >-
+        Teoria dos grafos, otimização combinatória e análise probabilística de
+        algoritmos gulosos em grafos lei de potência.
+      tech: [Teoria dos Grafos, Otimização Combinatória, Probabilidade, Algoritmos]
+      links:
+        - label: Ler a dissertação
+          url: https://acervodigital.ufpr.br/handle/1884/70774
+        - label: Ver o visualizador em Projetos
+          url: "#projects"
+
+  - period: 2015 - 2017
+    degree: Tecnólogo em Análise e Desenvolvimento de Sistemas
+    org: Universidade Federal do Paraná (UFPR)
+    work:
+      label: Trabalho de conclusão
+      name: Artemis - mineração de texto para artigos científicos
+      summary: >-
+        Extração automática de termos, sumarização e
+        agrupamento por similaridade sobre um corpus de artigos científicos, e a
+        avaliação do quanto essas técnicas de fato ajudam um pesquisador a ler
+        menos e encontrar mais. Software registrado.
+      tech: [Mineração de Texto, PLN, Recuperação de Informação]
+      links:
+        - label: Ler o trabalho
+          url: https://acervodigital.ufpr.br/handle/1884/54046
+        - label: Ver o software em Projetos
+          url: "#projects"

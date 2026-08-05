@@ -1,0 +1,56 @@
+name: David Reksidler Junior
+short_name: Dave
+title: Desenvolvedor Java Full Stack Sênior
+tagline: 9+ anos · Java · Spring · Vue.js
+location: Curitiba, PR - Brasil
+availability: 
+photo: /assets/images/face.PNG
+
+# Currículo servido no site em português.
+resume: /assets/files/CV_BR_DavidReksidlerJunior.pdf
+
+email: juniorrek15@gmail.com
+phone: "+55 (41) 99640-5683"
+# Só dígitos, para links tel:.
+phone_tel: "+5541996405683"
+github: https://github.com/Juniorrek
+linkedin: https://linkedin.com/in/david-reksidler-junior-3a5a99121
+lattes: http://lattes.cnpq.br/2955336452809218
+
+headline: |-
+  Engenharia de Software
+
+about:
+  - >-
+    Sou Desenvolvedor Java Full Stack Sênior com 9 anos de experiência
+    construindo plataformas acadêmicas para a Universidade
+    Federal do Paraná. Na UFPR, reconstruí o sistema de Iniciação Científica do
+    zero, substituindo uma aplicação legada por uma stack moderna Java/Spring e
+    Vue.js, utilizado por cerca de 1.000 professores e mais de 2.500 candidatos
+    a bolsa por ano.
+  - >-
+    Mestrado em Informática sobre clique
+    máxima em grafos lei de potência, além das especializações em Inteligência
+    Artificial Aplicada e Desenvolvimento Ágil de Software, todas pela UFPR.
+  - >-
+    Mais recentemente atuei como especialista em treinamento e avaliação de IA,
+    revisando respostas de modelos de linguagem em tarefas de código em Python,
+    Java e JavaScript. Aplicando
+    julgamento de engenharia de software ao treinamento e alinhamento dos
+    modelos.
+  - >-
+    Atuo em toda a stack Java e tenho experiência em traduzir trade-offs técnicos em
+    decisões práticas para stakeholders não técnicos.
+
+contact_intro: >-
+  O jeito mais rápido de falar comigo é por telefone ou e-mail.
+
+languages:
+  - name: Português
+    level: Nativo
+  - name: Inglês
+    level: Intermediário Avançado (B2)
+  - name: Espanhol
+    level: Básico
+  - name: Russo
+    level: Básico

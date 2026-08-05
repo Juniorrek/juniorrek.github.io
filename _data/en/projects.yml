@@ -1,0 +1,61 @@
+- name: Price Comparison App (Papa Preço)
+  featured: true
+  period: 
+  status: Deploying to AWS
+  image: /assets/images/papalogo.PNG
+  image_fit: cover
+  url: https://github.com/Juniorrek/papapreco
+  summary: >-
+    A collaborative price comparison app: shoppers report what they paid and
+    where, and the app builds a shared, location-aware price history so everyone
+    can find the cheapest nearby option.
+  details:
+    - Android app built with Flutter (Dart), backed by a Java/Spring Boot REST API.
+    - Modeled the domain and persistence layer with PostgreSQL.
+    - Containerised with Docker; currently being deployed to AWS.
+    - Built as the final project of the Specialization in Agile Software Development, applying Scrum practices to its design and delivery.
+  tech: [Flutter, Dart, Java, Spring Boot, PostgreSQL, Docker, AWS]
+  links:
+    - label: Source on GitHub
+      url: https://github.com/Juniorrek/papapreco
+
+- name: Artemis
+  period: 
+  image: /assets/images/artemisLogo.png
+  image_fit: cover
+  image_position: left
+  url: https://github.com/Juniorrek/TCC
+  summary: >-
+    A text-mining system that helps researchers analyse scientific articles at
+    scale. Term extraction, summarization and similarity grouping over a
+    corpus. Registered software, built with Java, R and MySQL.
+  tech: [Java, R, MySQL, Text Mining, NLP]
+  links:
+    - label: Source on GitHub
+      url: https://github.com/Juniorrek/TCC
+    - label: Read the paper
+      url: https://acervodigital.ufpr.br/handle/1884/54046
+
+- name: Graphw 2000
+  image: /assets/images/graphwLogo.png
+  image_fit: contain
+  url: /graphus2000.html
+  summary: >-
+    Interactive generator and visualiser for power law graphs, built alongside my
+    M.Sc. research to make the growth models tangible. Runs entirely in the browser.
+  tech: [JavaScript, D3.js, Cytoscape.js, Graph Theory]
+  links:
+    - label: Live demo
+      url: /graphus2000.html
+
+- name: Jerry Kijoji
+  image: /assets/images/jerryKijoji.png
+  image_fit: cover
+  url: https://github.com/Juniorrek/Jerry-kijoji
+  summary: >-
+    A small game built to explore classic data structures in a visual, playful
+    way - stacks, queues and lists you can actually watch working.
+  tech: [JavaScript, Data Structures]
+  links:
+    - label: Source on GitHub
+      url: https://github.com/Juniorrek/Jerry-kijoji

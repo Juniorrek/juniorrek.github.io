@@ -1,13 +1,24 @@
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+{%- assign lang = page.lang | default: site.lang | default: "en" -%}
+{%- assign locale = site.data[lang] -%}
+{%- assign profile = locale.profile -%}
+{%- assign ui = locale.ui -%}
+{%- assign current = site.languages | where: "code", lang | first -%}
+<html lang="{{ current.hreflang | default: lang }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {%- seo -%}
+    {%- for entry in site.languages -%}
+    <link rel="alternate" hreflang="{{ entry.hreflang | default: entry.code }}" href="{{ entry.url | absolute_url }}">
+    {%- endfor -%}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap">
     <link rel="stylesheet" href="{{ "/assets/css/bootstrap.min.css" | relative_url }}">
+    <link rel="stylesheet" href="{{ "/assets/css/font-awesome.min.css" | relative_url }}">
     <link rel="stylesheet" href="{{ "/assets/css/styles.css" | relative_url }}">
-    <script src="https://use.fontawesome.com/ed7f99a1dd.js"></script>
 
     {%- if jekyll.environment == 'production' and site.google_analytics -%}
         {%- include google-analytics.html -%}
@@ -16,44 +27,70 @@
 
 <body>
     <main aria-label="Content">
-        <section class="sidebar" style="text-align: center;">
-            <img src="assets/images/face.PNG" class="rounded-circle" width="160px">
-            <h1 class="heading"><div class="f8bit">Hello World</div> I'm Dave</h1>
-            <p class="text-muted bs">Java Full Stack Developer - Brazil</p>
+        <section class="sidebar">
+            {%- if site.languages.size > 1 %}
+            <nav class="lang-switch" aria-label="{{ ui.a11y.language_nav }}">
+                {%- for entry in site.languages %}
+                <a class="lang-option{% if entry.code == lang %} is-active{% endif %}"
+                   href="{{ entry.url | relative_url }}"
+                   hreflang="{{ entry.hreflang | default: entry.code }}"
+                   lang="{{ entry.hreflang | default: entry.code }}"
+                   {% if entry.code == lang %}aria-current="true"{% endif %}
+                   title="{{ entry.name }}"><span class="lang-flag" aria-hidden="true">{{ entry.flag }}</span> {{ entry.short }}</a>
+                {%- endfor %}
+            </nav>
+            {%- endif %}
+
+            <img src="{{ profile.photo | relative_url }}" class="avatar rounded-circle" width="140" height="140"
+                 alt="{{ profile.name }}">
+
+            <p class="f8bit greeting">Hello World</p>
+            <h1 class="sidebar-name">{{ profile.name }}</h1>
+            <p class="sidebar-title">{{ profile.title }}</p>
+            <p class="sidebar-meta">
+                {%- if profile.location and profile.location != "" %}
+                <i class="fa fa-map-marker" aria-hidden="true"></i> {{ profile.location }}
+                {%- endif %}
+                {%- if profile.phone and profile.phone != "" %}
+                <br><a class="sidebar-link" href="tel:{{ profile.phone_tel }}">
+                    <i class="fa fa-phone" aria-hidden="true"></i> {{ profile.phone }}
+                </a>
+                {%- endif %}
+            </p>
+
+            <a class="button button-accent" href="{{ profile.resume | relative_url }}" download>
+                <i class="fa fa-file-pdf-o" aria-hidden="true"></i> {{ ui.actions.resume_pdf }}
+            </a>
 
             <div class="social">
-                <a target="_blank" href="https://github.com/Juniorrek">
-                  <i class="fa fa-github"></i>
+                <a target="_blank" rel="noopener" href="{{ profile.github }}" aria-label="GitHub" title="GitHub">
+                    <i class="fa fa-github" aria-hidden="true"></i>
                 </a>
-              
-                <a target="_blank" href="https://www.facebook.com/juniorrek15">
-                  <i class="fa fa-facebook"></i>
+                <a target="_blank" rel="noopener" href="{{ profile.linkedin }}" aria-label="LinkedIn" title="LinkedIn">
+                    <i class="fa fa-linkedin-square" aria-hidden="true"></i>
                 </a>
-              
-                <a target="_blank" href="assets/files/CV_Ing_DavidReksidlerJunior.pdf">
-                  <i class="fa fa-file-text"></i>
+                {%- if profile.lattes and profile.lattes != "" %}
+                <a target="_blank" rel="noopener" href="{{ profile.lattes }}"
+                   aria-label="{{ ui.actions.lattes }}" title="{{ ui.actions.lattes_title }}">
+                    <i class="fa fa-graduation-cap" aria-hidden="true"></i>
                 </a>
-                
+                {%- endif %}
+                <a href="mailto:{{ profile.email }}" aria-label="Email" title="Email">
+                    <i class="fa fa-envelope" aria-hidden="true"></i>
+                </a>
             </div>
-            <br/><br/>
 
-            <ul class="menu-list">
-                <li>
-                    <a class="button" href="#habilidades">Skills</a>
-                </li>
-                <li>
-                    <a class="button" href="#experiencia">Experience</a>
-                </li>
-                <li>
-                    <a class="button" href="#educacao">Education</a>
-                </li>
-                <li>
-                    <a class="button" href="#projetos">Projects</a>
-                </li>
-                <li>
-                    <a class="button" href="#contato">Contact</a>
-                </li>
-            </ul>
+            {%- assign home = page.home_url | default: '/' %}
+            <nav aria-label="{{ ui.a11y.sections_nav }}">
+                <ul class="menu-list">
+                    <li><a class="button" href="{{ home | append: '#about' | relative_url }}">{{ ui.nav.about }}</a></li>
+                    <li><a class="button" href="{{ home | append: '#experience' | relative_url }}">{{ ui.nav.experience }}</a></li>
+                    <li><a class="button" href="{{ home | append: '#projects' | relative_url }}">{{ ui.nav.projects }}</a></li>
+                    <li><a class="button" href="{{ home | append: '#skills' | relative_url }}">{{ ui.nav.skills }}</a></li>
+                    <li><a class="button" href="{{ home | append: '#education' | relative_url }}">{{ ui.nav.education }}</a></li>
+                    <li><a class="button" href="{{ home | append: '#contact' | relative_url }}">{{ ui.nav.contact }}</a></li>
+                </ul>
+            </nav>
         </section>
         {{ content }}
     </main>

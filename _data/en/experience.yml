@@ -1,0 +1,49 @@
+- period: 2018 - 2026
+  role: Full Stack Java Developer
+  org: FUNPAR - UFPR
+  location: 
+  summary: >-
+    Scholarship and grant management platforms for the Federal University of
+    Paraná (UFPR), including the Scientific Initiation system used by ~1,000
+    professors and 2,500+ scholarship students per year.
+  highlights:
+    - Rebuilt the Scientific Initiation system from the ground up, replacing a legacy application with a modern Java/Spring and Vue.js stack - from requirements gathering to production delivery.
+    - Built REST APIs with Java/Spring and responsive front ends with Vue.js.
+    - Integrated with CNPq's Lattes national research database, parsing researcher XML records to automate publication scoring for scholarship ranking.
+    - Developed cross-system REST integrations to fetch and validate grant data between university platforms.
+    - Conducted requirements analysis and effort estimation for the systems and modules supporting the university's scholarship selection calls.
+    - Designed and optimized relational database schemas in Oracle and MySQL.
+  tech: [Java, Spring, Vue.js, JavaScript, REST APIs, Oracle, MySQL]
+
+- period: 2025 - 2026
+  role: AI Training & Evaluation Specialist
+  org: Revelo (AI Training Projects)
+  summary: >-
+    Evaluation and improvement of large language model output on software
+    engineering tasks.
+  highlights:
+    - Evaluated and improved LLM responses on coding tasks across Python, Java and JavaScript, reviewing for correctness, quality and safety.
+    - Applied software engineering judgment to assess AI-generated code and reasoning, contributing to model training and alignment.
+  tech: [LLMs, Python, Java, JavaScript]
+
+- period: 2017 - 2018
+  role: Junior Programmer
+  org: Núcleo de Concursos - UFPR
+  location: 
+  summary: >-
+    Systems supporting the university's public admission exams and
+    quota-admission process.
+  highlights:
+    - Built a system managing the university's quota-admission verification process - in-system video recording of candidate interviews, asynchronous review by evaluation boards, and final result generation (core Java, JSP/Servlets).
+    - Developed features for the university admission exam systems.
+  tech: [Java, JSP/Servlets, JavaScript, Oracle]
+
+- period: 2017
+  role: Trainee
+  org: Langowski
+  location: Curitiba, Brazil
+  summary: >-
+    First professional experience on a production codebase.
+  highlights:
+    - Developed and maintained web application features with PHP, Vue.js and JavaScript.
+  tech: [PHP, Vue.js, JavaScript, MySQL]

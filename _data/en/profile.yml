@@ -1,0 +1,54 @@
+name: David Reksidler Junior
+short_name: Dave
+title: Full Stack Java Developer
+tagline: 9+ years · Java · Spring · Vue.js
+location: Curitiba, PR - Brazil
+availability: 
+photo: /assets/images/face.PNG
+
+# Résumé served on the English site.
+resume: /assets/files/CV_EN_DavidReksidlerJunior.pdf
+
+email: juniorrek15@gmail.com
+phone: "+55 (41) 99640-5683"
+# Digits only, for tel: links.
+phone_tel: "+5541996405683"
+github: https://github.com/Juniorrek
+linkedin: https://linkedin.com/in/david-reksidler-junior-3a5a99121
+lattes: http://lattes.cnpq.br/2955336452809218
+
+headline: |-
+  Software Engineering
+
+about:
+  - >-
+    I'm a Full Stack Java Developer with 9+ years of experience building
+    large-scale academic platforms for one of Brazil's largest federal
+    universities a Universidade Federal do Paraná. At UFPR I rebuilt the Scientific Initiation system from the
+    ground up, replacing a legacy application with a modern Java/Spring and
+    Vue.js stack, which is used by around 1,000 professors and more than 2,500
+    scholarship students every year.
+  - >-
+    M.Sc. in Computer Science on maximum clique in power-law
+    graphs, plus postgraduate specializations in Applied Artificial Intelligence
+    and Agile Software Development, all from UFPR.
+  - >-
+    More recently I've worked as an AI training and evaluation specialist,
+    reviewing large language model output on Python, Java and JavaScript. Applying software engineering
+    judgment to model training and alignment.
+  - >-
+    I'm comfortable across the Java stack, and used to translating technical
+    trade-offs into decisions non-technical stakeholders can act on.
+
+contact_intro: >-
+  The fastest way to reach me is by phone or email.
+
+languages:
+  - name: Portuguese
+    level: Native
+  - name: English
+    level: Upper-Intermediate (B2)
+  - name: Spanish
+    level: Beginner
+  - name: Russian
+    level: Beginner

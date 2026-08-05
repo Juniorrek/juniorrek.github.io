@@ -1,0 +1,55 @@
+- group: Programming
+  items:
+    - Java
+    - JavaScript
+    - Python
+    - Dart
+    - C/C++
+    - Lua
+    - SQL
+    - R
+    - PHP
+    - Shell Script
+
+- group: Back-end
+  items:
+    - Spring / Spring Boot
+    - Hibernate / JPA
+    - REST APIs
+    - JasperReports
+    - JSP / Servlets
+    - JSF
+
+- group: Front-end
+  items:
+    - Vue.js
+    - Nuxt
+    - Angular
+    - Flutter
+    - HTML5 / CSS3
+    - Bootstrap
+    - jQuery
+
+- group: Database
+  items:
+    - Oracle
+    - MySQL
+    - PostgreSQL
+    - PL/SQL
+
+- group: Tooling & Infra
+  items:
+    - Git
+    - Docker
+    - AWS
+    - Maven
+    - Linux
+
+- group: Practices
+  items:
+    - Agile (Scrum, Kanban)
+    - UML
+    - MVC
+    - Requirements analysis
+    - Effort estimation
+    - Code review

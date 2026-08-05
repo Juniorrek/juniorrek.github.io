@@ -1,0 +1,62 @@
+- name: Aplicativo de Comparação de Preços (Papa Preço)
+  featured: true
+  period: 
+  status: Em implantação na AWS
+  image: /assets/images/papalogo.PNG
+  image_fit: cover
+  url: https://github.com/Juniorrek/papapreco
+  summary: >-
+    Um aplicativo colaborativo de comparação de preços: as pessoas registram
+    quanto pagaram e onde, e o app monta um histórico de preços compartilhado e
+    com localização, para todo mundo achar a opção mais barata por perto.
+  details:
+    - Aplicativo Android desenvolvido com Flutter (Dart), com back-end de API REST em Java/Spring Boot.
+    - Modelagem do domínio e da camada de persistência com PostgreSQL.
+    - Conteinerizado com Docker; atualmente em implantação na AWS.
+    - Desenvolvido como trabalho de conclusão da Especialização em Desenvolvimento Ágil de Software, aplicando práticas Scrum na concepção e entrega.
+  tech: [Flutter, Dart, Java, Spring Boot, PostgreSQL, Docker, AWS]
+  links:
+    - label: Código no GitHub
+      url: https://github.com/Juniorrek/papapreco
+
+- name: Artemis
+  period: 
+  image: /assets/images/artemisLogo.png
+  image_fit: cover
+  image_position: left
+  url: https://github.com/Juniorrek/TCC
+  summary: >-
+    Um sistema de mineração de texto que ajuda pesquisadores a analisar artigos
+    científicos em escala. Extração de termos, sumarização e agrupamento por
+    similaridade sobre um corpus. Software registrado, feito com Java, R e MySQL.
+  tech: [Java, R, MySQL, Mineração de Texto, PLN]
+  links:
+    - label: Código no GitHub
+      url: https://github.com/Juniorrek/TCC
+    - label: Ler o trabalho
+      url: https://acervodigital.ufpr.br/handle/1884/54046
+
+- name: Graphw 2000
+  image: /assets/images/graphwLogo.png
+  image_fit: contain
+  url: /graphus2000.html
+  summary: >-
+    Gerador e visualizador interativo de grafos lei de potência, construído
+    junto com a pesquisa do mestrado para tornar os modelos de crescimento
+    tangíveis. Roda inteiramente no navegador.
+  tech: [JavaScript, D3.js, Cytoscape.js, Teoria dos Grafos]
+  links:
+    - label: Demonstração
+      url: /graphus2000.html
+
+- name: Jerry Kijoji
+  image: /assets/images/jerryKijoji.png
+  image_fit: cover
+  url: https://github.com/Juniorrek/Jerry-kijoji
+  summary: >-
+    Um joguinho feito para explorar estruturas de dados clássicas de forma
+    visual e divertida - pilhas, filas e listas que dá para ver funcionando.
+  tech: [JavaScript, Estruturas de Dados]
+  links:
+    - label: Código no GitHub
+      url: https://github.com/Juniorrek/Jerry-kijoji
