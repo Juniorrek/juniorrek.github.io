@@ -23,7 +23,7 @@
     engineering tasks.
   highlights:
     - Evaluated and improved LLM responses on coding tasks across Python, Java and JavaScript, reviewing for correctness, quality and safety.
-    - Applied software engineering judgment to assess AI-generated code and reasoning, contributing to model training and alignment.
+    - Applied software engineering judgment and TDD practices to assess AI-generated code and reasoning, contributing to model training and alignment.
   tech: [LLMs, Python, Java, JavaScript]
 
 - period: 2017 - 2018

@@ -23,7 +23,7 @@
     tarefas de engenharia de software.
   highlights:
     - Avaliação e melhoria de respostas de modelos de linguagem em tarefas de código em Python, Java e JavaScript, revisando correção, qualidade e segurança.
-    - Aplicação de julgamento de engenharia de software para avaliar código e raciocínio gerados por IA, contribuindo para o treinamento e alinhamento dos modelos.
+    - Aplicação de julgamento de engenharia de software e de práticas de TDD para avaliar código e raciocínio gerados por IA, contribuindo para o treinamento e alinhamento dos modelos.
   tech: [LLMs, Python, Java, JavaScript]
 
 - period: 2017 - 2018
