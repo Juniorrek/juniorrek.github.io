@@ -1,7 +1,7 @@
 - name: Aplicativo de Comparação de Preços (Papa Preço)
   featured: true
   period: 
-  status: Em implantação na AWS
+  status: No ar na AWS · configurando CI/CD
   image: /assets/images/papalogo.PNG
   image_fit: cover
   url: https://github.com/Juniorrek/papapreco
@@ -12,7 +12,9 @@
   details:
     - Aplicativo Android desenvolvido com Flutter (Dart), com back-end de API REST em Java/Spring Boot.
     - Modelagem do domínio e da camada de persistência com PostgreSQL.
-    - Conteinerizado com Docker; atualmente em implantação na AWS.
+    - Deploy da API na AWS (EC2) com conteinerização via Docker.
+    - Publicação de builds versionados do APK através do GitHub Releases para testes.
+    - Configurando um pipeline de CI/CD com GitHub Actions para automatizar build e deploy.
     - Desenvolvido como trabalho de conclusão da Especialização em Desenvolvimento Ágil de Software, aplicando práticas Scrum na concepção e entrega.
   tech: [Flutter, Dart, Java, Spring Boot, PostgreSQL, Docker, AWS]
   links:
