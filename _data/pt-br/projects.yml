@@ -1,7 +1,7 @@
 - name: Aplicativo de Comparação de Preços (Papa Preço)
   featured: true
-  period: 
-  status: No ar na AWS · configurando CI/CD
+  period: 2025
+  status: No ar na AWS · CI/CD com GitHub Actions
   image: /assets/images/papalogo.PNG
   image_fit: cover
   url: https://github.com/Juniorrek/papapreco
@@ -14,12 +14,27 @@
     - Modelagem do domínio e da camada de persistência com PostgreSQL.
     - Deploy da API na AWS (EC2) com conteinerização via Docker.
     - Publicação de builds versionados do APK através do GitHub Releases para testes.
-    - Configurando um pipeline de CI/CD com GitHub Actions para automatizar build e deploy.
+    - Pipeline de CI/CD com GitHub Actions para build e deploy automatizados.
     - Desenvolvido como trabalho de conclusão da Especialização em Desenvolvimento Ágil de Software, aplicando práticas Scrum na concepção e entrega.
-  tech: [Flutter, Dart, Java, Spring Boot, PostgreSQL, Docker, AWS]
+  tech: [Flutter, Dart, Java, Spring Boot, PostgreSQL, Docker, AWS, GitHub Actions]
   links:
     - label: Código no GitHub
       url: https://github.com/Juniorrek/papapreco
+  # Trabalho planejado, ainda não entregue. Mova o item para `details` quando ficar pronto.
+  roadmap:
+    title: Roadmap
+    note: Próximos passos planejados, cada um descrito aqui quando for entregue.
+    items:
+      - name: Kafka
+        note: Processamento orientado a eventos dos registros de preço
+      - name: Redis
+        note: Cache para as consultas de preço mais frequentes
+      - name: Prometheus + Grafana
+        note: Métricas e dashboards da API
+      - name: Arquitetura hexagonal
+        note: Refatorar o núcleo da API em portas e adaptadores
+      - name: Next.js
+        note: Um cliente web ao lado do app Android
 
 - name: Artemis
   period: 

@@ -1,13 +1,14 @@
 name: David Reksidler Junior
 short_name: Dave
-title: Desenvolvedor Java Full Stack Sênior
-tagline: 9+ anos · Java · Spring · Vue.js
+title: Engenheiro de Software Sênior
+tagline: 9+ anos · Java · Spring Boot · Vue.js
 location: Curitiba, PR - Brasil
-availability: 
+availability:
 photo: /assets/images/face.PNG
 
-# Currículo servido no site em português.
-resume: /assets/files/CV_BR_DavidReksidlerJunior.pdf
+# Por enquanto só existe o currículo em inglês atualizado; quando houver um
+# CV_BR novo, volte para /assets/files/CV_BR_DavidReksidlerJunior.pdf.
+resume: /assets/files/CV_EN_DavidReksidlerJunior.pdf
 
 email: juniorrek15@gmail.com
 phone: "+55 (41) 99640-5683"
@@ -22,25 +23,34 @@ headline: |-
 
 about:
   - >-
-    Sou Desenvolvedor Java Full Stack Sênior com 9 anos de experiência
-    construindo plataformas acadêmicas para a Universidade
-    Federal do Paraná. Na UFPR, reconstruí o sistema de Iniciação Científica do
-    zero, substituindo uma aplicação legada por uma stack moderna Java/Spring e
-    Vue.js, utilizado por cerca de 1.000 professores e mais de 2.500 candidatos
-    a bolsa por ano.
+    Sou Engenheiro de Software Sênior com mais de 9 anos modernizando e
+    reconstruindo sistemas Java de médio e grande porte para o setor público
+    brasileiro, de aplicações legadas em JSF/JSP a Spring Boot e Vue.js.
   - >-
-    Mestrado em Informática sobre clique
-    máxima em grafos lei de potência, além das especializações em Inteligência
-    Artificial Aplicada e Desenvolvimento Ágil de Software, todas pela UFPR.
+    Hoje trabalho na plataforma de gestão de documentos da Câmara dos
+    Deputados, com requisitos rígidos de segurança e conformidade. Antes disso,
+    na Universidade Federal do Paraná (UFPR), liderei a reconstrução do sistema
+    de Iniciação Científica, que hoje atende ~3.000 professores e mais de 7.500
+    estudantes por ano.
   - >-
-    Mais recentemente atuei como especialista em treinamento e avaliação de IA,
-    revisando respostas de modelos de linguagem em tarefas de código em Python,
-    Java e JavaScript. Aplicando
-    julgamento de engenharia de software ao treinamento e alinhamento dos
-    modelos.
+    Liderei times pequenos de desenvolvimento, conduzi entrevistas técnicas e
+    code reviews, e trabalhei diretamente com stakeholders não técnicos,
+    traduzindo trade-offs técnicos em decisões práticas.
   - >-
-    Atuo em toda a stack Java e tenho experiência em traduzir trade-offs técnicos em
-    decisões práticas para stakeholders não técnicos.
+    Mestre em Informática, especialista em IA Aplicada e em Desenvolvimento
+    Ágil de Software, com um ano avaliando profissionalmente código gerado por
+    LLMs e uso diário de agentes de código com IA.
+
+# Números em destaque no topo. Mantenha iguais aos do CV.
+stats:
+  - value: 9+ anos
+    label: sistemas Java para o setor público
+  - value: 7.500+
+    label: estudantes por ano no sistema que reconstruí
+  - value: 163 → 4 ms
+    label: latência p95, teste de carga local
+  - value: Mestrado
+    label: Informática, UFPR
 
 contact_intro: >-
   O jeito mais rápido de falar comigo é por telefone ou e-mail.
@@ -49,7 +59,7 @@ languages:
   - name: Português
     level: Nativo
   - name: Inglês
-    level: Intermediário Avançado (B2)
+    level: Proficiência profissional (B2)
   - name: Espanhol
     level: Básico
   - name: Russo

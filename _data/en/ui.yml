@@ -29,3 +29,9 @@ actions:
 a11y:
   sections_nav: Sections
   language_nav: Language
+
+case:
+  label: Case
+  problem: Problem
+  approach: What I did
+  result: Result

@@ -1,0 +1,32 @@
+{%- comment -%}
+Before/after horizontal bar chart. Data comes from the YAML:
+  chart: { title, caption, unit, max, before_label, after_label,
+           rows: [{ label, before, after }] }
+`max` sets the full bar width so every row shares one scale.
+{%- endcomment -%}
+{%- assign ch = include.chart -%}
+<figure class="bar-chart">
+    {%- if ch.title %}<p class="bar-chart-title">{{ ch.title }}</p>{% endif %}
+    <ul class="bar-legend" aria-hidden="true">
+        <li><span class="swatch swatch-before"></span>{{ ch.before_label }}</li>
+        <li><span class="swatch swatch-after"></span>{{ ch.after_label }}</li>
+    </ul>
+    <dl class="bar-rows">
+        {%- for row in ch.rows %}
+        {%- assign wb = row.before | times: 100.0 | divided_by: ch.max -%}
+        {%- assign wa = row.after | times: 100.0 | divided_by: ch.max -%}
+        <dt>{{ row.label }}</dt>
+        <dd>
+            <span class="bar-line">
+                <span class="bar bar-before" style="width: {{ wb }}%"></span>
+                <span class="bar-value"><span class="sr-only">{{ ch.before_label }}: </span>{{ row.before }} {{ ch.unit }}</span>
+            </span>
+            <span class="bar-line">
+                <span class="bar bar-after" style="width: {{ wa }}%"></span>
+                <span class="bar-value"><span class="sr-only">{{ ch.after_label }}: </span>{{ row.after }} {{ ch.unit }}</span>
+            </span>
+        </dd>
+        {%- endfor %}
+    </dl>
+    {%- if ch.caption %}<figcaption>{{ ch.caption }}</figcaption>{% endif %}
+</figure>

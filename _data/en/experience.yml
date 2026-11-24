@@ -1,42 +1,208 @@
+# Each job can carry `cases`: short case studies in the format problem, what I
+# did, result. They render collapsed, showing only the title and the metric.
+# Rules: numbers must match the CV exactly; the JMeter figures always say they
+# come from a local load test; no client ticket numbers, class names or infra.
+
+- period: Sep 2026 - Present
+  role: Master IT Analyst (Java Software Engineer)
+  org: Grupo SOS Docs
+  location:
+  summary: >-
+    Document and process management platform of Brazil's Chamber of Deputies,
+    the lower house of the National Congress: a large legacy Java/Nuxeo system
+    under strict security and compliance requirements.
+  highlights:
+    - Built an integration with an external notification service using caching and fallback, cutting the endpoint's p95 latency from 163 ms to 4 ms in a local JMeter load test.
+    - Extended the compliance audit trail, recording previously untracked actions such as acknowledgment workflow events and access to confidential content.
+    - Traced and fixed business-rule bugs in the platform and its Spring Boot/Oracle integration API, including protocol-number ordering with a normalized SQL key and document inclusion rules for dossiers.
+    - Day-to-day work across the platform's stack, including RabbitMQ messaging, OpenSearch and Keycloak.
+    - Ramping up on the system's modernization, a full rewrite with Spring Boot 4, Spring Modulith, DDD and hexagonal architecture, studying its architecture decision records with the team.
+  tech: [Java 8/11/25, Nuxeo, JSF, Spring Boot, Oracle, OpenSearch, RabbitMQ, Keycloak, Docker, Jenkins]
+  cases:
+    - title: External notification integration with caching and fallback
+      metric: "p95: 163 ms → 4 ms"
+      problem: >-
+        The platform had to integrate with an external notification service.
+        Calling it on every request would tie the endpoint's response time, and
+        its availability, to a system outside the team's control.
+      approach: >-
+        Placed a cache with a fallback in front of the integration. Cached data
+        is served for 300 s; once it expires the service is called with a 3 s
+        timeout, and if the call fails or times out, the last known data is
+        served instead. Each server calls the external service at most once
+        every 5 minutes.
+      result: >-
+        In a local JMeter load test (5 users, ~140 requests), p95 latency went
+        from 163 ms to 4 ms, the median from 81 ms to 2 ms and the mean from
+        91 ms to 11 ms. When the external service is slow or down, users still
+        get the last known data.
+      chart:
+        title: Endpoint latency, before and after
+        unit: ms
+        max: 163
+        before_label: Before
+        after_label: After (cache + fallback)
+        caption: Local JMeter load test, 5 concurrent users, ~140 requests. Not production measurements.
+        rows:
+          - { label: Mean, before: 91, after: 11 }
+          - { label: Median, before: 81, after: 2 }
+          - { label: p95, before: 163, after: 4 }
+      flow:
+        title: How a request is served
+        steps:
+          - kicker: 1
+            title: Request arrives
+          - kicker: 2
+            title: Cache still fresh?
+            note: "TTL 300 s. Yes: answer from cache"
+          - kicker: 3
+            title: Call external service
+            note: Timeout 3 s, at most once every 5 min per server
+            alt: "On error or timeout: serve the last known data"
+          - kicker: 4
+            title: Refresh cache and answer
+      tech: [Java, Caching, JMeter]
+
 - period: 2018 - 2026
-  role: Full Stack Java Developer
+  role: Senior Java Full Stack Developer
   org: FUNPAR - UFPR
-  location: 
+  location:
   summary: >-
     Scholarship and grant management platforms for the Federal University of
-    Paraná (UFPR), including the Scientific Initiation system used by ~1,000
-    professors and 2,500+ scholarship students per year.
+    Paraná (UFPR), including the Scientific Initiation system, which serves
+    ~3,000 professors and 7,500+ students per year.
   highlights:
-    - Rebuilt the Scientific Initiation system from the ground up, replacing a legacy application with a modern Java/Spring and Vue.js stack - from requirements gathering to production delivery.
-    - Built REST APIs with Java/Spring and responsive front ends with Vue.js.
-    - Integrated with CNPq's Lattes national research database, parsing researcher XML records to automate publication scoring for scholarship ranking.
-    - Developed cross-system REST integrations to fetch and validate grant data between university platforms.
-    - Conducted requirements analysis and effort estimation for the systems and modules supporting the university's scholarship selection calls.
-    - Designed and optimized relational database schemas in Oracle and MySQL.
-  tech: [Java, Spring, Vue.js, JavaScript, REST APIs, Oracle, MySQL]
+    - Rebuilt the university's Scientific Initiation system from scratch as technical lead of a 3 to 4 developer team, replacing a legacy application with Java/Spring and Vue.js and migrating in phases so it stayed online during application periods.
+    - Integrated university systems with the CNPq Lattes national research database, parsing researcher XML records to automate publication scoring in scholarship rankings.
+    - Developed and maintained other scholarship and grant management platforms, with REST integrations to retrieve and validate data across university systems.
+    - Gathered requirements and negotiated scope directly with non-technical stakeholders (professors and university administration) for systems tied to scholarship calls.
+    - Conducted code reviews, onboarding and technical interviews for junior and mid-level developers.
+    - Wrote unit and integration tests with JUnit and Mockito, and modeled relational schemas in Oracle and MySQL.
+  tech: [Java 7/8/11/17, JSF, JSP, Spring Boot, Vue.js, Oracle, MySQL, RabbitMQ, JUnit, Mockito]
+  cases:
+    - title: Rebuilding the Scientific Initiation system without taking it offline
+      metric: "~3,000 professors · 7,500+ students / year"
+      problem: >-
+        The legacy system was written in JSF and had become hard to maintain
+        and to evolve. It was also hard to staff: new developers usually
+        arrived knowing plain Java or some Spring, not JSF. And it could not
+        simply be switched off, because professors and students depend on it
+        during every call's application periods.
+      approach: >-
+        As technical lead of a 3 to 4 developer team, I rebuilt it from scratch
+        in phases. The new system debuted as a pilot in the 2022 call (JSP with
+        Vue.js), running alongside the legacy one. Features were released
+        incrementally in the order of the call itself, starting with
+        applications and then evaluation, each one shipped when the call needed
+        it. The back end later moved to Spring Boot. From then on, every new
+        call was created in the new system, and a later phase migrated the
+        legacy data.
+      result: >-
+        The system stayed online through every application period of the
+        migration, which took about a year, and today serves ~3,000 professors
+        and 7,500+ students per year. Users got improvements along the way, and
+        the team got a codebase that is easier to maintain and to bring new
+        developers into.
+      flow:
+        title: Migration timeline
+        layout: vertical
+        steps:
+          - kicker: Before 2022
+            title: Legacy JSF system
+            note: Hard to maintain, evolve and staff
+          - kicker: 2022 call
+            title: Pilot in JSP + Vue.js
+            note: Ran alongside the legacy system, one call at a time
+          - kicker: ~1 year
+            title: Incremental releases
+            note: Features shipped in the call's own order, starting with applications and evaluation
+          - kicker: Next
+            title: Spring Boot back end
+            note: Every new call created in the new system
+          - kicker: ~2024
+            title: Legacy data migration
+            note: Older calls' data brought into the new system
+      tech: [Java, JSP, Vue.js, Spring Boot, Oracle]
+
+    - title: Automated publication scoring from the CNPq Lattes database
+      problem: >-
+        Scholarship rankings depend on each researcher's publication record.
+        The criteria change from call to call, but are largely based on Qualis,
+        the Brazilian journal ranking: an article in an A1 journal, for
+        example, scores more than one in a lower tier.
+      approach: >-
+        Integrated the university systems with the Lattes API, downloading each
+        researcher's CV as XML, parsing their publications and scoring them
+        against the current call's criteria.
+      result: >-
+        Publication scores in the scholarship rankings are computed
+        automatically from each researcher's Lattes record.
+      flow:
+        title: From Lattes record to ranking
+        steps:
+          - kicker: 1
+            title: Lattes API
+            note: Download the researcher's CV as XML
+          - kicker: 2
+            title: Parse XML
+            note: Extract publications, type and venue
+          - kicker: 3
+            title: Score
+            note: Apply the call's criteria, such as Qualis tier (A1 scores highest)
+          - kicker: 4
+            title: Scholarship ranking
+      tech: [Java, XML, REST APIs]
 
 - period: 2025 - 2026
-  role: AI Training & Evaluation Specialist
+  role: AI Training and Evaluation Specialist
   org: Revelo (AI Training Projects)
   summary: >-
     Evaluation and improvement of large language model output on software
     engineering tasks.
   highlights:
-    - Evaluated and improved LLM responses on coding tasks across Python, Java and JavaScript, reviewing for correctness, quality and safety.
+    - Evaluated and improved large language model responses on coding tasks in Python, Java and JavaScript, reviewing correctness, quality and security.
     - Applied software engineering judgment and TDD practices to assess AI-generated code and reasoning, contributing to model training and alignment.
-  tech: [LLMs, Python, Java, JavaScript]
+  tech: [LLMs, Python, Java, JavaScript, TDD]
 
 - period: 2017 - 2018
-  role: Junior Programmer
+  role: Junior Developer
   org: Núcleo de Concursos - UFPR
-  location: 
+  location:
   summary: >-
-    Systems supporting the university's public admission exams and
-    quota-admission process.
+    Systems supporting the university's admission exams and quota-admission
+    process.
   highlights:
-    - Built a system managing the university's quota-admission verification process - in-system video recording of candidate interviews, asynchronous review by evaluation boards, and final result generation (core Java, JSP/Servlets).
-    - Developed features for the university admission exam systems.
+    - Built a system managing the university's quota-admission verification process, with in-system video recording of candidate interviews, asynchronous review by evaluation boards, and final result generation (core Java, JSP/Servlets).
+    - Developed features for university admission exam systems (Java, JSP, JavaScript, Oracle).
   tech: [Java, JSP/Servlets, JavaScript, Oracle]
+  cases:
+    - title: Quota-admission verification with recorded interviews
+      problem: >-
+        Candidates admitted through racial quotas have their self-declaration
+        verified by evaluation boards (a process known in Brazil as
+        heteroidentification). Interviews, board reviews and results needed to
+        run in one place.
+      approach: >-
+        Built a system where candidate interviews are recorded on video inside
+        the system, evaluation boards review the recordings asynchronously,
+        and the final results are generated at the end. Core Java with
+        JSP/Servlets.
+      result: >-
+        The whole process, from interview to final result, ran in a single
+        system, and board members could review the recordings on their own
+        schedule.
+      flow:
+        steps:
+          - kicker: 1
+            title: Interview
+            note: Recorded on video inside the system
+          - kicker: 2
+            title: Board review
+            note: Evaluation boards watch and decide asynchronously
+          - kicker: 3
+            title: Final result
+            note: Generated by the system
+      tech: [Java, JSP/Servlets, Video recording]
 
 - period: 2017
   role: Trainee

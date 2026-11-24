@@ -22,6 +22,14 @@ layout: default
         {%- endif %}
         {%- endfor %}
 
+        {%- if profile.stats and profile.stats != empty %}
+        <ul class="stat-row">
+            {%- for stat in profile.stats %}
+            <li><span class="stat-value">{{ stat.value }}</span><span class="stat-label">{{ stat.label }}</span></li>
+            {%- endfor %}
+        </ul>
+        {%- endif %}
+
         {%- if profile.availability and profile.availability != "" %}
         <p class="availability">
             <i class="fa fa-globe" aria-hidden="true"></i> {{ profile.availability }}
@@ -60,6 +68,13 @@ layout: default
                 </ul>
                 {%- endif %}
                 {%- include tech-tags.html tech=job.tech -%}
+                {%- if job.cases and job.cases != empty %}
+                <div class="case-list">
+                    {%- for job_case in job.cases %}
+                    {%- include case.html case=job_case -%}
+                    {%- endfor %}
+                </div>
+                {%- endif %}
             </article>
             {%- endfor %}
         </div>
@@ -97,6 +112,19 @@ layout: default
                 {%- endif %}
                 {%- include tech-tags.html tech=project.tech -%}
                 {%- include item-links.html links=project.links -%}
+                {%- if project.roadmap %}
+                <div class="roadmap">
+                    <div class="roadmap-head">
+                        <h4 class="skill-group-title">{{ project.roadmap.title }}</h4>
+                        {%- if project.roadmap.note %}<span class="roadmap-note">{{ project.roadmap.note }}</span>{% endif %}
+                    </div>
+                    <ul class="roadmap-list">
+                        {%- for item in project.roadmap.items %}
+                        <li><strong>{{ item.name }}</strong>{% if item.note %}<span>{{ item.note }}</span>{% endif %}</li>
+                        {%- endfor %}
+                    </ul>
+                </div>
+                {%- endif %}
             </div>
         </article>
         {%- endif %}
@@ -180,6 +208,12 @@ layout: default
                     </p>
                     {%- if entry.work.summary and entry.work.summary != "" %}
                     <p>{{ entry.work.summary }}</p>
+                    {%- endif %}
+                    {%- if entry.work.result and entry.work.result != "" %}
+                    <p class="work-result">{{ entry.work.result }}</p>
+                    {%- endif %}
+                    {%- if entry.work.meta and entry.work.meta != "" %}
+                    <p class="work-meta">{{ entry.work.meta }}</p>
                     {%- endif %}
                     {%- include tech-tags.html tech=entry.work.tech -%}
                     {%- include item-links.html links=entry.work.links -%}

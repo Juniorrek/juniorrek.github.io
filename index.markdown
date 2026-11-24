@@ -3,11 +3,11 @@ layout: home
 lang: en
 permalink: /
 home_url: /
-title: Full Stack Java Developer
+title: Senior Software Engineer
 image: /assets/images/face.PNG
 description: >-
-  Full Stack Java Developer with 9+ years of experience building large-scale
-  academic platforms, based in Curitiba, Brazil. Java/Spring, Vue.js and Angular.
-  M.Sc. in Computer Science and specialist in Applied AI and Agile Software
-  Development.
+  Senior Software Engineer with 9+ years modernizing and rebuilding Java
+  systems for the Brazilian public sector, from legacy JSF/JSP to Spring Boot
+  and Vue.js. Based in Curitiba, Brazil. M.Sc. in Computer Science and
+  specialist in Applied AI.
 ---

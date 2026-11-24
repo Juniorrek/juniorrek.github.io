@@ -707,3 +707,468 @@ section {
 .f8bit {
 	font-family: f8bit, monospace;
 }
+
+// ---------------------------------------------------------------------------
+// Hero stats
+// ---------------------------------------------------------------------------
+.stat-row {
+	list-style: none;
+	padding: 0;
+	margin: 2rem 0 .5rem;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 12px;
+	max-width: 760px;
+
+	li {
+		padding: .9rem 1rem;
+		border: 1px solid $border;
+		border-left: 3px solid $accent;
+		border-radius: 6px;
+		background-color: $page;
+	}
+}
+
+.stat-value {
+	display: block;
+	font-size: 22px;
+	font-weight: 800;
+	line-height: 1.2;
+	color: $ink;
+	font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+	display: block;
+	margin-top: .25rem;
+	font-size: 12px;
+	line-height: 1.4;
+	color: $muted;
+}
+
+// ---------------------------------------------------------------------------
+// Case studies (collapsible)
+// ---------------------------------------------------------------------------
+.case-list {
+	margin-top: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.case {
+	border: 1px solid $border;
+	border-radius: 8px;
+	background-color: $page;
+	box-shadow: 0 1px 3px rgba(23, 26, 38, .05);
+	transition: box-shadow .2s ease, border-color .2s ease;
+
+	&:hover {
+		border-color: lighten($accent, 22%);
+	}
+
+	&[open] {
+		border-color: lighten($accent, 22%);
+		box-shadow: 0 4px 14px rgba(23, 26, 38, .08);
+	}
+
+	summary {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: .35rem .75rem;
+		padding: .85rem 3rem .85rem 1rem;
+		position: relative;
+		cursor: pointer;
+		list-style: none;
+
+		&::-webkit-details-marker {
+			display: none;
+		}
+
+		&:focus-visible {
+			outline: 2px solid $accent;
+			outline-offset: 2px;
+			border-radius: 8px;
+		}
+	}
+}
+
+.case-kicker {
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .12em;
+	color: $accent-dark;
+	background-color: $accent-soft;
+	padding: 2px 8px;
+	border-radius: 999px;
+}
+
+.case-title {
+	flex: 1 1 260px;
+	font-size: 15px;
+	font-weight: 700;
+	color: $ink;
+	line-height: 1.4;
+}
+
+.case-metric {
+	font-size: 13px;
+	font-weight: 700;
+	color: #fff;
+	background-color: $accent;
+	padding: 3px 10px;
+	border-radius: 4px;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+
+.case-toggle {
+	position: absolute;
+	right: 1rem;
+	top: 50%;
+	width: 10px;
+	height: 10px;
+	margin-top: -7px;
+	border-right: 2px solid $muted;
+	border-bottom: 2px solid $muted;
+	transform: rotate(45deg);
+	transition: transform .2s ease;
+
+	.case[open] & {
+		transform: rotate(225deg);
+		margin-top: -2px;
+	}
+}
+
+.case-body {
+	padding: .25rem 1rem 1.25rem;
+	border-top: 1px solid $border;
+	font-size: 14px;
+}
+
+.case-steps {
+	margin: 1rem 0 0;
+
+	dt {
+		font-size: 11px;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: .12em;
+		color: $muted;
+		margin-top: .9rem;
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+
+	dd {
+		margin: .2rem 0 0;
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Bar chart
+// ---------------------------------------------------------------------------
+.bar-chart,
+.flow {
+	margin: 1.25rem 0 0;
+	padding: 1rem 1rem .85rem;
+	border-radius: 6px;
+	background-color: $page-alt;
+	border: 1px solid $border;
+
+	figcaption {
+		margin-top: .75rem;
+		font-size: 12px;
+		color: $muted;
+	}
+}
+
+.bar-chart-title {
+	font-size: 13px;
+	font-weight: 700;
+	color: $ink;
+	margin: 0 0 .5rem;
+}
+
+.bar-legend {
+	list-style: none;
+	padding: 0;
+	margin: 0 0 .75rem;
+	display: flex;
+	gap: 1rem;
+	font-size: 12px;
+	color: $muted;
+
+	li {
+		display: flex;
+		align-items: center;
+		gap: .4rem;
+	}
+}
+
+.swatch {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 2px;
+}
+
+.swatch-before,
+.bar-before {
+	background-color: #b9bfcc;
+}
+
+.swatch-after,
+.bar-after {
+	background-color: $accent;
+}
+
+.bar-rows {
+	display: grid;
+	grid-template-columns: 4.5rem 1fr;
+	gap: .6rem .75rem;
+	margin: 0;
+
+	dt {
+		font-size: 13px;
+		font-weight: 600;
+		color: $ink;
+		align-self: center;
+	}
+
+	dd {
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+	}
+}
+
+.bar-line {
+	display: flex;
+	align-items: center;
+	gap: .5rem;
+}
+
+.bar {
+	display: block;
+	height: 12px;
+	min-width: 3px;
+	max-width: calc(100% - 4.5rem);
+	border-radius: 0 3px 3px 0;
+}
+
+.bar-value {
+	font-size: 12px;
+	font-weight: 600;
+	color: $body-text;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+
+// ---------------------------------------------------------------------------
+// Flow diagram
+// ---------------------------------------------------------------------------
+.flow-steps {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	gap: 1.5rem;
+}
+
+.flow-step {
+	flex: 1 1 0;
+	min-width: 0;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: .5rem;
+
+	// Arrow to the next step.
+	&:not(:last-child) .flow-box:after {
+		content: "";
+		position: absolute;
+		right: -1.1rem;
+		top: 50%;
+		width: 8px;
+		height: 8px;
+		margin-top: -4px;
+		border-top: 2px solid $soft;
+		border-right: 2px solid $soft;
+		transform: rotate(45deg);
+	}
+}
+
+.flow-box {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: .15rem;
+	height: 100%;
+	padding: .6rem .7rem;
+	background-color: $page;
+	border: 1px solid $border;
+	border-top: 3px solid $accent;
+	border-radius: 6px;
+}
+
+.flow-kicker {
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .1em;
+	color: $accent-dark;
+}
+
+.flow-title {
+	font-size: 13px;
+	line-height: 1.35;
+	color: $ink;
+}
+
+.flow-note {
+	font-size: 12px;
+	line-height: 1.4;
+	color: $muted;
+}
+
+.flow-alt {
+	padding: .45rem .6rem;
+	font-size: 12px;
+	line-height: 1.4;
+	color: $body-text;
+	border: 1px dashed $soft;
+	border-radius: 6px;
+	background-color: rgba(255, 255, 255, .6);
+}
+
+// ---------------------------------------------------------------------------
+// Project roadmap
+// ---------------------------------------------------------------------------
+.roadmap {
+	margin-top: 1.25rem;
+	padding-top: 1rem;
+	border-top: 1px dashed $border;
+}
+
+.roadmap-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: .25rem .75rem;
+	margin-bottom: .6rem;
+
+	.skill-group-title {
+		margin: 0;
+	}
+}
+
+.roadmap-note {
+	font-size: 12px;
+	color: $muted;
+}
+
+.roadmap-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 8px;
+
+	li {
+		padding: .5rem .7rem;
+		border: 1px dashed $soft;
+		border-radius: 6px;
+		font-size: 13px;
+		line-height: 1.4;
+	}
+
+	strong {
+		display: block;
+		color: $ink;
+	}
+
+	span {
+		color: $muted;
+		font-size: 12px;
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Education extras
+// ---------------------------------------------------------------------------
+.work-meta {
+	font-size: 12px !important;
+	color: $muted !important;
+}
+
+.work-result {
+	padding: .5rem .7rem;
+	border-radius: 6px;
+	background-color: $accent-soft;
+	color: $ink !important;
+}
+
+@media (max-width: 767px) {
+	.flow-steps {
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.flow-step:not(:last-child) .flow-box:after {
+		right: auto;
+		left: 50%;
+		top: auto;
+		bottom: -.95rem;
+		margin: 0 0 0 -4px;
+		transform: rotate(135deg);
+	}
+
+	.stat-value {
+		font-size: 19px;
+	}
+}
+
+// Timeline-style flow: steps stacked, kicker in a fixed left column.
+.flow-steps.flow-vertical {
+	flex-direction: column;
+	gap: 1.25rem;
+
+	.flow-box {
+		display: grid;
+		grid-template-columns: 7rem 1fr;
+		column-gap: .75rem;
+		border-top-width: 1px;
+		border-left: 3px solid $accent;
+	}
+
+	.flow-kicker {
+		grid-row: span 2;
+		align-self: center;
+	}
+
+	.flow-step:not(:last-child) .flow-box:after {
+		right: auto;
+		left: 50%;
+		top: auto;
+		bottom: -.95rem;
+		margin: 0 0 0 -4px;
+		transform: rotate(135deg);
+	}
+}
+
+@media (max-width: 767px) {
+	.flow-steps.flow-vertical .flow-box {
+		grid-template-columns: 1fr;
+
+		.flow-kicker {
+			grid-row: auto;
+		}
+	}
+}

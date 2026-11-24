@@ -1,7 +1,7 @@
 name: David Reksidler Junior
 short_name: Dave
-title: Full Stack Java Developer
-tagline: 9+ years · Java · Spring · Vue.js
+title: Senior Software Engineer
+tagline: 9+ years · Java · Spring Boot · Vue.js
 location: Curitiba, PR - Brazil
 availability: 
 photo: /assets/images/face.PNG
@@ -22,23 +22,34 @@ headline: |-
 
 about:
   - >-
-    I'm a Full Stack Java Developer with 9+ years of experience building
-    large-scale academic platforms for one of Brazil's largest federal
-    universities a Universidade Federal do Paraná. At UFPR I rebuilt the Scientific Initiation system from the
-    ground up, replacing a legacy application with a modern Java/Spring and
-    Vue.js stack, which is used by around 1,000 professors and more than 2,500
-    scholarship students every year.
+    I'm a Senior Software Engineer with 9+ years modernizing and rebuilding
+    medium to large Java systems for the Brazilian public sector, from legacy
+    JSF/JSP applications to Spring Boot and Vue.js.
   - >-
-    M.Sc. in Computer Science on maximum clique in power-law
-    graphs, plus postgraduate specializations in Applied Artificial Intelligence
-    and Agile Software Development, all from UFPR.
+    Today I work on the document management platform of Brazil's Chamber of
+    Deputies, under strict security and compliance requirements. Before that,
+    at the Federal University of Paraná (UFPR), I led the rebuild of the
+    Scientific Initiation system, which now serves ~3,000 professors and
+    7,500+ students per year.
   - >-
-    More recently I've worked as an AI training and evaluation specialist,
-    reviewing large language model output on Python, Java and JavaScript. Applying software engineering
-    judgment to model training and alignment.
+    I've led small development teams, conducted technical interviews and code
+    reviews, and worked directly with non-technical stakeholders, translating
+    technical trade-offs into practical decisions.
   - >-
-    I'm comfortable across the Java stack, and used to translating technical
-    trade-offs into decisions non-technical stakeholders can act on.
+    M.Sc. in Computer Science, postgraduate specializations in Applied AI and
+    Agile Software Development, one year professionally evaluating
+    LLM-generated code, and daily use of AI coding agents.
+
+# Headline numbers shown as tiles in the hero. Keep them identical to the CV.
+stats:
+  - value: 9+ years
+    label: Java systems for the public sector
+  - value: 7,500+
+    label: students per year on the system I rebuilt
+  - value: 163 → 4 ms
+    label: p95 latency, local load test
+  - value: M.Sc.
+    label: Computer Science, UFPR
 
 contact_intro: >-
   The fastest way to reach me is by phone or email.
@@ -47,7 +58,7 @@ languages:
   - name: Portuguese
     level: Native
   - name: English
-    level: Upper-Intermediate (B2)
+    level: Professional working proficiency (B2)
   - name: Spanish
     level: Beginner
   - name: Russian

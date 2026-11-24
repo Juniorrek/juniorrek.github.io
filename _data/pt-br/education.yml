@@ -1,6 +1,7 @@
 # Cada formação carrega o trabalho produzido nela. O software feito para uma
 # formação é descrito em projects.yml e apenas referenciado aqui por uma âncora
-# "#projects", para nada ser escrito duas vezes.
+# "#projects", para nada ser escrito duas vezes. `result` aparece em destaque;
+# `meta` é a letra miúda (orientação, data de defesa, autoria).
 
 intro: >-
 
@@ -12,10 +13,14 @@ items:
       label: Trabalho de conclusão
       name: PLN como ponte entre IA e Linguística
       summary: >-
-        Um estudo do processamento de linguagem natural no encontro entre
-        inteligência artificial e linguística, explorando o impacto dos modelos
-        de linguagem de grande escala.
-      tech: [PLN, LLMs, Linguística]
+        Um parecer técnico que percorre a evolução da IA, dos sistemas baseados
+        em regras ao aprendizado de máquina e ao aprendizado profundo, com foco
+        em processamento de linguagem natural: sua relação com a linguística,
+        os desafios de ambiguidade e contexto, e o impacto dos modelos de
+        linguagem de grande escala como o ChatGPT. Também documenta os projetos
+        feitos ao longo do curso.
+      meta: "Orientação: Profª Drª Rafaela Mantovani Fontana"
+      tech: [PLN, LLMs, Aprendizado de Máquina, Aprendizado Profundo, Linguística]
       links:
         - label: Ler o trabalho
           url: https://acervodigital.ufpr.br/handle/1884/99842
@@ -28,7 +33,9 @@ items:
       name: Aplicativo de Comparação de Preços (Papa Preço)
       summary: >-
         Aplicação de práticas Scrum na concepção e entrega de um produto
-        completo, do backlog à release.
+        completo, do backlog ao lançamento: um app Android em Flutter com uma
+        API Java/Spring Boot, hoje no ar na AWS.
+      tech: [Scrum, Flutter, Spring Boot]
       links:
         - label: Ver o app em Projetos
           url: "#projects"
@@ -40,8 +47,17 @@ items:
       label: Dissertação
       name: Clique máxima em grafos lei de potência
       summary: >-
-        Teoria dos grafos, otimização combinatória e análise probabilística de
-        algoritmos gulosos em grafos lei de potência.
+        Muitas redes reais, da web às redes sociais e biológicas, seguem uma
+        lei de potência nos graus dos vértices, e algoritmos gulosos funcionam
+        bem nelas na prática, com pouca teoria explicando o porquê. A
+        dissertação estuda o problema da clique máxima nesses grafos usando um
+        modelo de grafo aleatório de ligação preferencial.
+      result: >-
+        Resultado principal: a prova de que a probabilidade de aparecer uma
+        clique nesses grafos decai exponencialmente com o tamanho da clique, o
+        que ajuda a explicar por que algoritmos gulosos que começam pelos
+        vértices de grau alto têm bom desempenho.
+      meta: "Orientação: Prof. Dr. Murilo Vicente Gonçalves da Silva · Defesa em ago 2020"
       tech: [Teoria dos Grafos, Otimização Combinatória, Probabilidade, Algoritmos]
       links:
         - label: Ler a dissertação
@@ -50,17 +66,19 @@ items:
           url: "#projects"
 
   - period: 2015 - 2017
-    degree: Tecnólogo em Análise e Desenvolvimento de Sistemas
-    org: Universidade Federal do Paraná (UFPR)
+    degree: Tecnologia em Análise e Desenvolvimento de Sistemas
+    org: Universidade Federal do Paraná (UFPR) · graduação de 3 anos
     work:
       label: Trabalho de conclusão
-      name: Artemis - mineração de texto para artigos científicos
+      name: Artemis, mineração de texto para artigos científicos
       summary: >-
-        Extração automática de termos, sumarização e
-        agrupamento por similaridade sobre um corpus de artigos científicos, e a
-        avaliação do quanto essas técnicas de fato ajudam um pesquisador a ler
-        menos e encontrar mais. Software registrado.
-      tech: [Mineração de Texto, PLN, Recuperação de Informação]
+        Um sistema para analisar artigos científicos em escala: extração
+        automática de termos, sumarização e agrupamento por similaridade sobre
+        um corpus, além da avaliação de quanto essas técnicas ajudam um
+        pesquisador a ler menos e encontrar mais. Feito com Java, R e MySQL.
+        Software registrado.
+      meta: "Trabalho em equipe com dois colegas · Orientação: Profª Drª Rafaela Mantovani Fontana"
+      tech: [Mineração de Texto, PLN, Recuperação de Informação, Java, R]
       links:
         - label: Ler o trabalho
           url: https://acervodigital.ufpr.br/handle/1884/54046

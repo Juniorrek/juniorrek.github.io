@@ -1,24 +1,27 @@
-- group: Programação
+- group: Linguagens
   items:
-    - Java
+    - Java (7 a 25)
     - JavaScript
     - Python
     - Dart
+    - SQL
     - C/C++
     - Lua
-    - SQL
     - R
     - PHP
     - Shell Script
 
 - group: Back-end
   items:
-    - Spring / Spring Boot
+    - Spring Boot
+    - Spring Data
+    - Spring Security
     - Hibernate / JPA
     - APIs REST
-    - JasperReports
-    - JSP / Servlets
     - JSF
+    - JSP / Servlets
+    - Nuxeo
+    - JasperReports
 
 - group: Front-end
   items:
@@ -30,27 +33,48 @@
     - Bootstrap
     - jQuery
 
-- group: Bancos de Dados
+- group: Bancos de dados
   items:
+    - PostgreSQL
     - Oracle
     - MySQL
-    - PostgreSQL
     - PL/SQL
 
-- group: Ferramentas & Infra
+- group: Mensageria, busca e identidade
   items:
-    - Git
+    - RabbitMQ
+    - OpenSearch
+    - Keycloak
+
+- group: Testes
+  items:
+    - JUnit
+    - Mockito
+    - Testes unitários e de integração
+    - JMeter (teste de carga)
+
+- group: Infraestrutura
+  items:
     - Docker
-    - AWS
+    - AWS (EC2)
+    - GitHub Actions
+    - Jenkins
+    - Git
     - Maven
     - Linux
 
+- group: Ferramentas de IA
+  items:
+    - Claude Code
+    - Codex
+    - Avaliação de respostas de LLMs
+
 - group: Práticas
   items:
-    - Métodos Ágeis (Scrum, Kanban)
-    - UML
-    - MVC
-    - Levantamento de requisitos
-    - Estimativa de esforço
+    - Ágil (Scrum, Kanban)
     - Code review
     - TDD
+    - UML
+    - Levantamento de requisitos
+    - Estimativa de esforço
+    - Entrevistas técnicas
