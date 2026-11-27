@@ -3,38 +3,65 @@
   period: 2025
   status: Live on AWS · CI/CD with GitHub Actions
   image: /assets/images/papalogo.PNG
-  image_fit: cover
+  image_fit: contain
+  # Pixel-art logo: scale it without smoothing so it stays sharp.
+  image_pixelated: true
   url: https://github.com/Juniorrek/papapreco
   summary: >-
     A collaborative price comparison app: shoppers report what they paid and
-    where, and the app builds a shared, location-aware price history so everyone
+    where, and the app builds a shared, <strong>location-aware price history</strong> so everyone
     can find the cheapest nearby option.
   details:
-    - Android app built with Flutter (Dart), backed by a Java/Spring Boot REST API.
-    - Modeled the domain and persistence layer with PostgreSQL.
-    - Deployed the API to AWS (EC2) with Docker containerization.
-    - Published versioned APK builds through GitHub Releases for testing.
-    - CI/CD pipeline with GitHub Actions for automated build and deployment.
+    - Android app built with Flutter (Dart), backed by a Java/Spring Boot REST API. Prices come in by <strong>scanning the QR code of NFC-e receipts</strong> (Brazilian electronic invoices) or by hand.
+    - <strong>Price alerts</strong> that send a push notification when someone reports a product at or below the user's target price.
+    - Modeled the domain and persistence layer with PostgreSQL and <strong>versioned Flyway migrations</strong>.
+    - API running on <strong>AWS (EC2) in Docker</strong>, behind Caddy for HTTPS.
+    - "<strong>CI/CD with GitHub Actions</strong>: every merge to main builds the API image, publishes it to GitHub Container Registry and deploys it over AWS SSM, authenticated with OIDC instead of long-lived keys."
+    - <strong>Signed release APK (v1.0.0)</strong> published through GitHub Releases, with email or Google Sign-In.
     - Built as the final project of the Specialization in Agile Software Development, applying Scrum practices to its design and delivery.
-  tech: [Flutter, Dart, Java, Spring Boot, PostgreSQL, Docker, AWS, GitHub Actions]
+  tech: [Flutter, Java, Spring Boot, PostgreSQL, Docker, AWS]
   links:
+    # The release page, not the .apk itself: it carries the install notes.
+    - label: Download the Android APK (v1.0.0)
+      url: https://github.com/Juniorrek/papapreco/releases/tag/v1.0.0
     - label: Source on GitHub
       url: https://github.com/Juniorrek/papapreco
+  cases:
+    - id: case-aws
+      title: On AWS, sized for today with a path to scale
+      problem: >-
+        I wanted anyone who installs the APK to be able to use the app without
+        running anything themselves, on a budget that fits a personal project,
+        without closing the door to scaling later.
+      approach: >-
+        Built the infrastructure by hand first, to understand each piece: a
+        cost budget alarm before any other resource, then a single EC2
+        instance running the API and PostgreSQL with Docker Compose behind
+        Caddy for HTTPS, with a security group that only opens what the app
+        needs. The next steps are written down one new piece at a time:
+        PostgreSQL on RDS, the infrastructure as Terraform, and a target
+        architecture on ECS Fargate behind a load balancer.
+      result: >-
+        The API is live over HTTPS for <strong>about USD 20 a month</strong>, against roughly
+        USD 56 for the Fargate setup. When load requires it, the instance can
+        be resized (vertical scaling) or the API moved to Fargate behind a
+        load balancer (horizontal scaling).
+      tech: [AWS EC2, Docker Compose, Caddy, AWS Budgets]
   # Planned work, not shipped. Move an item into `details` once it is done.
   roadmap:
     title: Roadmap
     note: Planned next steps, each one written up here as it ships.
     items:
-      - name: Kafka
-        note: Event-driven processing of price reports
-      - name: Redis
-        note: Caching for frequent price queries
-      - name: Prometheus + Grafana
-        note: Metrics and dashboards for the API
-      - name: Hexagonal architecture
-        note: Refactor the API core into ports and adapters
-      - name: Next.js
-        note: A web client alongside the Android app
+      - name: Asynchronous receipt processing
+        note: NFC-e scraping moved to an SQS queue, with retries, a dead-letter queue and idempotency
+      - name: Automated tests
+        note: JUnit + Testcontainers against a real PostgreSQL, and Flutter unit tests
+      - name: Observability
+        note: Structured logs, correlation IDs, health and metrics endpoints, CloudWatch alarms
+      - name: Performance
+        note: Geospatial indexing and pagination for price searches
+      - name: Web demo
+        note: Flutter Web build on S3 + CloudFront
 
 - name: Artemis
   period: 
@@ -45,7 +72,8 @@
   summary: >-
     A text-mining system that helps researchers analyse scientific articles at
     scale. Term extraction, summarization and similarity grouping over a
-    corpus. Registered software, built with Java, R and MySQL.
+    corpus. Built with Java, R and MySQL, and <strong>registered with INPI</strong> (Brazil's
+    patent and software registry) in 2018.
   tech: [Java, R, MySQL, Text Mining, NLP]
   links:
     - label: Source on GitHub
@@ -58,7 +86,7 @@
   image_fit: contain
   url: /graphus2000.html
   summary: >-
-    Interactive generator and visualiser for power law graphs, built alongside my
+    <strong>Interactive generator and visualiser for power law graphs</strong>, built alongside my
     M.Sc. research to make the growth models tangible. Runs entirely in the browser.
   tech: [JavaScript, D3.js, Cytoscape.js, Graph Theory]
   links:
@@ -70,7 +98,7 @@
   image_fit: cover
   url: https://github.com/Juniorrek/Jerry-kijoji
   summary: >-
-    A small game built to explore classic data structures in a visual, playful
+    A small game built to explore <strong>classic data structures</strong> in a visual, playful
     way - stacks, queues and lists you can actually watch working.
   tech: [JavaScript, Data Structures]
   links:

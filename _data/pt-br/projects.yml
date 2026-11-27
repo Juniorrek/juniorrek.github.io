@@ -3,38 +3,64 @@
   period: 2025
   status: No ar na AWS · CI/CD com GitHub Actions
   image: /assets/images/papalogo.PNG
-  image_fit: cover
+  image_fit: contain
+  image_pixelated: true
   url: https://github.com/Juniorrek/papapreco
   summary: >-
     Um aplicativo colaborativo de comparação de preços: as pessoas registram
-    quanto pagaram e onde, e o app monta um histórico de preços compartilhado e
-    com localização, para todo mundo achar a opção mais barata por perto.
+    quanto pagaram e onde, e o app monta um <strong>histórico de preços compartilhado e
+    com localização</strong>, para todo mundo achar a opção mais barata por perto.
   details:
-    - Aplicativo Android desenvolvido com Flutter (Dart), com back-end de API REST em Java/Spring Boot.
-    - Modelagem do domínio e da camada de persistência com PostgreSQL.
-    - Deploy da API na AWS (EC2) com conteinerização via Docker.
-    - Publicação de builds versionados do APK através do GitHub Releases para testes.
-    - Pipeline de CI/CD com GitHub Actions para build e deploy automatizados.
+    - Aplicativo Android desenvolvido com Flutter (Dart), com back-end de API REST em Java/Spring Boot. Os preços entram pela <strong>leitura do QR code de cupons NFC-e</strong> ou manualmente.
+    - <strong>Alertas de preço</strong> que enviam uma notificação push quando alguém registra um produto pelo preço-alvo do usuário ou abaixo dele.
+    - Modelagem do domínio e da camada de persistência com PostgreSQL e <strong>migrações versionadas com Flyway</strong>.
+    - API rodando na <strong>AWS (EC2) em Docker</strong>, atrás do Caddy para HTTPS.
+    - "<strong>CI/CD com GitHub Actions</strong>: cada merge na main gera a imagem da API, publica no GitHub Container Registry e faz o deploy via AWS SSM, autenticado com OIDC em vez de chaves de longa duração."
+    - <strong>APK de release assinado (v1.0.0)</strong> publicado no GitHub Releases, com login por e-mail ou Google.
     - Desenvolvido como trabalho de conclusão da Especialização em Desenvolvimento Ágil de Software, aplicando práticas Scrum na concepção e entrega.
-  tech: [Flutter, Dart, Java, Spring Boot, PostgreSQL, Docker, AWS, GitHub Actions]
+  tech: [Flutter, Java, Spring Boot, PostgreSQL, Docker, AWS]
   links:
+    # The release page, not the .apk itself: it carries the install notes.
+    - label: Baixar o APK para Android (v1.0.0)
+      url: https://github.com/Juniorrek/papapreco/releases/tag/v1.0.0
     - label: Código no GitHub
       url: https://github.com/Juniorrek/papapreco
+  cases:
+    - id: case-aws
+      title: Na AWS, dimensionado para hoje e com caminho para escalar
+      problem: >-
+        Eu queria que qualquer pessoa que instalasse o APK conseguisse usar o
+        app sem rodar nada por conta própria, com um custo que cabe num
+        projeto pessoal e sem fechar a porta para escalar depois.
+      approach: >-
+        Montei a infraestrutura à mão primeiro, para entender cada peça: um
+        alarme de orçamento antes de qualquer outro recurso e, depois, uma
+        única instância EC2 rodando a API e o PostgreSQL com Docker Compose
+        atrás do Caddy para HTTPS, com um security group que só abre o que o
+        app precisa. Os próximos passos estão registrados, uma peça nova por
+        vez: PostgreSQL no RDS, a infraestrutura em Terraform e uma
+        arquitetura-alvo em ECS Fargate atrás de um load balancer.
+      result: >-
+        A API está no ar com HTTPS por <strong>cerca de USD 20 por mês</strong>, contra uns
+        USD 56 da configuração com Fargate. Quando a carga pedir, a instância
+        pode ser redimensionada (escala vertical) ou a API pode ir para o
+        Fargate atrás de um load balancer (escala horizontal).
+      tech: [AWS EC2, Docker Compose, Caddy, AWS Budgets]
   # Trabalho planejado, ainda não entregue. Mova o item para `details` quando ficar pronto.
   roadmap:
     title: Roadmap
     note: Próximos passos planejados, cada um descrito aqui quando for entregue.
     items:
-      - name: Kafka
-        note: Processamento orientado a eventos dos registros de preço
-      - name: Redis
-        note: Cache para as consultas de preço mais frequentes
-      - name: Prometheus + Grafana
-        note: Métricas e dashboards da API
-      - name: Arquitetura hexagonal
-        note: Refatorar o núcleo da API em portas e adaptadores
-      - name: Next.js
-        note: Um cliente web ao lado do app Android
+      - name: Processamento assíncrono de cupons
+        note: Leitura da NFC-e movida para uma fila SQS, com retentativas, dead-letter queue e idempotência
+      - name: Testes automatizados
+        note: JUnit + Testcontainers contra um PostgreSQL real, e testes unitários no Flutter
+      - name: Observabilidade
+        note: Logs estruturados, correlation IDs, endpoints de health e métricas, alarmes no CloudWatch
+      - name: Performance
+        note: Índices geoespaciais e paginação nas buscas de preço
+      - name: Demo web
+        note: Build Flutter Web no S3 + CloudFront
 
 - name: Artemis
   period: 
@@ -45,7 +71,8 @@
   summary: >-
     Um sistema de mineração de texto que ajuda pesquisadores a analisar artigos
     científicos em escala. Extração de termos, sumarização e agrupamento por
-    similaridade sobre um corpus. Software registrado, feito com Java, R e MySQL.
+    similaridade sobre um corpus. Feito com Java, R e MySQL e <strong>registrado no
+    INPI</strong> em 2018.
   tech: [Java, R, MySQL, Mineração de Texto, PLN]
   links:
     - label: Código no GitHub
@@ -58,7 +85,7 @@
   image_fit: contain
   url: /graphus2000.html
   summary: >-
-    Gerador e visualizador interativo de grafos lei de potência, construído
+    <strong>Gerador e visualizador interativo de grafos lei de potência</strong>, construído
     junto com a pesquisa do mestrado para tornar os modelos de crescimento
     tangíveis. Roda inteiramente no navegador.
   tech: [JavaScript, D3.js, Cytoscape.js, Teoria dos Grafos]
@@ -71,7 +98,7 @@
   image_fit: cover
   url: https://github.com/Juniorrek/Jerry-kijoji
   summary: >-
-    Um joguinho feito para explorar estruturas de dados clássicas de forma
+    Um joguinho feito para explorar <strong>estruturas de dados clássicas</strong> de forma
     visual e divertida - pilhas, filas e listas que dá para ver funcionando.
   tech: [JavaScript, Estruturas de Dados]
   links:

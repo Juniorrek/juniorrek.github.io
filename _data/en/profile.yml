@@ -15,28 +15,27 @@ phone: "+55 (41) 99640-5683"
 phone_tel: "+5541996405683"
 github: https://github.com/Juniorrek
 linkedin: https://linkedin.com/in/david-reksidler-junior-3a5a99121
-lattes: http://lattes.cnpq.br/2955336452809218
+lattes: https://busca-cv-lattes.cnpq.br/curriculo/2955336452809218
 
 headline: |-
   Software Engineering
 
 about:
   - >-
-    I'm a Senior Software Engineer with 9+ years modernizing and rebuilding
-    medium to large Java systems for the Brazilian public sector, from legacy
+    I'm a Senior Software Engineer with <strong>9+ years modernizing and rebuilding
+    medium to large Java systems</strong> for the Brazilian public sector, from legacy
     JSF/JSP applications to Spring Boot and Vue.js.
   - >-
-    Today I work on the document management platform of Brazil's Chamber of
-    Deputies, under strict security and compliance requirements. Before that,
-    at the Federal University of Paraná (UFPR), I led the rebuild of the
-    Scientific Initiation system, which now serves ~3,000 professors and
-    7,500+ students per year.
+    Today I work on the document management platform of <strong>Brazil's Chamber of
+    Deputies</strong>, under strict security and compliance requirements. Before that,
+    at the <strong>Federal University of Paraná (UFPR)</strong>, I led the rebuild of the
+    Scientific Initiation system, which now serves 10,000+ users per year.
   - >-
-    I've led small development teams, conducted technical interviews and code
+    I've <strong>led small development teams</strong>, conducted technical interviews and code
     reviews, and worked directly with non-technical stakeholders, translating
     technical trade-offs into practical decisions.
   - >-
-    M.Sc. in Computer Science, postgraduate specializations in Applied AI and
+    <strong>M.Sc. in Computer Science</strong>, postgraduate specializations in Applied AI and
     Agile Software Development, one year professionally evaluating
     LLM-generated code, and daily use of AI coding agents.
 
@@ -44,10 +43,10 @@ about:
 stats:
   - value: 9+ years
     label: Java systems for the public sector
-  - value: 7,500+
-    label: students per year on the system I rebuilt
-  - value: 163 → 4 ms
-    label: p95 latency, local load test
+  - value: 10,000+
+    label: users per year on the system I rebuilt
+  - value: Tech lead
+    label: of a 3 to 4 developer team on a full system rebuild
   - value: M.Sc.
     label: Computer Science, UFPR
 
@@ -59,7 +58,5 @@ languages:
     level: Native
   - name: English
     level: Professional working proficiency (B2)
-  - name: Spanish
-    level: Beginner
   - name: Russian
     level: Beginner

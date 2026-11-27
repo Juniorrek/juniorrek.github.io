@@ -16,28 +16,27 @@ phone: "+55 (41) 99640-5683"
 phone_tel: "+5541996405683"
 github: https://github.com/Juniorrek
 linkedin: https://linkedin.com/in/david-reksidler-junior-3a5a99121
-lattes: http://lattes.cnpq.br/2955336452809218
+lattes: https://busca-cv-lattes.cnpq.br/curriculo/2955336452809218
 
 headline: |-
   Engenharia de Software
 
 about:
   - >-
-    Sou Engenheiro de Software Sênior com mais de 9 anos modernizando e
-    reconstruindo sistemas Java de médio e grande porte para o setor público
+    Sou Engenheiro de Software Sênior com <strong>mais de 9 anos modernizando e
+    reconstruindo sistemas Java de médio e grande porte</strong> para o setor público
     brasileiro, de aplicações legadas em JSF/JSP a Spring Boot e Vue.js.
   - >-
-    Hoje trabalho na plataforma de gestão de documentos da Câmara dos
-    Deputados, com requisitos rígidos de segurança e conformidade. Antes disso,
-    na Universidade Federal do Paraná (UFPR), liderei a reconstrução do sistema
-    de Iniciação Científica, que hoje atende ~3.000 professores e mais de 7.500
-    estudantes por ano.
+    Hoje trabalho na plataforma de gestão de documentos da <strong>Câmara dos
+    Deputados</strong>, com requisitos rígidos de segurança e conformidade. Antes disso,
+    na <strong>Universidade Federal do Paraná (UFPR)</strong>, liderei a reconstrução do sistema
+    de Iniciação Científica, que hoje atende mais de 10.000 usuários por ano.
   - >-
-    Liderei times pequenos de desenvolvimento, conduzi entrevistas técnicas e
+    <strong>Liderei times pequenos de desenvolvimento</strong>, conduzi entrevistas técnicas e
     code reviews, e trabalhei diretamente com stakeholders não técnicos,
     traduzindo trade-offs técnicos em decisões práticas.
   - >-
-    Mestre em Informática, especialista em IA Aplicada e em Desenvolvimento
+    <strong>Mestre em Informática</strong>, especialista em IA Aplicada e em Desenvolvimento
     Ágil de Software, com um ano avaliando profissionalmente código gerado por
     LLMs e uso diário de agentes de código com IA.
 
@@ -45,10 +44,10 @@ about:
 stats:
   - value: 9+ anos
     label: sistemas Java para o setor público
-  - value: 7.500+
-    label: estudantes por ano no sistema que reconstruí
-  - value: 163 → 4 ms
-    label: latência p95, teste de carga local
+  - value: 10.000+
+    label: usuários por ano no sistema que reconstruí
+  - value: Líder técnico
+    label: de um time de 3 a 4 devs na reconstrução de um sistema
   - value: Mestrado
     label: Informática, UFPR
 
@@ -60,7 +59,5 @@ languages:
     level: Nativo
   - name: Inglês
     level: Proficiência profissional (B2)
-  - name: Espanhol
-    level: Básico
   - name: Russo
     level: Básico
