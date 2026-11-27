@@ -1,0 +1,4 @@
+# Site features that can be switched on and off.
+# game: shows the treasure chest in the Retro footer, which unlocks the
+# "Game" link in the sidebar. The game pages (/game.html) exist either way.
+game: false
