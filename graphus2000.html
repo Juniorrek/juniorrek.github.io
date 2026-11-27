@@ -80,22 +80,22 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Times (<p class="font-italic d-inline">t</p>)</label>
-                        <input id="times" type="number" class="form-control" />
+                        <label for="times">Times (<p class="font-italic d-inline">t</p>)</label>
+                        <input id="times" type="number" class="form-control" value="30" min="1" />
                         <!-- <small class="form-text text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small> -->
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">delta (<p class="font-italic d-inline">&delta; &ge; -1</p>)</label>
-                        <input id="delta" type="number" class="form-control" />
+                        <label for="delta">delta (<p class="font-italic d-inline">&delta; &ge; -1</p>)</label>
+                        <input id="delta" type="number" class="form-control" value="0" min="-1" />
                         <!-- <small class="form-text text-muted">Etiam hendrerit nisl vitae magna blandit tempor.</small> -->
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Edges/t (<p class="font-italic d-inline">m &ge; 1</p>)</label>
-                        <input id="edges" type="number" class="form-control" />
+                        <label for="edges">Edges/t (<p class="font-italic d-inline">m &ge; 1</p>)</label>
+                        <input id="edges" type="number" class="form-control" value="1" min="1" />
                         <!-- <small class="form-text text-muted">Etiam hendrerit nisl vitae magna blandit tempor.</small> -->
                     </div>
                 </div>
@@ -119,9 +119,8 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Times (<p class="font-italic d-inline">t</p>)</label>
-                        <input id="timesB" type="number" class="form-control" />
-                        <small class="form-text text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
+                        <label for="timesB">Times (<p class="font-italic d-inline">t</p>)</label>
+                        <input id="timesB" type="number" class="form-control" value="30" min="1" />
                     </div>
                 </div>
             </div>
@@ -246,11 +245,20 @@
             return prob;
         }
 
-        var old_time = new Date();
+        // Reads a number field, falling back to its default when empty or out of range.
+        function readInt(sel, min, fallback) {
+            var v = parseInt($(sel).val(), 10);
+            if (isNaN(v) || v < min) {
+                v = fallback;
+                $(sel).val(v);
+            }
+            return v;
+        }
+
         function generate() {
-            var times = parseInt($('#times').val());
-            var delta = parseInt($('#delta').val());
-            var edges = parseInt($('#edges').val());
+            var times = readInt('#times', 1, 30);
+            var delta = readInt('#delta', -1, 0);
+            var edges = readInt('#edges', 1, 1);
             hofstadRandomGraph(times, delta, edges);
         }
 
@@ -337,8 +345,6 @@
                     generateHistogram(times, 'Hofstad', delta, edges);
                     indexDegree();
                     btnCliques();
-                    var new_time = new Date();
-                    alert(new_time - old_time);
                     cy.endBatch();
                 }
             } 
@@ -356,8 +362,8 @@
         }
 
         function generateBollobas() {
-            var times = parseInt($('#timesB').val());
-            bollobasRandomGraph(times, delta);
+            var times = readInt('#timesB', 1, 30);
+            bollobasRandomGraph(times);
         }
 
         function calcProbsB(t) {
@@ -599,8 +605,8 @@
         var ci = 0;
         function btnCliques() {
             ci++;
-            $('.cis').prop('disabled', 'true');
-            $('#cliques').append('<div id="ci'+ci+'" style="height:400px;" class="d-flex align-items-center"><button onclick="bronKerbosch()" class="btn btn-dark btn-circle cis" style="margin: 0 auto;">Cliques</button></div>');
+            // Replace the previous result instead of stacking a new block per graph.
+            $('#cliques').html('<div id="ci'+ci+'" style="height:400px;" class="d-flex align-items-center"><button onclick="bronKerbosch()" class="btn btn-dark btn-circle cis" style="margin: 0 auto;">Cliques</button></div>');
         }
 
         function bronKerbosch() {
@@ -657,11 +663,18 @@
                 }
             });
             
-            var html = '<ul>';
-            map.forEach(function(v, k) {
-                html += '<li>' + k + ': ' + v + '</li>';
-            });
-            html += '</ul>';
+            var colors = { k3: 'red', k4: 'blue', k5: 'green', k6: 'yellow' };
+            var html;
+            if (map.size == 0) {
+                // m = 1 always builds a tree, and a tree has no triangles.
+                html = '<p class="small">Nenhum clique com 3 ou mais vértices neste grafo. Com uma aresta por vértice (m = 1) o grafo é uma árvore. No modelo Hofstad, tente m ≥ 2.</p>';
+            } else {
+                html = '<ul class="list-unstyled">';
+                map.forEach(function(v, k) {
+                    html += '<li><span style="display:inline-block;width:12px;height:12px;margin-right:6px;background:' + (colors[k] || '#666') + '"></span>' + k + ': ' + v + '</li>';
+                });
+                html += '</ul><p class="small">Cliques coloridos no grafo.</p>';
+            }
             $('#ci'+ci).html(html);
         }
     </script>
