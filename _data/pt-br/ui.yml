@@ -13,6 +13,7 @@ sections:
   experience: Experiência profissional
   projects: Projetos
   skills: Competências técnicas
+  skills_core: Stack principal
   education: Formação &amp; pesquisa
   courses: Cursos &amp; certificados
   languages: Idiomas
@@ -24,14 +25,36 @@ actions:
   email_me: Enviar e-mail
   more_github: Mais no GitHub
   lattes: Currículo Lattes
+  back_to_top: Voltar ao topo
   lattes_title: Currículo Lattes na plataforma do CNPq
 
 a11y:
   sections_nav: Seções
   language_nav: Idioma
+  style_nav: Estilo da página
+  menu: Menu
 
 case:
   label: Case
   problem: Problema
   approach: O que eu fiz
   result: Resultado
+
+# The Retro (2000s) style (see _sass/theme-y2k.scss).
+style:
+  y2k: Retro
+  modern: Moderno
+
+y2k:
+  ticker: "*** NOVO!!! Cases adicionados *** mais de 10.000 usuários por ano no sistema que reconstruí *** p95 de 163 ms → 4 ms (teste local) *** Mestre em Informática ***"
+  best_viewed: Melhor visualizado no Internet Explorer 6 em 800x600
+  chest: Abrir o baú do tesouro
+  unlocked: Você achou o tesouro! O jogo foi desbloqueado no menu.
+
+# Game mode (_includes/game.html).
+game:
+  title: "Portfólio: o jogo"
+  hint: Ande com as setas ou WASD, ou clique num quadrado. Pise numa placa, ou clique nela, para abrir essa seção do portfólio.
+  back: Voltar ao portfólio
+  link: Jogo
+  pad: Controles de movimento

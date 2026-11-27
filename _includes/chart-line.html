@@ -1,0 +1,44 @@
+{%- comment -%}
+Line chart drawn as inline SVG. Data comes from the YAML:
+  line: { title, x_label, xs, y_min, y_ticks, series: [{ label, ys }], caption }
+`ys` and `y_ticks` are base-10 exponents (0 = 1, -3 = 10^-3), so the y axis
+is a log scale; `y_min` is the bottom of the axis and must be negative.
+Values are precomputed in the YAML; Liquid has no logarithms.
+{%- endcomment -%}
+{%- assign ch = include.chart -%}
+{%- assign W = 340 -%}{%- assign H = 200 -%}
+{%- assign pl = 42 -%}{%- assign pr = 50 -%}{%- assign pt = 10 -%}{%- assign pb = 40 -%}
+{%- assign plotW = W | minus: pl | minus: pr -%}
+{%- assign plotH = H | minus: pt | minus: pb -%}
+{%- assign steps = ch.xs.size | minus: 1 -%}
+{%- assign stepW = plotW | times: 1.0 | divided_by: steps -%}
+{%- assign bottom = H | minus: pb -%}
+{%- assign right = W | minus: pr -%}
+<figure class="line-chart">
+    {%- if ch.title %}<p class="bar-chart-title">{{ ch.title }}</p>{% endif %}
+    <svg viewBox="0 0 {{ W }} {{ H }}" role="img" aria-label="{{ ch.title }}">
+        {%- for t in ch.y_ticks %}
+        {%- assign ty = t | times: 1.0 | divided_by: ch.y_min | times: plotH | plus: pt %}
+        <line class="lc-grid" x1="{{ pl }}" x2="{{ right }}" y1="{{ ty }}" y2="{{ ty }}"/>
+        <text class="lc-tick" x="{{ pl | minus: 8 }}" y="{{ ty | plus: 4 }}" text-anchor="end">{% if t == 0 %}1{% else %}10<tspan dy="-6" font-size="10">{{ t | replace: '-', '−' }}</tspan>{% endif %}</text>
+        {%- endfor %}
+        {%- for x in ch.xs %}
+        {%- assign tx = forloop.index0 | times: stepW | plus: pl %}
+        <text class="lc-tick" x="{{ tx }}" y="{{ bottom | plus: 16 }}" text-anchor="middle">{{ x }}</text>
+        {%- endfor %}
+        <text class="lc-axis" x="{{ plotW | divided_by: 2 | plus: pl }}" y="{{ H | minus: 4 }}" text-anchor="middle">{{ ch.x_label }}</text>
+        {%- for s in ch.series %}
+        {%- capture pts %}{% for v in s.ys %}{% assign px = forloop.index0 | times: stepW | plus: pl %}{% assign py = v | times: 1.0 | divided_by: ch.y_min | times: plotH | plus: pt %}{{ px }},{{ py }} {% endfor %}{% endcapture %}
+        <polyline class="lc-line lc-s{{ forloop.index0 }}" points="{{ pts | strip }}"/>
+        {%- for v in s.ys %}
+        {%- assign px = forloop.index0 | times: stepW | plus: pl %}
+        {%- assign py = v | times: 1.0 | divided_by: ch.y_min | times: plotH | plus: pt %}
+        <circle class="lc-dot lc-s{{ forloop.parentloop.index0 }}" cx="{{ px }}" cy="{{ py }}" r="3"/>
+        {%- if forloop.last %}
+        <text class="lc-label lc-s{{ forloop.parentloop.index0 }}" x="{{ px | plus: 8 }}" y="{{ py | plus: 4 }}">{{ s.label }}</text>
+        {%- endif %}
+        {%- endfor %}
+        {%- endfor %}
+    </svg>
+    {%- if ch.caption %}<figcaption>{{ ch.caption }}</figcaption>{% endif %}
+</figure>

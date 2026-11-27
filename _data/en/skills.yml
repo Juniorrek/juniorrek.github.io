@@ -1,10 +1,13 @@
+# Items marked core are the main stack and are highlighted on the page.
+# Every tag used on an experience, project or education item appears here.
 - group: Languages
   items:
-    - Java (7 to 25)
+    - { name: "Java (7 to 25)", core: true }
     - JavaScript
     - Python
     - Dart
     - SQL
+    - XML
     - C/C++
     - Lua
     - R
@@ -13,32 +16,38 @@
 
 - group: Back-end
   items:
-    - Spring Boot
+    - { name: "Spring Boot", core: true }
+    - { name: "REST APIs", core: true }
     - Spring Data
     - Spring Security
     - Hibernate / JPA
-    - REST APIs
     - JSF
     - JSP / Servlets
     - Nuxeo
     - JasperReports
+    - Caching
 
 - group: Front-end
   items:
-    - Vue.js
+    - { name: "Vue.js", core: true }
     - Nuxt
     - Angular
     - Flutter
     - HTML5 / CSS3
     - Bootstrap
     - jQuery
+    - DOMPurify
+    - D3.js
+    - Cytoscape.js
+    - Video recording
 
 - group: Databases
   items:
-    - PostgreSQL
-    - Oracle
+    - { name: "Oracle", core: true }
+    - { name: "PostgreSQL", core: true }
     - MySQL
     - PL/SQL
+    - Flyway
 
 - group: Messaging, search & identity
   items:
@@ -56,18 +65,37 @@
 - group: Infrastructure
   items:
     - Docker
-    - AWS (EC2)
+    - Docker Compose
+    - AWS (EC2, Budgets)
+    - Caddy
     - GitHub Actions
     - Jenkins
     - Git
     - Maven
     - Linux
 
-- group: AI tools
+- group: AI & NLP
   items:
     - Claude Code
     - Codex
     - LLM output evaluation
+    - LLMs
+    - NLP
+    - Machine Learning
+    - Deep Learning
+    - Text Mining
+    - Information Retrieval
+    - Linguistics
+
+- group: Computer science
+  items:
+    - Algorithms
+    - Data Structures
+    - Graph Theory
+    - Combinatorial Optimization
+    - Probability
+    - Random graphs
+    - Asymptotic analysis
 
 - group: Practices
   items:
@@ -78,3 +106,6 @@
     - Requirements analysis
     - Effort estimation
     - Technical interviews
+    - Security
+    - Audit logging
+    - Compliance

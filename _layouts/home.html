@@ -7,8 +7,10 @@ layout: default
 {%- assign ui = locale.ui -%}
 
 <div class="main-content">
+{% include switches.html class="top-switches" %}
 
     <section class="section-hero" id="about">
+        <p class="y2k-only y2k-ticker" aria-hidden="true"><span>{{ ui.y2k.ticker }}</span></p>
         {%- if profile.tagline and profile.tagline != "" %}
         <p class="eyebrow">{{ profile.tagline }}</p>
         {%- endif %}
@@ -62,7 +64,8 @@ layout: default
                 {%- endif %}
                 {%- if job.highlights and job.highlights != empty %}
                 <ul class="item-highlights">
-                    {%- for highlight in job.highlights %}
+                    {%- assign bullets = job.highlights_short | default: job.highlights %}
+                    {%- for highlight in bullets %}
                     <li>{{ highlight }}</li>
                     {%- endfor %}
                 </ul>
@@ -86,23 +89,28 @@ layout: default
         {%- for project in locale.projects %}
         {%- if project.featured %}
         <article class="project-featured">
-            <div class="project-featured-media">
-                <a href="{{ project.url | relative_url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-                    <span class="featuredImage rounded"
-                          style="background-image: url('{{ project.image | relative_url }}'); background-size: {{ project.image_fit | default: 'cover' }}; background-position: {{ project.image_position | default: 'center' }};"></span>
-                </a>
+            {%- comment -%} Image beside the header only; everything else runs full width below. {%- endcomment -%}
+            <div class="project-featured-top">
+                <div class="project-featured-media">
+                    <a href="{{ project.url | relative_url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+                        <span class="featuredImage rounded{% if project.image_pixelated %} pixelated{% endif %}"
+                              style="background-image: url('{{ project.image | relative_url }}'); background-size: {{ project.image_fit | default: 'cover' }}; background-position: {{ project.image_position | default: 'center' }};"></span>
+                    </a>
+                </div>
+                <div class="project-featured-head">
+                    {%- if project.status and project.status != "" %}
+                    <span class="status-pill">{{ project.status }}</span>
+                    {%- endif %}
+                    {%- if project.period and project.period != "" %}
+                    <span class="date">{{ project.period }}</span>
+                    {%- endif %}
+                    <h3 class="project-title">
+                        <a href="{{ project.url | relative_url }}" target="_blank" rel="noopener">{{ project.name }}</a>
+                    </h3>
+                    {%- if project.summary and project.summary != "" %}<p class="project-summary">{{ project.summary }}</p>{%- endif %}
+                </div>
             </div>
             <div class="project-featured-body">
-                {%- if project.status and project.status != "" %}
-                <span class="status-pill">{{ project.status }}</span>
-                {%- endif %}
-                {%- if project.period and project.period != "" %}
-                <span class="date">{{ project.period }}</span>
-                {%- endif %}
-                <h3 class="project-title">
-                    <a href="{{ project.url | relative_url }}" target="_blank" rel="noopener">{{ project.name }}</a>
-                </h3>
-                {%- if project.summary and project.summary != "" %}<p class="project-summary">{{ project.summary }}</p>{%- endif %}
                 {%- if project.details and project.details != empty %}
                 <ul class="project-details">
                     {%- for detail in project.details %}
@@ -112,6 +120,13 @@ layout: default
                 {%- endif %}
                 {%- include tech-tags.html tech=project.tech -%}
                 {%- include item-links.html links=project.links -%}
+                {%- if project.cases and project.cases != empty %}
+                <div class="case-list">
+                    {%- for project_case in project.cases %}
+                    {%- include case.html case=project_case -%}
+                    {%- endfor %}
+                </div>
+                {%- endif %}
                 {%- if project.roadmap %}
                 <div class="roadmap">
                     <div class="roadmap-head">
@@ -162,13 +177,18 @@ layout: default
 
     <section class="section-alt" id="skills">
         <h2 class="heading">{{ ui.sections.skills }}</h2>
+        <p class="skills-legend"><span class="tag tag-core">{{ ui.sections.skills_core }}</span></p>
         <div class="row">
             {%- for group in locale.skills %}
             <div class="col-lg-4 col-md-6 col-12 mb-4">
                 <h3 class="skill-group-title">{{ group.group }}</h3>
                 <ul class="tag-list">
                     {%- for item in group.items %}
+                    {%- if item.name %}
+                    <li class="tag{% if item.core %} tag-core{% endif %}">{{ item.name }}</li>
+                    {%- else %}
                     <li class="tag">{{ item }}</li>
+                    {%- endif %}
                     {%- endfor %}
                 </ul>
             </div>
@@ -192,34 +212,33 @@ layout: default
         <p class="lead-text">{{ locale.education.intro }}</p>
         {%- endif %}
 
-        <div class="timeline">
+        <div class="rail-list">
             {%- for entry in locale.education.items %}
-            {%- assign side = forloop.index | modulo: 2 %}
-            <div class="timeline-item clearfix">
-                <div class="timeline-icon"></div>
-                <div class="timeline-content{% if side == 1 %} right{% endif %}">
-                    <span class="date">{{ entry.period }}</span>
-                    <h3 class="h5 item-title">{{ entry.degree }}</h3>
-                    <p class="item-org">{{ entry.org }}</p>
-                    {%- if entry.work %}
-                    <p class="work-title">
-                        <span class="work-label">{{ entry.work.label }}</span>
-                        {{ entry.work.name }}
-                    </p>
-                    {%- if entry.work.summary and entry.work.summary != "" %}
-                    <p>{{ entry.work.summary }}</p>
-                    {%- endif %}
-                    {%- if entry.work.result and entry.work.result != "" %}
-                    <p class="work-result">{{ entry.work.result }}</p>
-                    {%- endif %}
-                    {%- if entry.work.meta and entry.work.meta != "" %}
-                    <p class="work-meta">{{ entry.work.meta }}</p>
-                    {%- endif %}
-                    {%- include tech-tags.html tech=entry.work.tech -%}
-                    {%- include item-links.html links=entry.work.links -%}
-                    {%- endif %}
-                </div>
-            </div>
+            <article class="rail-item">
+                <span class="date">{{ entry.period }}</span>
+                <h3 class="h5 item-title">{{ entry.degree }}</h3>
+                <p class="item-org">{{ entry.org }}</p>
+                {%- if entry.work %}
+                <p class="work-title">
+                    <span class="work-label">{{ entry.work.label }}</span>
+                    {{ entry.work.name }}
+                </p>
+                {%- if entry.work.summary and entry.work.summary != "" %}
+                <p>{{ entry.work.summary }}</p>
+                {%- endif %}
+                {%- if entry.work.result and entry.work.result != "" %}
+                <p class="work-result">{{ entry.work.result }}</p>
+                {%- endif %}
+                {%- if entry.work.case %}
+                <div class="case-list">{% include case.html case=entry.work.case %}</div>
+                {%- endif %}
+                {%- if entry.work.meta and entry.work.meta != "" %}
+                <p class="work-meta">{{ entry.work.meta }}</p>
+                {%- endif %}
+                {%- include tech-tags.html tech=entry.work.tech -%}
+                {%- include item-links.html links=entry.work.links -%}
+                {%- endif %}
+            </article>
             {%- endfor %}
         </div>
 
@@ -266,4 +285,91 @@ layout: default
         </div>
     </section>
 
+    <footer class="y2k-only y2k-footer">
+        <span class="y2k-badge y2k-badge-java">JAVA POWERED</span>
+        <span class="y2k-badge y2k-badge-construction">UNDER CONSTRUCTION</span>
+        <span class="y2k-best">{{ ui.y2k.best_viewed }}</span>
+        {%- comment -%} The hidden quest: opening the chest unlocks the game link (script in default.html). Off unless _data/features.yml has game: true. {%- endcomment %}
+        {%- if site.data.features.game %}
+        <button type="button" class="y2k-chest" aria-label="{{ ui.y2k.chest }}" title="?">
+            <svg viewBox="0 0 32 28" width="30" height="26" aria-hidden="true">
+                <g class="chest-lid">
+                    <path d="M3 12 V8 Q3 3 8 3 H24 Q29 3 29 8 V12 Z" fill="#a0522d" stroke="#000" stroke-width="1.5"/>
+                    <rect x="3" y="9" width="26" height="3" fill="#ffd700" stroke="#000" stroke-width="1"/>
+                </g>
+                <rect x="3" y="12" width="26" height="13" fill="#8b4513" stroke="#000" stroke-width="1.5"/>
+                <rect x="3" y="15" width="26" height="3" fill="#ffd700" stroke="#000" stroke-width="1"/>
+                <rect x="14" y="13" width="4" height="6" fill="#ffd700" stroke="#000" stroke-width="1"/>
+            </svg>
+        </button>
+        <p class="y2k-unlock-msg" role="status" aria-live="polite" data-message="{{ ui.y2k.unlocked }}"></p>
+        {%- endif %}
+    </footer>
+
 </div>
+
+<script>
+// Cases inside the same .case-list open one at a time, and open and close
+// with a short height animation. Without JS they still work as plain
+// <details>; with reduced motion they toggle instantly.
+(function () {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function isOpen(d) { return d._target === undefined ? d.open : d._target; }
+
+    function toggle(d, open) {
+        d._target = open;
+        if (reduce || !d.animate) { d.open = open; return; }
+        if (d._anim) d._anim.cancel();
+        var start = d.offsetHeight;
+        d.style.overflow = 'hidden';
+        if (open) d.open = true;
+        var border = d.offsetHeight - d.clientHeight;
+        var end = open ? d.offsetHeight : d.querySelector('summary').offsetHeight + border;
+        var anim = d.animate({ height: [start + 'px', end + 'px'] }, { duration: 260, easing: 'ease-out' });
+        d._anim = anim;
+        anim.onfinish = function () {
+            d._anim = null;
+            d.style.overflow = '';
+            if (!open) d.open = false;
+        };
+        anim.oncancel = function () { d._anim = null; d.style.overflow = ''; };
+    }
+
+    document.querySelectorAll('details.case > summary').forEach(function (summary) {
+        summary.addEventListener('click', function (e) {
+            e.preventDefault();
+            var d = summary.parentNode;
+            var opening = !isOpen(d);
+            var group = d.closest('.case-list');
+            if (opening && group) {
+                group.querySelectorAll('details.case').forEach(function (other) {
+                    if (other !== d && isOpen(other)) toggle(other, false);
+                });
+            }
+            toggle(d, opening);
+        });
+    });
+
+    // A link to a case (#case-...) opens it and scrolls it into view.
+    function openFromHash() {
+        var id = decodeURIComponent(location.hash.slice(1));
+        var d = id && document.getElementById(id);
+        if (!d || !d.matches('details.case')) return;
+        var group = d.closest('.case-list');
+        // No animation here: the page must not shift after scrolling.
+        if (group) group.querySelectorAll('details.case').forEach(function (other) {
+            if (other !== d && isOpen(other)) {
+                if (other._anim) other._anim.cancel();
+                other.open = false; other._target = false;
+            }
+        });
+        d.open = true; d._target = true;
+        requestAnimationFrame(function () {
+            d.scrollIntoView({ block: 'start', behavior: 'instant' });
+        });
+    }
+    window.addEventListener('hashchange', openFromHash);
+    openFromHash();
+})();
+</script>

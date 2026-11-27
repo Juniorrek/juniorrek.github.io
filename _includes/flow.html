@@ -3,11 +3,13 @@ Step diagram. Data comes from the YAML:
   flow: { title, caption, steps: [{ kicker, title, note, alt }] }
 Steps read left to right (top to bottom on phones). `alt` draws a dashed
 side path under a step, for fallbacks and exceptions.
+`layout: vertical` stacks boxes; `layout: timeline` draws a line with a dot
+per step (horizontal on desktop, vertical on phones).
 {%- endcomment -%}
 {%- assign fl = include.flow -%}
 <figure class="flow">
     {%- if fl.title %}<p class="bar-chart-title">{{ fl.title }}</p>{% endif %}
-    <ol class="flow-steps{% if fl.layout == 'vertical' %} flow-vertical{% endif %}">
+    <ol class="flow-steps{% if fl.layout == 'vertical' %} flow-vertical{% elsif fl.layout == 'timeline' %} flow-timeline{% endif %}">
         {%- for step in fl.steps %}
         <li class="flow-step">
             <div class="flow-box">
