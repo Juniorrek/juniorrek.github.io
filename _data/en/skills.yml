@@ -1,56 +1,111 @@
-- group: Programming
+# Items marked core are the main stack and are highlighted on the page.
+# Every tag used on an experience, project or education item appears here.
+- group: Languages
   items:
-    - Java
+    - { name: "Java (7 to 25)", core: true }
     - JavaScript
     - Python
     - Dart
+    - SQL
+    - XML
     - C/C++
     - Lua
-    - SQL
     - R
     - PHP
     - Shell Script
 
 - group: Back-end
   items:
-    - Spring / Spring Boot
+    - { name: "Spring Boot", core: true }
+    - { name: "REST APIs", core: true }
+    - Spring Data
+    - Spring Security
     - Hibernate / JPA
-    - REST APIs
-    - JasperReports
-    - JSP / Servlets
     - JSF
+    - JSP / Servlets
+    - Nuxeo
+    - JasperReports
+    - Caching
 
 - group: Front-end
   items:
-    - Vue.js
+    - { name: "Vue.js", core: true }
     - Nuxt
     - Angular
     - Flutter
     - HTML5 / CSS3
     - Bootstrap
     - jQuery
+    - DOMPurify
+    - D3.js
+    - Cytoscape.js
+    - Video recording
 
-- group: Database
+- group: Databases
   items:
-    - Oracle
+    - { name: "Oracle", core: true }
+    - { name: "PostgreSQL", core: true }
     - MySQL
-    - PostgreSQL
     - PL/SQL
+    - Flyway
 
-- group: Tooling & Infra
+- group: Messaging, search & identity
   items:
-    - Git
+    - RabbitMQ
+    - OpenSearch
+    - Keycloak
+
+- group: Testing
+  items:
+    - JUnit
+    - Mockito
+    - Unit & integration testing
+    - JMeter (load testing)
+
+- group: Infrastructure
+  items:
     - Docker
-    - AWS
+    - Docker Compose
+    - AWS (EC2, Budgets)
+    - Caddy
+    - GitHub Actions
+    - Jenkins
+    - Git
     - Maven
     - Linux
+
+- group: AI & NLP
+  items:
+    - Claude Code
+    - Codex
+    - LLM output evaluation
+    - LLMs
+    - NLP
+    - Machine Learning
+    - Deep Learning
+    - Text Mining
+    - Information Retrieval
+    - Linguistics
+
+- group: Computer science
+  items:
+    - Algorithms
+    - Data Structures
+    - Graph Theory
+    - Combinatorial Optimization
+    - Probability
+    - Random graphs
+    - Asymptotic analysis
 
 - group: Practices
   items:
     - Agile (Scrum, Kanban)
-    - UML
-    - MVC
-    - Requirements analysis
-    - Effort estimation
     - Code review
     - TDD
+    - UML
+    - Requirements analysis
+    - Effort estimation
+    - Technical interviews
+    - Security
+    - Audit logging
+    - Compliance

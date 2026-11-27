@@ -15,12 +15,14 @@ $page:       #ffffff;
 $page-alt:   #f6f7f9;
 $border:     #e4e7ec;
 
-$sidebar-bg: #1e2235;
+$sidebar-bg: #0f2427;
 $sidebar-fg: #ffffff;
+// Accent on the dark sidebar: lighter, so it stays readable there.
+$sidebar-accent: #6fd6df;
 
-$accent:      #4f6df5;
-$accent-dark: #3a55d0;
-$accent-soft: #eef1fe;
+$accent:      #0f7f8c;
+$accent-dark: #0b6772;
+$accent-soft: #e3f4f5;
 
 html {
 	scroll-behavior: smooth;
@@ -34,7 +36,6 @@ body {
 	line-height: 1.65;
 }
 
-@import "timeline";
 
 // ---------------------------------------------------------------------------
 // Sidebar
@@ -61,6 +62,140 @@ body {
 	justify-content: center;
 	gap: 4px;
 	margin-bottom: 1.75rem;
+}
+
+// The ☰ button (phones only, see the mobile sidebar rules).
+.nav-toggle {
+	display: none;
+	flex-direction: column;
+	justify-content: center;
+	gap: 5px;
+	width: 44px;
+	height: 44px;
+	padding: 0 11px;
+	background: none;
+	border: 1px solid rgba(255, 255, 255, .25);
+	border-radius: 8px;
+	cursor: pointer;
+
+	span {
+		display: block;
+		height: 2px;
+		background: #fff;
+		border-radius: 1px;
+		transition: transform .2s ease, opacity .2s ease;
+	}
+}
+
+// Open: the three bars turn into an X.
+.sidebar.is-open .nav-toggle span {
+	&:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+	&:nth-child(2) { opacity: 0; }
+	&:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+}
+
+// Language and page-style switches, stacked at the top of the sidebar.
+.sidebar-switches {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 1.75rem;
+
+	.lang-switch {
+		margin-bottom: 0;
+	}
+}
+
+// Desktop: the switches sit at the top right of the content, in the space
+// beside the intro, and scroll away with the page. Phones use the copy in the
+// sidebar header instead (see the mobile sidebar rules).
+.top-switches {
+	display: none;
+}
+
+@media (min-width: 768px) {
+	.sidebar-switches {
+		display: none;
+	}
+
+	.top-switches {
+		position: absolute;
+		top: 12px;
+		right: 16px;
+		z-index: 5;
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 4px;
+		padding: 6px 8px;
+		background: $sidebar-bg;
+		border-radius: 14px;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, .18);
+
+		// Two rows: languages on top, page style below.
+		.lang-switch {
+			margin-bottom: 0;
+			justify-content: space-between;
+		}
+
+		.style-switch {
+			padding-top: 4px;
+			border-top: 1px solid rgba(255, 255, 255, .15);
+		}
+	}
+}
+
+// Short desktop screens (laptops): a tighter sidebar, so it fits without scrolling.
+@media (min-width: 768px) and (max-height: 880px) {
+	.sidebar {
+		padding-top: 1.75rem;
+		padding-bottom: .75rem;
+	}
+
+	.sidebar .avatar {
+		width: 104px;
+		height: 104px;
+	}
+}
+
+// The intro buttons spread across the same width as the stat cards above.
+.section-hero .cta-row {
+	max-width: 760px;
+	justify-content: space-between;
+}
+
+button.lang-option {
+	background: none;
+	border: 0;
+	font-family: inherit;
+	cursor: pointer;
+}
+
+// The game link stays hidden until the chest in the Retro footer is opened.
+html.game-locked .game-link {
+	display: none;
+}
+
+.game-link.is-revealed {
+	animation: style-reveal 1.6s ease-out;
+}
+
+@keyframes style-reveal {
+	0% { transform: scale(0); opacity: 0; }
+	35% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 0 0 rgba(255, 215, 0, .9); }
+	100% { transform: scale(1); box-shadow: 0 0 0 14px rgba(255, 215, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.game-link.is-revealed {
+		animation: none;
+	}
+}
+
+// Elements that exist only in the 2000s style.
+.y2k-only {
+	display: none;
 }
 
 .lang-flag {
@@ -98,7 +233,7 @@ body {
 	margin: 1.25rem 0 .35rem;
 	font-size: 13px;
 	letter-spacing: .08em;
-	color: $accent;
+	color: $sidebar-accent;
 }
 
 .sidebar-name {
@@ -247,7 +382,7 @@ section {
 }
 
 .lead-text {
-	font-size: 16px;
+	font-size: 15px;
 	max-width: 62ch;
 	margin-bottom: 1rem;
 
@@ -257,6 +392,12 @@ section {
 	text-align: justify;
 	-webkit-hyphens: auto;
 	hyphens: auto;
+}
+
+// The main intro is a step larger, and lines up with the stat cards below it.
+.section-hero .lead-text {
+	font-size: 16px;
+	max-width: 760px;
 }
 
 .availability {
@@ -669,34 +810,6 @@ section {
 	.project-featured-media .featuredImage {
 		min-height: 160px;
 	}
-
-	.timeline {
-		margin: 0;
-		padding-left: 1.75rem;
-		width: 100%;
-
-		&:before {
-			left: 7px;
-		}
-
-		.timeline-item {
-			text-align: left;
-
-			.timeline-content {
-				width: 100%;
-				float: none;
-				text-align: left;
-
-				.tag-list {
-					justify-content: flex-start;
-				}
-			}
-
-			.timeline-icon {
-				left: 7px;
-			}
-		}
-	}
 }
 
 @font-face {
@@ -707,3 +820,944 @@ section {
 .f8bit {
 	font-family: f8bit, monospace;
 }
+
+// ---------------------------------------------------------------------------
+// Hero stats
+// ---------------------------------------------------------------------------
+.stat-row {
+	list-style: none;
+	padding: 0;
+	margin: 2rem 0 .5rem;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 12px;
+	max-width: 760px;
+
+	li {
+		padding: .9rem 1rem;
+		border: 1px solid $border;
+		border-left: 3px solid $accent;
+		border-radius: 6px;
+		background-color: $page;
+	}
+}
+
+.stat-value {
+	display: block;
+	font-size: 22px;
+	font-weight: 800;
+	line-height: 1.2;
+	color: $ink;
+	font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+	display: block;
+	margin-top: .25rem;
+	font-size: 12px;
+	line-height: 1.4;
+	color: $muted;
+}
+
+// ---------------------------------------------------------------------------
+// Case studies (collapsible)
+// ---------------------------------------------------------------------------
+.case-list {
+	margin-top: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.case {
+	border: 1px solid $border;
+	border-radius: 8px;
+	background-color: $page;
+	box-shadow: 0 1px 3px rgba(23, 26, 38, .05);
+	transition: box-shadow .2s ease, border-color .2s ease;
+
+	&:hover {
+		border-color: mix($accent, #ffffff, 45%);
+	}
+
+	&[open] {
+		border-color: mix($accent, #ffffff, 45%);
+		box-shadow: 0 4px 14px rgba(23, 26, 38, .08);
+	}
+
+	summary {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: .35rem .75rem;
+		padding: .85rem 3rem .85rem 1rem;
+		position: relative;
+		cursor: pointer;
+		list-style: none;
+
+		&::-webkit-details-marker {
+			display: none;
+		}
+
+		&:focus-visible {
+			outline: 2px solid $accent;
+			outline-offset: 2px;
+			border-radius: 8px;
+		}
+	}
+}
+
+.case-kicker {
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .12em;
+	color: $accent-dark;
+	background-color: $accent-soft;
+	padding: 2px 8px;
+	border-radius: 999px;
+}
+
+.case-title {
+	flex: 1 1 260px;
+	font-size: 15px;
+	font-weight: 700;
+	color: $ink;
+	line-height: 1.4;
+}
+
+.case-metric {
+	font-size: 13px;
+	font-weight: 700;
+	color: #fff;
+	background-color: $accent;
+	padding: 3px 10px;
+	border-radius: 4px;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+
+.case-toggle {
+	position: absolute;
+	right: .75rem;
+	top: 50%;
+	width: 28px;
+	height: 28px;
+	margin-top: -14px;
+	border-radius: 50%;
+	background-color: $accent-soft;
+	transition: background-color .2s ease;
+
+	// The chevron.
+	&:before {
+		content: "";
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		width: 8px;
+		height: 8px;
+		margin: -6px 0 0 -4px;
+		border-right: 2px solid $accent-dark;
+		border-bottom: 2px solid $accent-dark;
+		transform: rotate(45deg);
+		transition: transform .2s ease, border-color .2s ease;
+	}
+
+	.case[open] &:before {
+		transform: rotate(225deg);
+		margin-top: -2px;
+	}
+
+	.case summary:hover &,
+	.case summary:focus-visible & {
+		background-color: $accent;
+
+		&:before {
+			border-color: #fff;
+		}
+	}
+}
+
+.case-body {
+	padding: .25rem 1rem 1.25rem;
+	border-top: 1px solid $border;
+	font-size: 14px;
+}
+
+.case-steps {
+	margin: 1rem 0 0;
+
+	dt {
+		font-size: 11px;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: .12em;
+		color: $muted;
+		margin-top: .9rem;
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+
+	dd {
+		margin: .2rem 0 0;
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Bar chart
+// ---------------------------------------------------------------------------
+.bar-chart,
+.flow {
+	margin: 1.25rem 0 0;
+	padding: 1rem 1rem .85rem;
+	border-radius: 6px;
+	background-color: $page-alt;
+	border: 1px solid $border;
+
+	figcaption {
+		margin-top: .75rem;
+		font-size: 12px;
+		color: $muted;
+	}
+}
+
+.bar-chart-title {
+	font-size: 13px;
+	font-weight: 700;
+	color: $ink;
+	margin: 0 0 .5rem;
+}
+
+.bar-legend {
+	list-style: none;
+	padding: 0;
+	margin: 0 0 .75rem;
+	display: flex;
+	gap: 1rem;
+	font-size: 12px;
+	color: $muted;
+
+	li {
+		display: flex;
+		align-items: center;
+		gap: .4rem;
+	}
+}
+
+.swatch {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 2px;
+}
+
+.swatch-before,
+.bar-before {
+	background-color: #b9bfcc;
+}
+
+.swatch-after,
+.bar-after {
+	background-color: $accent;
+}
+
+.bar-rows {
+	display: grid;
+	grid-template-columns: 4.5rem 1fr;
+	gap: .6rem .75rem;
+	margin: 0;
+
+	dt {
+		font-size: 13px;
+		font-weight: 600;
+		color: $ink;
+		align-self: center;
+	}
+
+	dd {
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+	}
+}
+
+.bar-line {
+	display: flex;
+	align-items: center;
+	gap: .5rem;
+}
+
+.bar {
+	display: block;
+	height: 12px;
+	min-width: 3px;
+	max-width: calc(100% - 4.5rem);
+	border-radius: 0 3px 3px 0;
+}
+
+.bar-value {
+	font-size: 12px;
+	font-weight: 600;
+	color: $body-text;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+
+// ---------------------------------------------------------------------------
+// Flow diagram
+// ---------------------------------------------------------------------------
+.flow-steps {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	gap: 1.5rem;
+}
+
+.flow-step {
+	flex: 1 1 0;
+	min-width: 0;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: .5rem;
+
+	// Arrow to the next step.
+	&:not(:last-child) .flow-box:after {
+		content: "";
+		position: absolute;
+		right: -1.1rem;
+		top: 50%;
+		width: 8px;
+		height: 8px;
+		margin-top: -4px;
+		border-top: 2px solid $soft;
+		border-right: 2px solid $soft;
+		transform: rotate(45deg);
+	}
+}
+
+.flow-box {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: .15rem;
+	height: 100%;
+	padding: .6rem .7rem;
+	background-color: $page;
+	border: 1px solid $border;
+	border-top: 3px solid $accent;
+	border-radius: 6px;
+}
+
+.flow-kicker {
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .1em;
+	color: $accent-dark;
+}
+
+.flow-title {
+	font-size: 13px;
+	line-height: 1.35;
+	color: $ink;
+}
+
+.flow-note {
+	font-size: 12px;
+	line-height: 1.4;
+	color: $muted;
+}
+
+.flow-alt {
+	padding: .45rem .6rem;
+	font-size: 12px;
+	line-height: 1.4;
+	color: $body-text;
+	border: 1px dashed $soft;
+	border-radius: 6px;
+	background-color: rgba(255, 255, 255, .6);
+}
+
+// ---------------------------------------------------------------------------
+// Project roadmap
+// ---------------------------------------------------------------------------
+.roadmap {
+	margin-top: 1.25rem;
+	padding-top: 1rem;
+	border-top: 1px dashed $border;
+}
+
+.roadmap-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: .25rem .75rem;
+	margin-bottom: .6rem;
+
+	.skill-group-title {
+		margin: 0;
+	}
+}
+
+.roadmap-note {
+	font-size: 12px;
+	color: $muted;
+}
+
+.roadmap-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+
+	// A route: hollow stops joined by a dashed line, like a map of what comes next.
+	li {
+		position: relative;
+		padding-left: 28px;
+		font-size: 14px;
+		line-height: 1.5;
+		text-align: left;
+
+		&:before {
+			content: "";
+			position: absolute;
+			left: 2px;
+			top: .35em;
+			width: 12px;
+			height: 12px;
+			border: 2px solid $accent;
+			border-radius: 50%;
+			background: #fff;
+			z-index: 1;
+		}
+
+		&:not(:last-child):after {
+			content: "";
+			position: absolute;
+			left: 7px;
+			top: calc(.35em + 12px);
+			bottom: calc(-8px - .35em);
+			border-left: 2px dashed mix($accent, #fff, 45%);
+		}
+	}
+
+	strong {
+		color: $ink;
+	}
+
+	span {
+		color: $muted;
+
+		&:before {
+			content: " · ";
+		}
+	}
+}
+
+// Contact buttons: a little smaller, so all five fit on one row on laptops.
+#contact .cta-row {
+	gap: 8px;
+
+	a {
+		font-size: 13px;
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Education extras
+// ---------------------------------------------------------------------------
+.work-meta {
+	font-size: 12px !important;
+	color: $muted !important;
+}
+
+.work-result {
+	padding: .6rem .85rem;
+	border-left: 3px solid $accent;
+	border-radius: 0 6px 6px 0;
+	background-color: $accent-soft;
+	color: $ink !important;
+
+	strong {
+		font-weight: 700;
+		color: $accent-dark !important;
+	}
+}
+
+@media (max-width: 767px) {
+	.flow-steps {
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.flow-step:not(:last-child) .flow-box:after {
+		right: auto;
+		left: 50%;
+		top: auto;
+		bottom: -.95rem;
+		margin: 0 0 0 -4px;
+		transform: rotate(135deg);
+	}
+
+	.stat-value {
+		font-size: 19px;
+	}
+
+	// Long metrics would push the card past the screen edge.
+	.case-metric {
+		white-space: normal;
+	}
+}
+
+// Timeline-style flow: steps stacked, kicker in a fixed left column.
+.flow-steps.flow-vertical {
+	flex-direction: column;
+	gap: 1.25rem;
+
+	.flow-box {
+		display: grid;
+		grid-template-columns: 7rem 1fr;
+		column-gap: .75rem;
+		border-top-width: 1px;
+		border-left: 3px solid $accent;
+	}
+
+	.flow-kicker {
+		grid-row: span 2;
+		align-self: center;
+	}
+
+	.flow-step:not(:last-child) .flow-box:after {
+		right: auto;
+		left: 50%;
+		top: auto;
+		bottom: -.95rem;
+		margin: 0 0 0 -4px;
+		transform: rotate(135deg);
+	}
+}
+
+@media (max-width: 767px) {
+	.flow-steps.flow-vertical .flow-box {
+		grid-template-columns: 1fr;
+
+		.flow-kicker {
+			grid-row: auto;
+		}
+	}
+}
+
+// Timeline-style flow: a line with a dot per step, dates above the titles.
+// Horizontal on desktop, vertical on phones.
+.flow-steps.flow-timeline {
+	gap: 1.5rem;
+
+	.flow-step {
+		padding-top: 1.6rem;
+
+		// Line from this dot to the next one.
+		&:not(:last-child):before {
+			content: "";
+			position: absolute;
+			top: 5px;
+			left: 6px;
+			right: calc(-1.5rem - 6px);
+			height: 2px;
+			background-color: $soft;
+		}
+
+		// Dot.
+		&:after {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 12px;
+			height: 12px;
+			border-radius: 50%;
+			background-color: $accent;
+			box-shadow: 0 0 0 3px $page-alt;
+		}
+	}
+
+	.flow-box {
+		height: auto;
+		padding: 0;
+		background: none;
+		border: 0;
+	}
+
+	.flow-step:not(:last-child) .flow-box:after {
+		display: none;
+	}
+}
+
+@media (max-width: 767px) {
+	.flow-steps.flow-timeline {
+		gap: 1.1rem;
+
+		.flow-step {
+			padding: 0 0 0 1.6rem;
+
+			&:not(:last-child):before {
+				top: 6px;
+				left: 5px;
+				right: auto;
+				bottom: calc(-1.1rem - 6px);
+				width: 2px;
+				height: auto;
+			}
+
+			&:after {
+				top: 2px;
+			}
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Featured project: image beside the header, everything else full width.
+// ---------------------------------------------------------------------------
+.project-featured {
+	display: block;
+}
+
+.project-featured-top {
+	display: flex;
+	align-items: center;
+	gap: 1.75rem;
+	margin-bottom: 1.25rem;
+}
+
+.project-featured-media {
+	flex: 0 0 200px;
+	min-width: 0;
+
+	.featuredImage {
+		height: auto;
+		min-height: 0;
+		aspect-ratio: 1 / 1;
+	}
+}
+
+.project-featured-head {
+	flex: 1 1 auto;
+	min-width: 0;
+
+	.project-summary {
+		margin-bottom: 0;
+	}
+}
+
+// Pixel-art images: scale without smoothing so they stay sharp. The logo
+// PNG has an opaque white background, so the box matches it.
+.featuredImage.pixelated {
+	image-rendering: pixelated;
+	background-size: 70% !important;
+	background-repeat: no-repeat;
+	background-color: #fff;
+}
+
+.project-featured-body .case-list {
+	margin-top: 1rem;
+}
+
+@media (max-width: 767px) {
+	.project-featured-top {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1rem;
+	}
+
+	.project-featured-media {
+		flex-basis: auto;
+		width: 140px;
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Formula and line chart inside cases
+// ---------------------------------------------------------------------------
+.case-formula {
+	margin: 1rem 0 .25rem;
+	font-family: "Times New Roman", Times, serif;
+	font-size: 24px;
+	font-style: italic;
+	color: $ink;
+	text-align: center;
+}
+
+.line-chart {
+	margin: 1rem 0 0;
+	padding: 1rem 1rem .85rem;
+	border-radius: 6px;
+	background-color: $page-alt;
+	border: 1px solid $border;
+	text-align: left;
+
+	svg {
+		display: block;
+		width: 100%;
+		max-width: 440px;
+		margin: 0 auto;
+		height: auto;
+		overflow: visible;
+	}
+
+	figcaption {
+		margin-top: .6rem;
+		font-size: 12px;
+		line-height: 1.45;
+		color: $muted;
+	}
+}
+
+.lc-grid { stroke: $border; stroke-width: 1; }
+.lc-tick { font-size: 13px; fill: $muted; }
+.lc-axis { font-size: 12px; font-weight: 700; fill: $muted; }
+.lc-line { fill: none; stroke-width: 2.5; }
+.lc-label { font-size: 13px; font-weight: 700; }
+.lc-dot { stroke: $page-alt; stroke-width: 1.5; }
+
+.lc-line.lc-s0 { stroke: $accent; }
+.lc-line.lc-s1 { stroke: rgba($accent, .6); }
+.lc-line.lc-s2 { stroke: rgba($accent, .32); }
+.lc-dot.lc-s0, .lc-label.lc-s0 { fill: $accent; }
+.lc-dot.lc-s1, .lc-label.lc-s1 { fill: rgba($accent, .6); }
+.lc-dot.lc-s2, .lc-label.lc-s2 { fill: rgba($accent, .45); }
+
+// A case inside an education entry.
+.rail-item > .case-list {
+	margin: .75rem 0;
+}
+
+@media (max-width: 600px) {
+	.case-formula {
+		font-size: 20px;
+		white-space: nowrap;
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Readability: emphasis in long text
+// ---------------------------------------------------------------------------
+// Key phrases in bullets and cases are wrapped in <strong> in the YAML; they
+// read darker so the eye can skim a bullet by its bold words alone.
+.lead-text strong,
+.item-highlights strong,
+.project-details strong,
+.project-summary strong,
+.case-steps strong,
+// The summary paragraph that opens each job and education entry: 15px, like
+// the section intros and project summaries.
+.rail-item > p:not([class]),
+.rail-item > p.work-result {
+	font-size: 15px;
+}
+
+.rail-item > p strong {
+	font-weight: 600;
+	color: $ink;
+}
+
+// Section labels (Problem / What I did / Result) in the accent colour.
+.case-steps dt {
+	color: $accent;
+}
+
+// The result is what a reader is looking for: set it off as a callout.
+.case-steps dd.case-result {
+	margin-top: .35rem;
+	padding: .6rem .85rem;
+	background: $accent-soft;
+	border-left: 3px solid $accent;
+	border-radius: 0 6px 6px 0;
+	color: $ink;
+}
+
+.case-steps dd.case-result strong {
+	font-weight: 700;
+	color: $accent-dark;
+}
+
+// Justified body copy across the page, matching the intro. Hyphenation keeps
+// it from opening gaps between words (it follows the page's lang attribute).
+.rail-item > p:not([class]),
+.rail-item > p.work-result,
+.item-highlights li,
+.case-steps dd,
+.project-summary,
+.project-details li {
+	text-align: justify;
+	-webkit-hyphens: auto;
+	hyphens: auto;
+}
+
+// Justified text opens wide gaps on narrow screens; keep it ragged-right there.
+@media (max-width: 600px) {
+	.lead-text,
+	.rail-item > p:not([class]),
+	.rail-item > p.work-result,
+	.item-highlights li,
+	.case-steps dd,
+	.project-summary,
+	.project-details li {
+		text-align: left;
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Sidebar: current section, compact mobile header, back-to-top
+// ---------------------------------------------------------------------------
+.menu-list a.is-active {
+	color: #fff;
+	background-color: $accent;
+	box-shadow: inset 0 0 0 1px $accent, 0 0 0 3px rgba($accent, .35);
+	font-weight: 700;
+}
+
+.to-top {
+	display: none;
+}
+
+@media (max-width: 767px) {
+	// The sidebar becomes a short header: photo, name and title, and a ☰
+	// button that opens a panel with the switches and the section menu.
+	// Résumé, social links, phone and location are repeated in the hero and
+	// in Contact, so they are hidden here.
+	.sidebar {
+		display: grid;
+		grid-template-columns: 64px 1fr auto;
+		column-gap: 1rem;
+		align-items: center;
+		padding: 1rem;
+		text-align: left;
+
+		.avatar {
+			grid-row: span 2;
+			width: 64px;
+			height: 64px;
+		}
+
+		.greeting,
+		.sidebar-meta,
+		.button-accent,
+		.social {
+			display: none;
+		}
+
+		.sidebar-name {
+			font-size: 20px;
+			margin: 0;
+			align-self: end;
+		}
+
+		.sidebar-title {
+			grid-column: 2;
+			font-size: 14px;
+			margin: 0;
+			align-self: start;
+		}
+
+		.nav-toggle {
+			display: flex;
+			grid-column: 3;
+			grid-row: 1 / span 2;
+		}
+
+		.sidebar-panel {
+			display: none;
+			grid-column: 1 / -1;
+			margin-top: 1rem;
+			padding-top: 1rem;
+			border-top: 1px solid rgba(255, 255, 255, .12);
+		}
+
+		&.is-open .sidebar-panel {
+			display: block;
+		}
+
+		.sidebar-switches {
+			flex-direction: row;
+			justify-content: space-between;
+			margin-bottom: 1rem;
+		}
+	}
+
+	// Inside the panel the sections are a two-column grid of buttons.
+	.sidebar .menu-list {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 8px;
+
+		a {
+			display: block;
+			margin: 0;
+			text-align: center;
+		}
+	}
+
+	.to-top {
+		position: fixed;
+		right: 16px;
+		bottom: 16px;
+		z-index: 20;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		background-color: $accent;
+		color: #fff;
+		font-size: 18px;
+		box-shadow: 0 4px 12px rgba(23, 26, 38, .25);
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity .2s ease;
+
+		&.is-visible {
+			opacity: 1;
+			pointer-events: auto;
+		}
+
+		&:hover,
+		&:focus {
+			color: #fff;
+			text-decoration: none;
+		}
+	}
+}
+
+// Core stack in Skills: solid accent so the main stack reads first.
+.tag.tag-core {
+	background-color: $accent;
+	color: #fff;
+	font-weight: 600;
+}
+
+.skills-legend {
+	margin: -1.25rem 0 1.5rem;
+
+	.tag {
+		display: inline-block;
+		font-size: 12px;
+	}
+}
+
+// Links to a case (#case-...) stop a little below the top of the screen.
+details.case {
+	scroll-margin-top: 20px;
+}
+
+// The 2000s page style, switched on by html.theme-y2k.
+@import "theme-y2k";

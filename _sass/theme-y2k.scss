@@ -1,0 +1,698 @@
+// ---------------------------------------------------------------------------
+// 2000s page style
+// ---------------------------------------------------------------------------
+// Everything here is scoped to html.theme-y2k, which the script in
+// _layouts/default.html sets (2000s is the default; the sidebar switch turns
+// it off and remembers the choice). Remove this file and its @import at the
+// end of styles.scss to drop the style entirely.
+
+$y2k-teal:    #008080;
+$y2k-navy:    #000080;
+$y2k-silver:  #c0c0c0;
+$y2k-face:    #d4d0c8;
+$y2k-shadow:  #808080;
+$y2k-dark:    #404040;
+$y2k-paper:   #ffffcc;
+$y2k-maroon:  #800000;
+$y2k-link:    #0000ee;
+$y2k-visited: #551a8b;
+$y2k-font:    Verdana, Tahoma, Geneva, sans-serif;
+$y2k-serif:   "Times New Roman", Times, serif;
+$y2k-comic:   "Comic Sans MS", "Comic Neue", "Chalkboard SE", cursive;
+
+// Raised and sunken Windows-style edges.
+@mixin y2k-raised($w: 2px) {
+	border: $w solid;
+	border-color: #fff $y2k-dark $y2k-dark #fff;
+}
+
+@mixin y2k-sunken($w: 2px) {
+	border: $w solid;
+	border-color: $y2k-shadow #fff #fff $y2k-shadow;
+}
+
+@mixin y2k-titlebar {
+	background: linear-gradient(90deg, $y2k-navy, #1084d0);
+	color: #fff;
+	font-family: $y2k-font;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1.4;
+	letter-spacing: 0;
+	text-transform: none;
+	text-shadow: none;
+}
+
+@mixin y2k-button {
+	@include y2k-raised;
+	background: $y2k-silver;
+	color: #000;
+	border-radius: 0;
+	box-shadow: none;
+	font-family: $y2k-font;
+	text-decoration: none;
+
+	&:hover,
+	&:focus {
+		background: $y2k-face;
+		color: #000;
+		text-decoration: none;
+		box-shadow: none;
+	}
+
+	&:active {
+		@include y2k-sunken;
+	}
+}
+
+html.theme-y2k {
+	body {
+		font-family: $y2k-font;
+		color: #000;
+		background-color: $y2k-teal;
+		background-image: radial-gradient(rgba(255, 255, 255, .12) 1px, transparent 1px);
+		background-size: 6px 6px;
+	}
+
+	a {
+		color: $y2k-link;
+		text-decoration: underline;
+
+		&:visited {
+			color: $y2k-visited;
+		}
+
+		&:hover {
+			color: #ff0000;
+		}
+	}
+
+	// --- Sidebar --------------------------------------------------------
+	.sidebar {
+		background: $y2k-navy;
+		color: #fff;
+		font-family: $y2k-font;
+	}
+
+	.avatar {
+		border-radius: 0 !important;
+		border: 4px ridge $y2k-silver;
+	}
+
+	.greeting {
+		font-family: $y2k-comic;
+		font-size: 15px;
+		letter-spacing: 0;
+		color: #ffff00;
+	}
+
+	.sidebar-name {
+		font-family: $y2k-serif;
+		font-size: 28px;
+	}
+
+	.sidebar-title {
+		color: #fff;
+	}
+
+	.sidebar-meta,
+	.sidebar-link {
+		color: $y2k-silver;
+	}
+
+	.lang-option {
+		border-radius: 0;
+		color: $y2k-silver;
+		font-family: $y2k-font;
+		letter-spacing: .04em;
+
+		&.is-active {
+			@include y2k-raised(1px);
+			background: $y2k-silver;
+			color: #000;
+		}
+	}
+
+	// The floating switches as a small navy toolbar.
+	@media (min-width: 768px) {
+		.top-switches {
+			@include y2k-raised;
+			background: $y2k-navy;
+			border-radius: 0;
+			box-shadow: 1px 1px 0 #000;
+		}
+	}
+
+	// Below 1420px there is no room beside the intro window: the toolbar goes
+	// back to one row and the windows start below it.
+	@media (min-width: 768px) and (max-width: 1419px) {
+		.top-switches {
+			flex-direction: row;
+			align-items: center;
+			gap: 6px;
+
+			.style-switch {
+				padding-top: 0;
+				padding-left: 6px;
+				border-top: 0;
+				border-left: 1px solid rgba(255, 255, 255, .2);
+			}
+		}
+
+		body .main-content {
+			padding-top: 58px;
+		}
+	}
+
+	// The ☰ button as a beveled gray button with black bars.
+	.nav-toggle {
+		@include y2k-raised;
+		background: $y2k-silver;
+		border-radius: 0;
+
+		span {
+			background: #000;
+			border-radius: 0;
+		}
+	}
+
+	.button,
+	.button-accent,
+	.menu-list a {
+		@include y2k-button;
+		font-weight: 700;
+		letter-spacing: .04em;
+	}
+
+	// The section being read: pressed in, white, with a marker.
+	.menu-list a.is-active {
+		@include y2k-sunken;
+		background: #fff;
+		color: $y2k-maroon;
+
+		&:before {
+			content: "\25B6\00a0";
+			font-size: .8em;
+		}
+	}
+
+	.social a,
+	.lang-option,
+	.sidebar-link {
+		text-decoration: none;
+	}
+
+	.social a {
+		color: #fff;
+	}
+
+	// --- Sections become windows ----------------------------------------
+	.main-content {
+		padding: 16px;
+	}
+
+	// Each window is only as wide as its content needs (up to the full width).
+	.main-content > section {
+		width: fit-content;
+		max-width: 100%;
+		@include y2k-raised;
+		background: #fff;
+		padding: 0 1.75rem 1.75rem;
+		margin-bottom: 16px;
+		box-shadow: 1px 1px 0 #000;
+	}
+
+	// Intro text fills its window without making the window wider.
+	.section-hero .lead-text {
+		width: 0;
+		min-width: 100%;
+	}
+
+	.main-content > .section-alt {
+		background: $y2k-paper;
+	}
+
+	.heading {
+		@include y2k-titlebar;
+		margin: 0 -1.75rem 1.5rem;
+		padding: 4px 10px;
+	}
+
+	.section-hero {
+		padding-top: 0;
+
+		&:before {
+			@include y2k-titlebar;
+			content: "index.htm - Microsoft Internet Explorer";
+			display: block;
+			margin: 0 -1.75rem 1.25rem;
+			padding: 4px 10px;
+		}
+
+		.heading {
+			margin: 0 0 1.25rem;
+			padding: 0;
+			background: none;
+			color: $y2k-maroon;
+			font-family: $y2k-serif;
+			font-size: 48px;
+			text-shadow: 2px 2px 0 $y2k-silver;
+		}
+	}
+
+	.eyebrow {
+		color: $y2k-teal;
+		letter-spacing: .08em;
+	}
+
+	.lead-text,
+	.rail-item > p,
+	.item-highlights,
+	.case-steps dd {
+		color: #000;
+	}
+
+	.lead-text strong,
+	.item-highlights strong,
+	.project-details strong,
+	.project-summary strong,
+	.case-steps strong,
+	.rail-item > p strong {
+		color: #000;
+		font-weight: 700;
+	}
+
+	// --- Stat tiles and buttons -----------------------------------------
+	// Group boxes, not buttons: an etched frame on the page.
+	.stat-row li {
+		border: 2px groove $y2k-face;
+		border-radius: 0;
+		background: transparent;
+	}
+
+	.stat-value {
+		color: $y2k-maroon;
+		font-family: $y2k-serif;
+	}
+
+	.stat-label {
+		color: #000;
+	}
+
+	.btn-solid,
+	.btn-outline {
+		@include y2k-button;
+	}
+
+	.btn-solid {
+		font-weight: 700;
+	}
+
+	// --- Tags, dates, timeline ------------------------------------------
+	.tag,
+	.tag-list-sm .tag {
+		border-radius: 0;
+		background: #fff;
+		color: #000;
+		border: 1px solid $y2k-shadow;
+		font-family: $y2k-font;
+	}
+
+	.tag.tag-core {
+		background: $y2k-navy;
+		border-color: $y2k-navy;
+		color: #fff;
+	}
+
+	.skill-group-title {
+		color: $y2k-navy;
+	}
+
+	.date {
+		border-radius: 0;
+		background: $y2k-navy;
+		color: #fff;
+	}
+
+	.rail-list {
+		border-left: 2px dotted $y2k-shadow;
+	}
+
+	.rail-item:before {
+		border-radius: 0;
+		background: $y2k-maroon;
+	}
+
+	.item-org {
+		color: $y2k-teal;
+	}
+
+	.work-label {
+		border-radius: 0;
+	}
+
+	// --- Cases ----------------------------------------------------------
+	.case,
+	.case:hover,
+	.case[open] {
+		@include y2k-raised;
+		border-radius: 0;
+		background: #fff;
+		box-shadow: none;
+	}
+
+	.case summary {
+		background: $y2k-silver;
+	}
+
+	// The toggle as a combo-box button: a raised square with a black arrow.
+	.case-toggle {
+		@include y2k-raised;
+		width: 24px;
+		height: 24px;
+		margin-top: -12px;
+		border-radius: 0;
+		background: $y2k-silver;
+
+		&:before {
+			width: 0;
+			height: 0;
+			margin: -3px 0 0 -5px;
+			border: 0;
+			border-left: 5px solid transparent;
+			border-right: 5px solid transparent;
+			border-top: 6px solid #000;
+			transform: none;
+		}
+	}
+
+	.case[open] .case-toggle:before {
+		margin-top: -3px;
+		transform: rotate(180deg);
+	}
+
+	.case summary:hover .case-toggle,
+	.case summary:focus-visible .case-toggle {
+		background: $y2k-face;
+
+		&:before {
+			border-color: transparent;
+			border-top-color: $y2k-navy;
+		}
+	}
+
+	.case[open] summary .case-toggle {
+		@include y2k-sunken;
+	}
+
+	.case-kicker {
+		border-radius: 0;
+		background: $y2k-navy;
+		color: #fff;
+	}
+
+	.case-metric {
+		border-radius: 0;
+		background: #000;
+		color: #00ff00;
+		font-family: "Courier New", Courier, monospace;
+	}
+
+	.case-steps dt {
+		color: $y2k-navy;
+	}
+
+	.case-steps dd.case-result,
+	.work-result {
+		border-radius: 0;
+		border-left-color: $y2k-navy;
+		background: $y2k-paper;
+
+		strong {
+			color: $y2k-maroon !important;
+		}
+	}
+
+	.section-alt .work-result {
+		background: #fff;
+	}
+
+	.case-formula {
+		color: #000;
+	}
+
+	// --- Charts, flows, roadmap: sunken panels --------------------------
+	.bar-chart,
+	.flow,
+	.line-chart {
+		@include y2k-sunken;
+		border-radius: 0;
+		background: #fff;
+	}
+
+	// The roadmap as a to-do list box with empty checkboxes.
+	.roadmap {
+		padding: .75rem 1rem;
+		border: 1px solid $y2k-shadow;
+		box-shadow: inset 1px 1px 0 $y2k-dark;
+		background: #fff;
+	}
+
+	// Retro bullets: little maroon arrows, no connecting line.
+	.roadmap-list li {
+		padding-left: 22px;
+
+		&:before {
+			content: "";
+			top: .3em;
+			left: 2px;
+			width: 0;
+			height: 0;
+			border: 0;
+			border-radius: 0;
+			border-top: 6px solid transparent;
+			border-bottom: 6px solid transparent;
+			border-left: 9px solid #800000;
+			background: none;
+		}
+
+		&:after {
+			display: none;
+		}
+	}
+
+	.flow-box {
+		border-radius: 0;
+	}
+
+	// --- Projects -------------------------------------------------------
+	.project-featured,
+	.project-card {
+		@include y2k-raised;
+		border-radius: 0;
+		background: #fff;
+		box-shadow: none;
+	}
+
+	.featuredImage,
+	.rounded {
+		border-radius: 0;
+	}
+
+	.language-list li {
+		border-radius: 0;
+	}
+
+	// --- Back to top (mobile) -------------------------------------------
+	.to-top {
+		@include y2k-raised;
+		border-radius: 0;
+		background: $y2k-silver;
+		color: #000;
+		box-shadow: none;
+	}
+
+	// --- Scrolling banner and footer ------------------------------------
+	.y2k-only {
+		display: block;
+	}
+
+	.y2k-ticker {
+		// Zero width plus min-width 100%: the long scrolling line never widens
+		// its window, it just fills whatever width the window has.
+		width: 0;
+		min-width: 100%;
+		margin: 0 0 1.25rem;
+		padding: 4px 0;
+		overflow: hidden;
+		white-space: nowrap;
+		background: #000;
+		color: #00ff00;
+		font-family: "Courier New", Courier, monospace;
+		font-size: 14px;
+
+		span {
+			display: inline-block;
+			padding-left: 100%;
+			animation: y2k-marquee 30s linear infinite;
+		}
+	}
+
+	.y2k-footer {
+		@include y2k-raised;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px 12px;
+		padding: 8px 12px;
+		background: $y2k-silver;
+		font-size: 12px;
+	}
+
+	.y2k-badge {
+		padding: 3px 6px;
+		border: 1px solid #000;
+		font-size: 10px;
+		font-weight: 700;
+		color: #000;
+	}
+
+	.y2k-badge-java {
+		background: #ff6600;
+	}
+
+	.y2k-badge-construction {
+		background: #ffff00;
+	}
+
+	.y2k-best {
+		margin-left: auto;
+		color: #333;
+	}
+
+	// The hidden chest: opening it unlocks the Modern style.
+	.y2k-chest {
+		margin-left: 4px;
+		padding: 0;
+		border: 0;
+		background: none;
+		line-height: 0;
+		opacity: .85;
+		transition: transform .15s ease, opacity .15s ease;
+
+		svg {
+			overflow: visible;
+		}
+
+		.chest-lid {
+			transform-box: fill-box;
+			transform-origin: left bottom;
+			transition: transform .35s cubic-bezier(.3, 1.6, .5, 1);
+		}
+
+		&:hover,
+		&:focus-visible {
+			opacity: 1;
+			transform: rotate(-6deg) scale(1.1);
+		}
+
+		&.is-open {
+			opacity: 1;
+			transform: none;
+			filter: drop-shadow(0 0 6px #ffd700);
+
+			.chest-lid {
+				transform: translateY(-3px) rotate(-28deg);
+			}
+		}
+	}
+
+	.y2k-unlock-msg {
+		flex-basis: 100%;
+		margin: 0;
+		font-weight: 700;
+		color: $y2k-maroon;
+
+		&:empty {
+			display: none;
+		}
+	}
+
+	@media (max-width: 767px) {
+		.main-content {
+			padding: 10px;
+		}
+
+		.main-content > section {
+			padding: 0 1rem 1.25rem;
+			margin-bottom: 10px;
+		}
+
+		.heading {
+			margin: 0 -1rem 1.25rem;
+		}
+
+		.section-hero {
+			&:before {
+				margin: 0 -1rem 1rem;
+			}
+
+			.heading {
+				margin: 0 0 1rem;
+				font-size: 34px;
+			}
+		}
+
+		.y2k-best {
+			margin-left: 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.y2k-ticker span {
+			padding-left: 0;
+			animation: none;
+		}
+	}
+}
+
+@keyframes y2k-marquee {
+	to {
+		transform: translateX(-100%);
+	}
+}
+
+// Sparkles: the chest burst. Created by the scripts in
+// _layouts/default.html, only in the 2000s style.
+.y2k-sparkle {
+	position: fixed;
+	z-index: 9999;
+	width: 11px;
+	height: 11px;
+	pointer-events: none;
+	background: currentColor;
+	// A four-pointed star, drawn so it looks the same in any font.
+	clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+	transform: translate(-50%, -50%);
+	animation: y2k-sparkle .7s ease-out forwards;
+}
+
+.y2k-sparkle.is-burst {
+	width: 16px;
+	height: 16px;
+	animation: y2k-burst .9s ease-out forwards;
+}
+
+@keyframes y2k-sparkle {
+	to {
+		opacity: 0;
+		transform: translate(-50%, 30%) scale(.4);
+	}
+}
+
+@keyframes y2k-burst {
+	to {
+		opacity: 0;
+		transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.5) rotate(90deg);
+	}
+}

@@ -19,34 +19,41 @@
     <link rel="stylesheet" href="{{ "/assets/css/bootstrap.min.css" | relative_url }}">
     <link rel="stylesheet" href="{{ "/assets/css/font-awesome.min.css" | relative_url }}">
     <link rel="stylesheet" href="{{ "/assets/css/styles.css" | relative_url }}">
+    <script>
+    // Page style: "y2k" (Retro, the default) or "modern". Set before the
+    // first paint so the page never flashes the other style.
+    (function () {
+        var root = document.documentElement;
+        var style = 'y2k';
+        try {
+            if (localStorage.getItem('site-style') === 'modern') style = 'modern';
+        } catch (e) {}
+        if (style === 'y2k') root.classList.add('theme-y2k');
+        // The game link stays hidden until the chest in the Retro footer is opened.
+        var unlocked = false;
+        try { unlocked = localStorage.getItem('game-unlocked') === '1'; } catch (e) {}
+        if (!unlocked) root.classList.add('game-locked');
+    })();
+    </script>
 
     {%- if jekyll.environment == 'production' and site.google_analytics -%}
         {%- include google-analytics.html -%}
     {%- endif -%}
 </head>
 
-<body>
+<body id="top">
     <main aria-label="Content">
         <section class="sidebar">
-            {%- if site.languages.size > 1 %}
-            <nav class="lang-switch" aria-label="{{ ui.a11y.language_nav }}">
-                {%- for entry in site.languages %}
-                <a class="lang-option{% if entry.code == lang %} is-active{% endif %}"
-                   href="{{ entry.url | relative_url }}"
-                   hreflang="{{ entry.hreflang | default: entry.code }}"
-                   lang="{{ entry.hreflang | default: entry.code }}"
-                   {% if entry.code == lang %}aria-current="true"{% endif %}
-                   title="{{ entry.name }}"><span class="lang-flag" aria-hidden="true">{{ entry.flag }}</span> {{ entry.short }}</a>
-                {%- endfor %}
-            </nav>
-            {%- endif %}
-
             <img src="{{ profile.photo | relative_url }}" class="avatar rounded-circle" width="140" height="140"
                  alt="{{ profile.name }}">
 
             <p class="f8bit greeting">Hello World</p>
             <h1 class="sidebar-name">{{ profile.name }}</h1>
             <p class="sidebar-title">{{ profile.title }}</p>
+            {%- comment -%} Phones only: opens the panel with the switches and the section menu. {%- endcomment %}
+            <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="sidebar-panel" aria-label="{{ ui.a11y.menu }}">
+                <span></span><span></span><span></span>
+            </button>
             <p class="sidebar-meta">
                 {%- if profile.location and profile.location != "" %}
                 <i class="fa fa-map-marker" aria-hidden="true"></i> {{ profile.location }}
@@ -81,6 +88,8 @@
             </div>
 
             {%- assign home = page.home_url | default: '/' %}
+            <div class="sidebar-panel" id="sidebar-panel">
+            {% include switches.html class="sidebar-switches" %}
             <nav aria-label="{{ ui.a11y.sections_nav }}">
                 <ul class="menu-list">
                     <li><a class="button" href="{{ home | append: '#about' | relative_url }}">{{ ui.nav.about }}</a></li>
@@ -91,8 +100,116 @@
                     <li><a class="button" href="{{ home | append: '#contact' | relative_url }}">{{ ui.nav.contact }}</a></li>
                 </ul>
             </nav>
+            </div>
         </section>
         {{ content }}
     </main>
+    <a class="to-top" href="#top" aria-label="{{ ui.actions.back_to_top }}" title="{{ ui.actions.back_to_top }}">
+        <i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+    <script>
+    // The 2000s / Modern switch in the sidebar.
+    (function () {
+        var root = document.documentElement;
+        var buttons = document.querySelectorAll('.style-option');
+        function sync() {
+            var y2k = root.classList.contains('theme-y2k');
+            buttons.forEach(function (b) {
+                var on = (b.getAttribute('data-style') === 'y2k') === y2k;
+                b.classList.toggle('is-active', on);
+                b.setAttribute('aria-pressed', on ? 'true' : 'false');
+            });
+        }
+        buttons.forEach(function (b) {
+            b.addEventListener('click', function () {
+                var style = b.getAttribute('data-style');
+                root.classList.toggle('theme-y2k', style === 'y2k');
+                try { localStorage.setItem('site-style', style); } catch (e) {}
+                sync();
+            });
+        });
+        sync();
+
+        // The quest: the chest in the Retro footer unlocks the game link.
+        var chest = document.querySelector('.y2k-chest');
+        if (!chest) return;
+        if (!root.classList.contains('game-locked')) chest.classList.add('is-open');
+        var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        chest.addEventListener('click', function () {
+            if (chest.classList.contains('is-open')) return;
+            chest.classList.add('is-open');
+            try { localStorage.setItem('game-unlocked', '1'); } catch (e) {}
+            root.classList.remove('game-locked');
+            var game = document.querySelector('.game-link');
+            if (game) game.classList.add('is-revealed');
+            var msg = document.querySelector('.y2k-unlock-msg');
+            if (msg) msg.textContent = msg.getAttribute('data-message');
+            if (still) return;
+            // A burst of sparkles out of the chest.
+            var r = chest.getBoundingClientRect();
+            var colors = ['#ffd700', '#ffff00', '#00ffff', '#ff66ff', '#ffffff'];
+            for (var i = 0; i < 14; i++) {
+                var a = (Math.PI * 2 * i) / 14, d = 40 + Math.random() * 40;
+                var sp = document.createElement('span');
+                sp.className = 'y2k-sparkle is-burst';
+                sp.setAttribute('aria-hidden', 'true');
+                sp.style.left = (r.left + r.width / 2) + 'px';
+                sp.style.top = (r.top + r.height / 2) + 'px';
+                sp.style.color = colors[i % colors.length];
+                sp.style.setProperty('--dx', Math.cos(a) * d + 'px');
+                sp.style.setProperty('--dy', Math.sin(a) * d + 'px');
+                document.body.appendChild(sp);
+                setTimeout(sp.remove.bind(sp), 950);
+            }
+        });
+    })();
+    </script>
+    <script>
+    // Phones: the ☰ button opens and closes the panel with the switches and
+    // the section menu; picking a section closes it again.
+    (function () {
+        var sidebar = document.querySelector('.sidebar');
+        var toggle = document.querySelector('.nav-toggle');
+        if (!sidebar || !toggle) return;
+        function setOpen(open) {
+            sidebar.classList.toggle('is-open', open);
+            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+        toggle.addEventListener('click', function () { setOpen(!sidebar.classList.contains('is-open')); });
+        document.querySelectorAll('.sidebar-panel .menu-list a').forEach(function (a) {
+            a.addEventListener('click', function () { setOpen(false); });
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && sidebar.classList.contains('is-open')) { setOpen(false); toggle.focus(); }
+        });
+    })();
+    </script>
+    <script>
+    // Highlights the sidebar link of the section being read, and shows the
+    // back-to-top button (mobile only, via CSS) once the header is out of view.
+    (function () {
+        var links = {};
+        document.querySelectorAll('.menu-list a').forEach(function (a) {
+            var id = a.getAttribute('href').split('#')[1];
+            if (id && document.getElementById(id)) links[id] = a;
+        });
+        var ids = Object.keys(links);
+        var toTop = document.querySelector('.to-top');
+        var ticking = false;
+        function update() {
+            ticking = false;
+            var line = window.innerHeight * 0.35, current = ids[0];
+            ids.forEach(function (id) {
+                if (document.getElementById(id).getBoundingClientRect().top <= line) current = id;
+            });
+            if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) current = ids[ids.length - 1];
+            ids.forEach(function (id) { links[id].classList.toggle('is-active', id === current); });
+            if (toTop) toTop.classList.toggle('is-visible', window.scrollY > window.innerHeight);
+        }
+        window.addEventListener('scroll', function () {
+            if (!ticking) { ticking = true; requestAnimationFrame(update); }
+        }, { passive: true });
+        update();
+    })();
+    </script>
 </body>
 </html>

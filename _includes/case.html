@@ -1,0 +1,41 @@
+{%- comment -%}
+A short case study: problem, what I did, result. Collapsed by default so the
+page stays scannable; the summary line carries the title and the headline
+number. Optional `formula`, `chart` (bar chart), `line` (line chart) and
+`flow` (step diagram) render inside. Cases inside the same `.case-list` open
+one at a time (see the script at the end of home.html). An optional `id`
+gives the case a link target (e.g. /#case-notices, used by the CV); opening
+the page at that link opens the case.
+{%- endcomment -%}
+{%- assign c = include.case -%}
+<details class="case"{% if c.id %} id="{{ c.id }}"{% endif %}>
+    <summary>
+        <span class="case-kicker">{{ ui.case.label }}</span>
+        <span class="case-title">{{ c.title }}</span>
+        {%- if c.metric and c.metric != "" %}
+        <span class="case-metric">{{ c.metric }}</span>
+        {%- endif %}
+        <span class="case-toggle" aria-hidden="true"></span>
+    </summary>
+    <div class="case-body">
+        <dl class="case-steps">
+            {%- if c.problem %}
+            <dt>{{ ui.case.problem }}</dt>
+            <dd>{{ c.problem }}</dd>
+            {%- endif %}
+            {%- if c.approach %}
+            <dt>{{ ui.case.approach }}</dt>
+            <dd>{{ c.approach }}</dd>
+            {%- endif %}
+            {%- if c.result %}
+            <dt>{{ ui.case.result }}</dt>
+            <dd class="case-result">{{ c.result }}</dd>
+            {%- endif %}
+        </dl>
+        {%- if c.formula %}<p class="case-formula">{{ c.formula }}</p>{% endif %}
+        {%- if c.chart %}{% include chart-bars.html chart=c.chart %}{% endif %}
+        {%- if c.line %}{% include chart-line.html chart=c.line %}{% endif %}
+        {%- if c.flow %}{% include flow.html flow=c.flow %}{% endif %}
+        {%- include tech-tags.html tech=c.tech -%}
+    </div>
+</details>

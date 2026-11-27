@@ -1,42 +1,238 @@
+# Each job can carry `cases`: short case studies in the format problem, what I
+# did, result. They render collapsed, showing only the title and the metric.
+# Rules: numbers must match the CV exactly; the JMeter figures always say they
+# come from a local load test; no client ticket numbers, class names or infra.
+
+- period: 2026 - Present
+  role: Master IT Analyst (Java Software Engineer)
+  org: Grupo SOS Docs
+  location:
+  summary: >-
+    Document and process management platform of Brazil's Chamber of Deputies,
+    the lower house of the National Congress: a large legacy Java/Nuxeo system
+    under strict security and compliance requirements.
+  highlights:
+    - Built a <strong>notices panel on the platform's login page</strong>, fed by an external notification service, with caching, timeout and fallback on the back end and HTML sanitized with DOMPurify on the front end. In a local JMeter load test, the endpoint's <strong>p95 latency went from 163 ms to 4 ms</strong>.
+    - Extended the <strong>compliance audit trail</strong>, recording previously untracked actions such as acknowledgment workflow events and access to confidential content.
+    - Traced and fixed <strong>business-rule bugs</strong> in the platform and its Spring Boot/Oracle integration API, including protocol-number ordering with a normalized SQL key and document inclusion rules for dossiers.
+    - Evolved the <strong>REST integration API</strong> that other systems use to work with the platform, adding operations with input validation and clear statuses and errors for callers, and added failure logging to external service integrations so production issues can be traced.
+    - Day-to-day work across the platform's stack, including <strong>RabbitMQ messaging, OpenSearch and Keycloak</strong>.
+    - Ramping up on the <strong>system's modernization</strong>, a full rewrite with Spring Boot 4, Spring Modulith, DDD and hexagonal architecture, studying its architecture decision records with the team.
+  # Shorter versions, shown on the page. The full ones stay in `highlights`;
+  # delete `highlights_short` to show them again.
+  highlights_short:
+    - Built a <strong>notices panel on the login page</strong> fed by an external service, with caching and fallback; p95 went from 163 ms to 4 ms in a local load test.
+    - Extended the <strong>compliance audit trail</strong> to record previously untracked actions.
+    - Fixed <strong>business-rule bugs</strong> in the platform and evolved the REST integration API that other systems use, with validated operations and failure logging to external integrations.
+    - Ramping up on the <strong>system's modernization</strong> (Spring Boot 4, Spring Modulith, DDD, hexagonal architecture).
+  tech: [Java 8/11/25, Nuxeo, Spring Boot, Oracle, RabbitMQ, Keycloak]
+  cases:
+    - id: case-notices
+      title: Login-page notices from an external service, with caching and fallback
+      metric: "p95 163 → 4 ms (local test)"
+      problem: >-
+        The login page, used by up to about 2,500 unique users a day (around
+        10 logins per minute, rarely more than 20), had to show notices
+        published in an external notification service. Calling it on every
+        page load would tie the page's response time, and its availability,
+        to a system outside the team's control.
+      approach: >-
+        Placed a cache with a fallback in front of the integration. Notices are
+        served from the cache for 300 s; once it expires, the service is called
+        again with a 3 s timeout, and if the call fails or times out, the last
+        known notices are kept. On the page, the notices' HTML is sanitized
+        with DOMPurify before it is rendered.
+      result: >-
+        Instead of one call to the external service per login, each server now
+        calls it <strong>at most once every 5 minutes</strong>, whatever the traffic. In a
+        local JMeter load test (5 users, ~140 requests), <strong>p95 latency went from
+        163 ms to 4 ms</strong> and the median from 81 ms to 2 ms. When the external
+        service is slow or down, the login page still shows the last known
+        notices.
+      chart:
+        title: Endpoint latency, before and after
+        unit: ms
+        max: 163
+        before_label: Before
+        after_label: After (cache + fallback)
+        caption: Local JMeter load test, 5 concurrent users, ~140 requests.
+        rows:
+          - { label: Median, before: 81, after: 2 }
+          - { label: p95, before: 163, after: 4 }
+      tech: [Java, Caching, JavaScript, DOMPurify, JMeter]
+
+    - id: case-audit
+      title: A more complete audit trail for confidential content
+      problem: >-
+        The platform stores confidential documents under strict compliance
+        rules, and its audit trail has to answer who did what to a document
+        and when. Some relevant actions were not recorded, and the trail did
+        not tell apart a user who actually viewed confidential content from
+        one who was stopped by its restriction.
+      approach: >-
+        Extended the audit trail to record those actions. Viewing confidential
+        content is now logged only when the user explicitly chooses to open
+        it, separately from access blocked by confidentiality. Acknowledgment
+        workflow events, a document being added to or removed from a process,
+        and the type of restriction applied when access is limited are
+        recorded as well.
+      result: >-
+        Audits can now <strong>tell who actually viewed confidential content</strong> and
+        follow a document's workflow with fewer gaps.
+      tech: [Java, Nuxeo, Security, Audit logging, Compliance]
+
 - period: 2018 - 2026
-  role: Full Stack Java Developer
+  role: Senior Java Full Stack Developer
   org: FUNPAR - UFPR
-  location: 
+  location:
   summary: >-
     Scholarship and grant management platforms for the Federal University of
-    Paraná (UFPR), including the Scientific Initiation system used by ~1,000
-    professors and 2,500+ scholarship students per year.
+    Paraná (UFPR), including the Scientific Initiation system, which serves
+    <strong>10,000+ users per year</strong>.
   highlights:
-    - Rebuilt the Scientific Initiation system from the ground up, replacing a legacy application with a modern Java/Spring and Vue.js stack - from requirements gathering to production delivery.
-    - Built REST APIs with Java/Spring and responsive front ends with Vue.js.
-    - Integrated with CNPq's Lattes national research database, parsing researcher XML records to automate publication scoring for scholarship ranking.
-    - Developed cross-system REST integrations to fetch and validate grant data between university platforms.
-    - Conducted requirements analysis and effort estimation for the systems and modules supporting the university's scholarship selection calls.
-    - Designed and optimized relational database schemas in Oracle and MySQL.
-  tech: [Java, Spring, Vue.js, JavaScript, REST APIs, Oracle, MySQL]
+    - Rebuilt the university's Scientific Initiation system <strong>from scratch as technical lead of a 3 to 4 developer team</strong>, replacing a legacy application with Java/Spring and Vue.js and migrating in phases so it stayed online during application periods.
+    - Integrated university systems with the <strong>CNPq Lattes national research database</strong>, parsing researcher XML records to automate publication scoring in scholarship rankings.
+    - Developed and maintained <strong>other scholarship and grant management platforms</strong>, with REST integrations to retrieve and validate data across university systems.
+    - Gathered requirements and negotiated scope directly with <strong>non-technical stakeholders</strong> (professors and university administration) for systems tied to scholarship calls.
+    - Conducted <strong>code reviews, onboarding and technical interviews</strong> for junior and mid-level developers.
+    - Wrote unit and integration tests with <strong>JUnit and Mockito</strong>, and modeled relational schemas in Oracle and MySQL.
+  highlights_short:
+    - <strong>Rebuilt the Scientific Initiation system</strong> as tech lead of a 3 to 4 developer team (Spring and Vue.js), migrating in phases so it stayed online during application periods.
+    - Integrated with the <strong>CNPq Lattes database</strong> to automate publication scoring in scholarship rankings.
+    - Maintained <strong>other scholarship and grant platforms</strong>, with REST integrations across university systems.
+    - Worked directly with <strong>non-technical stakeholders</strong> on requirements and scope.
+    - <strong>Code reviews, onboarding and technical interviews</strong> for junior and mid-level developers.
+    - Tests with <strong>JUnit and Mockito</strong>; relational modeling in Oracle and MySQL.
+  tech: [Java 7/8/11/17, Spring Boot, Vue.js, Oracle, JSF, JUnit]
+  cases:
+    - id: case-rebuild
+      title: Rebuilding the Scientific Initiation system without taking it offline
+      metric: "~3,000 professors · 7,500+ students / year"
+      problem: >-
+        The legacy system was written in JSF and had become hard to maintain
+        and to evolve. It was also hard to staff: new developers usually
+        arrived knowing plain Java or some Spring, not JSF. And it could not
+        simply be switched off, because professors and students depend on it
+        during every call's application periods.
+      approach: >-
+        As technical lead of a 3 to 4 developer team, I rebuilt it from scratch
+        in phases, with a Spring Boot back end and a Vue.js front end. The new
+        system debuted as a pilot in the 2022 call, running alongside the
+        legacy one. Features were released incrementally in the order of the
+        call itself, starting with applications and then evaluation, each one
+        shipped when the call needed it. From then on, every new call was
+        created in the new system, and a later phase migrated the legacy data.
+      result: >-
+        The system <strong>stayed online through every application period</strong> of the
+        migration, which took about a year, and today serves <strong>~3,000 professors
+        and 7,500+ students per year</strong>. Users got improvements along the way, and
+        the team got a codebase that is easier to maintain and to bring new
+        developers into.
+      flow:
+        title: Migration timeline
+        layout: timeline
+        steps:
+          - kicker: Before 2022
+            title: Legacy JSF system
+            note: Hard to maintain, evolve and staff
+          - kicker: 2022 call
+            title: Pilot in Spring Boot + Vue.js
+            note: Ran alongside the legacy system
+          - kicker: ~1 year
+            title: Incremental releases
+            note: Shipped in the call's own order; every new call created in the new system
+          - kicker: ~2024
+            title: Legacy data migration
+            note: Older calls' data brought into the new system
+      tech: [Java, Spring Boot, Vue.js, Oracle]
+
+    - id: case-lattes
+      title: Automated publication scoring from the CNPq Lattes database
+      problem: >-
+        Scholarship rankings depend on each researcher's publication record.
+        The criteria change from call to call, but are largely based on Qualis,
+        the Brazilian journal ranking: an article in an A1 journal, for
+        example, scores more than one in a lower tier.
+      approach: >-
+        Integrated the university systems with the Lattes API, downloading each
+        researcher's CV as XML, parsing their publications and scoring them
+        against the current call's criteria.
+      result: >-
+        Publication scores in the scholarship rankings are <strong>computed
+        automatically</strong> from each researcher's Lattes record.
+      flow:
+        title: From Lattes record to ranking
+        steps:
+          - kicker: 1
+            title: Lattes API
+            note: Download the researcher's CV as XML
+          - kicker: 2
+            title: Parse XML
+            note: Extract publications, type and venue
+          - kicker: 3
+            title: Score
+            note: Apply the call's criteria, such as Qualis tier (A1 scores highest)
+          - kicker: 4
+            title: Scholarship ranking
+      tech: [Java, XML, REST APIs]
 
 - period: 2025 - 2026
-  role: AI Training & Evaluation Specialist
+  role: AI Training and Evaluation Specialist
   org: Revelo (AI Training Projects)
   summary: >-
     Evaluation and improvement of large language model output on software
     engineering tasks.
   highlights:
-    - Evaluated and improved LLM responses on coding tasks across Python, Java and JavaScript, reviewing for correctness, quality and safety.
+    - <strong>Evaluated and improved large language model responses</strong> on coding tasks in Python, Java and JavaScript, reviewing correctness, quality and security.
     - Applied software engineering judgment and TDD practices to assess AI-generated code and reasoning, contributing to model training and alignment.
-  tech: [LLMs, Python, Java, JavaScript]
+  highlights_short:
+    - <strong>Evaluated and improved LLM responses</strong> on coding tasks in Python, Java and JavaScript.
+    - Applied engineering judgment and TDD to assess AI-generated code, contributing to model training.
+  tech: [LLMs, Python, Java, JavaScript, TDD]
 
 - period: 2017 - 2018
-  role: Junior Programmer
+  role: Junior Developer
   org: Núcleo de Concursos - UFPR
-  location: 
+  location:
   summary: >-
-    Systems supporting the university's public admission exams and
-    quota-admission process.
+    Systems supporting the university's admission exams and quota-admission
+    process.
   highlights:
-    - Built a system managing the university's quota-admission verification process - in-system video recording of candidate interviews, asynchronous review by evaluation boards, and final result generation (core Java, JSP/Servlets).
-    - Developed features for the university admission exam systems.
+    - Built a system managing the university's <strong>quota-admission verification process</strong>, with in-system video recording of candidate interviews, asynchronous review by evaluation boards, and final result generation (core Java, JSP/Servlets).
+    - Developed features for university admission exam systems (Java, JSP, JavaScript, Oracle).
+  highlights_short:
+    - Built the <strong>quota-admission verification system</strong>, with recorded interviews, asynchronous board review and final results (Java, JSP/Servlets).
+    - Developed features for admission exam systems (Java, JSP, JavaScript, Oracle).
   tech: [Java, JSP/Servlets, JavaScript, Oracle]
+  cases:
+    - id: case-quota
+      title: Quota-admission verification with recorded interviews
+      problem: >-
+        Candidates admitted through racial quotas have their self-declaration
+        verified by evaluation boards (a process known in Brazil as
+        heteroidentification). Interviews, board reviews and results needed to
+        run in one place.
+      approach: >-
+        Built a system where candidate interviews are recorded on video inside
+        the system, evaluation boards review the recordings asynchronously,
+        and the final results are generated at the end. Core Java with
+        JSP/Servlets.
+      result: >-
+        The whole process, from interview to final result, ran in a <strong>single
+        system</strong>, and board members could review the recordings on their own
+        schedule.
+      flow:
+        steps:
+          - kicker: 1
+            title: Interview
+            note: Recorded on video inside the system
+          - kicker: 2
+            title: Board review
+            note: Evaluation boards watch and decide asynchronously
+          - kicker: 3
+            title: Final result
+            note: Generated by the system
+      tech: [Java, JSP/Servlets, Video recording]
 
 - period: 2017
   role: Trainee

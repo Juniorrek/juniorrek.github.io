@@ -1,0 +1,498 @@
+{%- comment -%}
+"Game" mode: a tiny map in an oblique top-down view where an original pixel character walks to
+signposts, one per portfolio section. Stepping on a sign, or clicking it,
+goes back to the portfolio at that section. Standalone page (no layout), used
+by /game.html and /pt-br/game.html. No libraries: one canvas plus plain JS.
+{%- endcomment -%}
+{%- assign lang = page.lang | default: site.lang | default: "en" -%}
+{%- assign locale = site.data[lang] -%}
+{%- assign ui = locale.ui -%}
+{%- assign current = site.languages | where: "code", lang | first -%}
+{%- assign home = page.home_url | default: '/' -%}
+<!DOCTYPE html>
+<html lang="{{ current.hreflang | default: lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ ui.game.title }} · {{ locale.profile.name }}</title>
+<meta name="robots" content="noindex">
+<style>
+:root {
+	--bg: #0f2427;
+	--ink: #f3efe2;
+	--muted: #a9c9c6;
+	--panel: #13302f;
+	--gold: #ffd54a;
+	--accent: #6fd6df;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+	min-height: 100vh;
+	background: var(--bg);
+	color: var(--ink);
+	font-family: Verdana, Tahoma, Geneva, sans-serif;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 14px;
+	padding: 20px 16px 28px;
+}
+header {
+	width: 100%;
+	max-width: 960px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 8px 16px;
+}
+h1 {
+	margin: 0;
+	font-size: 22px;
+	letter-spacing: .02em;
+	color: var(--gold);
+	text-shadow: 2px 2px 0 #000;
+}
+header a {
+	color: var(--accent);
+	font-size: 14px;
+}
+.hint {
+	width: 100%;
+	max-width: 960px;
+	margin: 0;
+	font-size: 13px;
+	color: var(--muted);
+}
+.stage {
+	position: relative;
+	width: 100%;
+	max-width: 960px;
+	border: 4px solid #000;
+	box-shadow: 0 0 0 3px #5b4a2a, 0 10px 30px rgba(0, 0, 0, .5);
+	line-height: 0;
+}
+canvas {
+	display: block;
+	width: 100%;
+	height: auto;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+	touch-action: manipulation;
+	cursor: pointer;
+}
+/* Signposts: real links laid over the map, so they work with a keyboard too. */
+.sign {
+	position: absolute;
+	transform: translate(-50%, -100%);
+	padding: 3px 8px;
+	background: #5b3a1e;
+	color: #fff3c4;
+	border: 2px solid #000;
+	box-shadow: inset 0 0 0 2px #8a5a2b;
+	font: 700 clamp(9px, 1.4vw, 13px)/1.3 Verdana, Tahoma, sans-serif;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+	text-decoration: none;
+	white-space: nowrap;
+	line-height: 1.3;
+}
+.sign:hover,
+.sign:focus-visible,
+.sign.is-near {
+	background: #8a5a2b;
+	color: #fff;
+	outline: 2px solid var(--gold);
+	outline-offset: 1px;
+}
+.pad {
+	display: none;
+	grid-template-columns: repeat(3, 52px);
+	grid-template-rows: repeat(3, 52px);
+	gap: 6px;
+}
+.pad button {
+	border: 2px solid #000;
+	background: #2a4a48;
+	color: var(--ink);
+	font-size: 20px;
+	box-shadow: inset 0 0 0 2px #3f6b68;
+	touch-action: manipulation;
+}
+.pad button:active { background: #3f6b68; }
+.pad .up { grid-column: 2; grid-row: 1; }
+.pad .left { grid-column: 1; grid-row: 2; }
+.pad .right { grid-column: 3; grid-row: 2; }
+.pad .down { grid-column: 2; grid-row: 3; }
+@media (pointer: coarse) { .pad { display: grid; } }
+.status {
+	min-height: 1.4em;
+	margin: 0;
+	font-size: 14px;
+	color: var(--gold);
+}
+</style>
+</head>
+<body>
+<header>
+	<h1>{{ ui.game.title }}</h1>
+	<a href="{{ home | relative_url }}">{{ ui.game.back }}</a>
+</header>
+<p class="hint">{{ ui.game.hint }}</p>
+
+<div class="stage" id="stage">
+	<canvas id="map" width="480" height="352" aria-label="{{ ui.game.title }}" role="img"></canvas>
+	<a class="sign" data-id="about" href="{{ home | append: '#about' | relative_url }}">{{ ui.nav.about }}</a>
+	<a class="sign" data-id="experience" href="{{ home | append: '#experience' | relative_url }}">{{ ui.nav.experience }}</a>
+	<a class="sign" data-id="projects" href="{{ home | append: '#projects' | relative_url }}">{{ ui.nav.projects }}</a>
+	<a class="sign" data-id="skills" href="{{ home | append: '#skills' | relative_url }}">{{ ui.nav.skills }}</a>
+	<a class="sign" data-id="education" href="{{ home | append: '#education' | relative_url }}">{{ ui.nav.education }}</a>
+	<a class="sign" data-id="contact" href="{{ home | append: '#contact' | relative_url }}">{{ ui.nav.contact }}</a>
+</div>
+
+<p class="status" id="status" role="status" aria-live="polite"></p>
+
+<div class="pad" aria-label="{{ ui.game.pad }}">
+	<button type="button" class="up" data-dir="up" aria-label="↑">▲</button>
+	<button type="button" class="left" data-dir="left" aria-label="←">◀</button>
+	<button type="button" class="right" data-dir="right" aria-label="→">▶</button>
+	<button type="button" class="down" data-dir="down" aria-label="↓">▼</button>
+</div>
+
+<script>
+(function () {
+	// Oblique top-down view: 32px tiles, light from the top left, and anything
+	// tall (trees, the character) drawn shifted up and to the left of its tile.
+	// Rows further down are drawn last, so they overlap the rows behind them.
+	var TILE = 32, COLS = 15, ROWS = 11, LIFT = 8;
+	var canvas = document.getElementById('map');
+	var ctx = canvas.getContext('2d');
+	ctx.imageSmoothingEnabled = false;
+	var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	var status = document.getElementById('status');
+
+	// --- Where things are (tile coordinates) -----------------------------
+	var SIGNS = {
+		about:      { x: 7,  y: 1 },
+		experience: { x: 12, y: 2 },
+		projects:   { x: 12, y: 8 },
+		skills:     { x: 7,  y: 9 },
+		education:  { x: 2,  y: 8 },
+		contact:    { x: 2,  y: 2 }
+	};
+	var OBJECTS = [
+		{ kind: 'tree', x: 4, y: 4 }, { kind: 'tree', x: 10, y: 4 }, { kind: 'tree', x: 4, y: 6 }, { kind: 'tree', x: 10, y: 6 },
+		{ kind: 'tree', x: 1, y: 1 }, { kind: 'tree', x: 14, y: 1 }, { kind: 'tree', x: 1, y: 10 }, { kind: 'tree', x: 14, y: 10 },
+		{ kind: 'tree', x: 5, y: 1 }, { kind: 'tree', x: 10, y: 10 }, { kind: 'tree', x: 0, y: 6 }, { kind: 'tree', x: 14, y: 6 },
+		{ kind: 'bush', x: 3, y: 3 }, { kind: 'bush', x: 11, y: 7 }, { kind: 'bush', x: 4, y: 9 }, { kind: 'bush', x: 10, y: 1 },
+		{ kind: 'rock', x: 6, y: 9 }, { kind: 'rock', x: 8, y: 1 }, { kind: 'rock', x: 13, y: 4 }
+	];
+	OBJECTS.sort(function (p, q) { return (p.y * 100 + p.x) - (q.y * 100 + q.x); });
+	var blocked = {};
+	OBJECTS.forEach(function (o) { blocked[o.x + ',' + o.y] = true; });
+
+	// --- Seeded random, so the map looks the same on every visit ----------
+	var seed = 7;
+	function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+	function layer(w, h) { var c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+	function dot(g, c, x, y, w, h) { g.fillStyle = c; g.fillRect(x, y, w || 1, h || 1); }
+
+	// --- Ground: grass, dirt paths with soft edges, a cobbled plaza --------
+	var ground = [];
+	for (var gy = 0; gy < ROWS; gy++) { ground.push([]); for (var gx = 0; gx < COLS; gx++) ground[gy].push('g'); }
+	function path(x0, y0, x1, y1) {                              // an L-shaped dirt path
+		var x = x0, y = y0;
+		while (x !== x1) { ground[y][x] = 'd'; x += x < x1 ? 1 : -1; }
+		while (y !== y1) { ground[y][x] = 'd'; y += y < y1 ? 1 : -1; }
+		ground[y][x] = 'd';
+	}
+	Object.keys(SIGNS).forEach(function (k) { path(7, 5, SIGNS[k].x, SIGNS[k].y); });
+	for (var py = 4; py <= 6; py++) for (var pxx = 6; pxx <= 8; pxx++) ground[py][pxx] = 'p';
+	function at(x, y) { return x < 0 || y < 0 || x >= COLS || y >= ROWS ? 'g' : ground[y][x]; }
+
+	var bg = layer(COLS * TILE, ROWS * TILE);
+	var b = bg.getContext('2d');
+	function grass(ox, oy) {
+		dot(b, '#4b8a34', ox, oy, TILE, TILE);
+		for (var i = 0; i < 46; i++) {
+			var x = ox + Math.floor(rnd() * TILE), y = oy + Math.floor(rnd() * TILE), r = rnd();
+			dot(b, r < .45 ? '#3d7529' : r < .85 ? '#5c9e41' : '#79b955', x, y, 1, r < .45 ? 2 : 1);
+		}
+		if (rnd() < .08) {                                       // a few flowers
+			var fx = ox + 6 + Math.floor(rnd() * 20), fy = oy + 6 + Math.floor(rnd() * 20);
+			var fc = ['#ffe066', '#ff8fab', '#ffffff'][Math.floor(rnd() * 3)];
+			dot(b, '#2f6a22', fx, fy + 2, 1, 2); dot(b, fc, fx - 1, fy, 3, 1); dot(b, fc, fx, fy - 1, 1, 3); dot(b, '#c98a00', fx, fy);
+		}
+	}
+	function dirt(ox, oy) {
+		dot(b, '#8f6c40', ox, oy, TILE, TILE);
+		for (var i = 0; i < 40; i++) {
+			var r = rnd();
+			dot(b, r < .5 ? '#7c5c34' : '#a37e50', ox + Math.floor(rnd() * TILE), oy + Math.floor(rnd() * TILE), r < .2 ? 2 : 1, 1);
+		}
+		for (var j = 0; j < 3; j++) {                            // pebbles
+			var x = ox + 3 + Math.floor(rnd() * 25), y = oy + 3 + Math.floor(rnd() * 25);
+			dot(b, '#5e4526', x + 1, y + 1, 2, 2); dot(b, '#c2ab88', x, y, 2, 2); dot(b, '#e0d2ba', x, y);
+		}
+	}
+	function cobbles(ox, oy) {
+		dot(b, '#4d4d50', ox, oy, TILE, TILE);
+		for (var cy = 0; cy < 2; cy++) for (var cx = 0; cx < 2; cx++) {
+			var x = ox + cx * 16 + 1, y = oy + cy * 16 + 1, tone = rnd() < .5 ? '#8c8c90' : '#97979b';
+			dot(b, tone, x + 1, y, 13, 14); dot(b, tone, x, y + 1, 15, 12);
+			dot(b, '#b7b7bb', x + 1, y, 13, 1); dot(b, '#b7b7bb', x, y + 1, 1, 12);
+			dot(b, '#6c6c70', x + 1, y + 13, 13, 1); dot(b, '#6c6c70', x + 14, y + 1, 1, 12);
+			if (rnd() < .4) dot(b, '#7a7a7e', x + 4 + Math.floor(rnd() * 6), y + 4 + Math.floor(rnd() * 6), 2, 1);
+		}
+	}
+	for (var ty = 0; ty < ROWS; ty++) for (var tx = 0; tx < COLS; tx++) {
+		var t = ground[ty][tx], ox = tx * TILE, oy = ty * TILE;
+		if (t === 'g') grass(ox, oy); else if (t === 'd') dirt(ox, oy); else cobbles(ox, oy);
+	}
+	// Grass creeps over the edges of the dirt, so paths do not look like boxes.
+	for (ty = 0; ty < ROWS; ty++) for (tx = 0; tx < COLS; tx++) {
+		if (ground[ty][tx] !== 'd') continue;
+		var ox2 = tx * TILE, oy2 = ty * TILE;
+		[[0, -1], [0, 1], [-1, 0], [1, 0]].forEach(function (n) {
+			if (at(tx + n[0], ty + n[1]) !== 'g') return;
+			for (var i = 0; i < TILE; i++) {
+				var depth = 1 + Math.floor(rnd() * 4), c = rnd() < .3 ? '#5c9e41' : '#4b8a34';
+				if (n[1] === -1) dot(b, c, ox2 + i, oy2, 1, depth);
+				if (n[1] === 1) dot(b, c, ox2 + i, oy2 + TILE - depth, 1, depth);
+				if (n[0] === -1) dot(b, c, ox2, oy2 + i, depth, 1);
+				if (n[0] === 1) dot(b, c, ox2 + TILE - depth, oy2 + i, depth, 1);
+			}
+		});
+	}
+
+	// --- Objects: leafy blobs shaded from the top left, with an outline ----
+	// circles: [cx, cy, r] relative to the object's tile; shades: dark to light.
+	function blob(g, circles, shades, outline, lx, ly, lr) {
+		var minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
+		circles.forEach(function (c) { minX = Math.min(minX, c[0] - c[2]); minY = Math.min(minY, c[1] - c[2]); maxX = Math.max(maxX, c[0] + c[2]); maxY = Math.max(maxY, c[1] + c[2]); });
+		function inside(x, y) { for (var i = 0; i < circles.length; i++) { var c = circles[i], dx = x - c[0], dy = y - c[1]; if (dx * dx + dy * dy <= c[2] * c[2]) return true; } return false; }
+		for (var y = Math.floor(minY); y <= maxY; y++) for (var x = Math.floor(minX); x <= maxX; x++) {
+			if (!inside(x + .5, y + .5)) continue;
+			var edge = !inside(x - .5, y + .5) || !inside(x + 1.5, y + .5) || !inside(x + .5, y - .5) || !inside(x + .5, y + 1.5);
+			if (edge) { dot(g, outline, x, y); continue; }
+			var v = (-(x - lx) - (y - ly)) / (lr * 2) + .5 + (rnd() - .5) * .45;
+			dot(g, shades[Math.max(0, Math.min(shades.length - 1, Math.floor(v * shades.length)))], x, y);
+		}
+	}
+	function shadow(g, cx, cy, rx, ry) {
+		g.fillStyle = 'rgba(0,0,0,.22)';
+		for (var y = -ry; y <= ry; y++) { var w = Math.round(rx * Math.sqrt(1 - (y * y) / (ry * ry))); g.fillRect(cx - w, cy + y, w * 2, 1); }
+	}
+	// Each object is drawn once into its own 64x64 sprite; the tile sits in its bottom right quarter.
+	function makeObject(kind) {
+		var c = layer(64, 64), g = c.getContext('2d'), T = 32;     // tile origin inside the sprite
+		if (kind === 'tree') {
+			shadow(g, T + 18, T + 27, 15, 4);
+			dot(g, '#1e1209', T + 11, T + 6, 10, 23);
+			dot(g, '#4a2f17', T + 12, T + 6, 8, 22);
+			dot(g, '#6b4423', T + 12, T + 6, 3, 22);
+			dot(g, '#2c1a0d', T + 17, T + 10, 1, 4); dot(g, '#2c1a0d', T + 14, T + 18, 1, 3);
+			dot(g, '#1e1209', T + 8, T + 27, 16, 2); dot(g, '#4a2f17', T + 9, T + 27, 3, 1); dot(g, '#4a2f17', T + 20, T + 27, 3, 1);
+			blob(g, [[T + 8, T - 4, 17], [T - 6, T + 4, 11], [T + 22, T + 2, 11], [T + 4, T - 18, 12], [T + 18, T - 12, 10], [T + 10, T + 8, 10]],
+				['#15361a', '#1f4d22', '#2b6a2c', '#3c8735', '#5aa646', '#7cc35a'], '#0b1f0c', T + 6, T - 6, 24);
+		} else if (kind === 'bush') {
+			shadow(g, T + 17, T + 26, 13, 4);
+			blob(g, [[T + 12, T + 14, 11], [T + 22, T + 18, 8], [T + 6, T + 20, 7]],
+				['#1a4320', '#24592a', '#337634', '#4b9440', '#6cb452'], '#0b1f0c', T + 12, T + 14, 14);
+			[[8, 10], [16, 8], [20, 16], [11, 18], [24, 21]].forEach(function (p) { dot(g, '#7a0c18', T + p[0] + 1, T + p[1] + 1); dot(g, '#e0283c', T + p[0], T + p[1]); });
+		} else {
+			shadow(g, T + 17, T + 26, 13, 4);
+			blob(g, [[T + 14, T + 18, 10], [T + 22, T + 21, 7], [T + 8, T + 22, 6]],
+				['#4a4a50', '#636369', '#7d7d84', '#9c9ca3', '#c4c4ca'], '#202024', T + 12, T + 16, 12);
+		}
+		return c;
+	}
+	var objectSprites = { tree: makeObject('tree'), bush: makeObject('bush'), rock: makeObject('rock') };
+
+	// --- The character: original pixel art (long hair, sunglasses, teal shirt)
+	var PAL = { k: '#16100c', h: '#5a3218', H: '#8a5530', s: '#f0c08a', S: '#c98f5f', m: '#9a4a3a', g: '#0e0e12', w: '#9fb6c8',
+		c: '#0f7f8c', C: '#43b8c4', d: '#0a5a63', b: '#3b2a1a', p: '#2c3a66', P: '#1d2747', f: '#3a2414' };
+	function mirror(half) { return half.map(function (r) { return r + r.split('').reverse().join(''); }); }
+	var FRONT_HEAD = mirror(['.....kkkkk', '....khhhhh', '...khhHHhh', '..khhhhhhh', '..khhhhhhh', '..khhsssss', '..khsggggs', '..khsgwggs', '..khssssss', '..khhssssS', '..khhssssm', '..khhhssss', '..khhhkkSS']);
+	var FRONT_BODY = mirror(['.khhhkcccc', '.khhkccccc', 'kcckccccCc', 'kcckccccCc', 'kcckcccccc', 'ksskcccccc', '.kkbbbbbbb']);
+	var BACK_HEAD = mirror(['.....kkkkk', '....khhhhh', '...khhHHhh', '..khhhhHhh', '..khhhhhhh', '..khhhhhhh', '..khhhhhhh', '..khhhhhhh', '..khhhhhhh', '..khhhhhhh', '..khhhhhhh', '..khhhhhhh', '..khhhhhhh']);
+	var BACK_BODY = mirror(['.khhhhhhhh', 'kcckhhhhhh', 'kcckchhhhh', 'kcckcchhhh', 'kcckcccchh', 'ksskcccccc', '.kkbbbbbbb']);
+	var LEGS_FRONT = {
+		stand: mirror(['...kppppk.', '...kppppk.', '...kpPppk.', '...kpPppk.', '...kffffk.', '...kkkkkk.']),
+		a: ['...kppppk..kppppk...', '...kppppk..kppppk...', '...kpPppk..kffffk...', '...kpPppk..kkkkkk...', '...kffffk...........', '...kkkkkk...........']
+	};
+	LEGS_FRONT.b = LEGS_FRONT.a.map(function (r) { return r.split('').reverse().join(''); });
+	var SIDE = {
+		head: ['.......kkkkkk.......', '.....kkhhhhhhk......', '....khhhhHHhhhk.....', '...khhhhhhhhhhhk....', '...khhhhhhhhhhhk....', '...khhhhhhhssssk....', '...khhhhhhsgggggk...', '...khhhhhhsgwggsk...', '...khhhhhhssssssk...', '...khhhhhhsssssSk...', '...khhhhhhsssmsk....', '...khhhhhhhssssk....', '...khhhhhhhkSSk.....'],
+		body: ['...khhhhhkcccck.....', '....khhhkcccccck....', '....khkccccdcCck....', '.....kcccccdcCck....', '.....kcccccdccck....', '.....kcccccdssk.....', '.....kbbbbbbbbk.....'],
+		stand: ['......kppppppk......', '......kppPppk.......', '......kppPppk.......', '......kppPppk.......', '......kffffffk......', '......kkkkkkkk......'],
+		a: ['.....kpppppppk......', '....kpppk.kppk......', '...kpppk...kPpk.....', '..kffffk....kPpk....', '..kkkkk.....kfffk...', '.............kkkk...'],
+		b: ['......kppppppk......', '......kpppppk.......', '.....kpppkPpk.......', '....kfffkPpk........', '....kkkk.kffk.......', '.........kkkk.......']
+	};
+	function rows(dir, frame) {
+		if (dir === 'left' || dir === 'right') return SIDE.head.concat(SIDE.body, SIDE[frame]);
+		var legs = LEGS_FRONT[frame];
+		return dir === 'up' ? BACK_HEAD.concat(BACK_BODY, legs) : FRONT_HEAD.concat(FRONT_BODY, legs);
+	}
+	var spriteCache = {};
+	function sprite(dir, frame) {
+		var key = dir + frame;
+		if (spriteCache[key]) return spriteCache[key];
+		var r = rows(dir, frame), c = layer(20, r.length), g = c.getContext('2d'), flip = dir === 'left';
+		r.forEach(function (row, y) {
+			for (var x = 0; x < row.length; x++) {
+				var ch = row[flip ? row.length - 1 - x : x];
+				if (ch !== '.') dot(g, PAL[ch], x, y);
+			}
+		});
+		return (spriteCache[key] = c);
+	}
+
+	// --- Portals under each sign: an animated teal magic field ------------
+	function portal(ox, oy, time) {
+		var cx = ox + 16, cy = oy + 16, cols = ['#0b3b40', '#0f7f8c', '#3fc1cc', '#c8f6f8'];
+		for (var y = -14; y < 14; y += 2) for (var x = -14; x < 14; x += 2) {
+			var d = Math.sqrt((x + 1) * (x + 1) + (y + 1) * (y + 1));
+			if (d > 14) continue;
+			var v = Math.sin(Math.atan2(y, x) * 3 + d * .45 - time * .004) * .5 + .5;
+			v = v * (1 - d / 22);
+			ctx.fillStyle = cols[Math.min(3, Math.floor(v * 4.6))];
+			ctx.fillRect(cx + x, cy + y, 2, 2);
+		}
+		var tw = Math.floor(time / 140) % 4;                       // a twinkle
+		ctx.fillStyle = '#ffffff';
+		ctx.fillRect(cx - 8 + tw * 5, cy - 6 + (tw % 2) * 9, 1, 1);
+	}
+
+	// --- Signs as links, placed over their tiles --------------------------
+	var signEls = {};
+	document.querySelectorAll('.sign').forEach(function (a) {
+		var s = SIGNS[a.getAttribute('data-id')];
+		signEls[a.getAttribute('data-id')] = a;
+		a.style.left = ((s.x + .5) / COLS * 100) + '%';
+		a.style.top = (s.y / ROWS * 100) + '%';
+	});
+
+	// --- Player state and movement ----------------------------------------
+	var me = { x: 7, y: 5, fx: 7, fy: 5, dir: 'down', moving: false, t: 0, step: 0 };
+	var queue = [];                 // tiles to walk through (from a click)
+	var held = null;                // direction key being held
+	var leaving = false;
+	var DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+	var STEP_MS = still ? 0 : 170;
+
+	function free(x, y) { return x >= 0 && y >= 0 && x < COLS && y < ROWS && !blocked[x + ',' + y]; }
+	function signAt(x, y) {
+		for (var k in SIGNS) if (SIGNS[k].x === x && SIGNS[k].y === y) return k;
+		return null;
+	}
+	function tryStep(dir) {
+		me.dir = dir;
+		var nx = me.x + DIRS[dir][0], ny = me.y + DIRS[dir][1];
+		if (!free(nx, ny)) return false;
+		me.fx = me.x; me.fy = me.y; me.x = nx; me.y = ny;
+		me.moving = true; me.t = 0; me.step++;
+		return true;
+	}
+	function arrived() {
+		me.moving = false;
+		Object.keys(signEls).forEach(function (k) {
+			var s = SIGNS[k];
+			signEls[k].classList.toggle('is-near', Math.abs(s.x - me.x) + Math.abs(s.y - me.y) === 1);
+		});
+		var k = signAt(me.x, me.y);
+		if (k) enter(k);
+	}
+	function enter(k) {
+		if (leaving) return;
+		leaving = true; queue = []; held = null;
+		var a = signEls[k];
+		status.textContent = '→ ' + a.textContent;
+		setTimeout(function () { window.location.href = a.href; }, still ? 0 : 450);
+	}
+
+	// Shortest path to a tile (breadth-first search over free tiles).
+	function route(tx, ty) {
+		var start = me.x + ',' + me.y, goal = tx + ',' + ty, prev = {}, seen = {}, q = [[me.x, me.y]];
+		seen[start] = true;
+		while (q.length) {
+			var cur = q.shift();
+			if (cur[0] + ',' + cur[1] === goal) break;
+			Object.keys(DIRS).forEach(function (d) {
+				var nx = cur[0] + DIRS[d][0], ny = cur[1] + DIRS[d][1], key = nx + ',' + ny;
+				if (!seen[key] && free(nx, ny)) { seen[key] = true; prev[key] = [cur, d]; q.push([nx, ny]); }
+			});
+		}
+		if (!seen[goal]) return [];
+		var steps = [], k = goal;
+		while (k !== start) { steps.unshift(prev[k][1]); k = prev[k][0][0] + ',' + prev[k][0][1]; }
+		return steps;
+	}
+
+	// --- Input ------------------------------------------------------------
+	var KEYS = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', w: 'up', s: 'down', a: 'left', d: 'right', W: 'up', S: 'down', A: 'left', D: 'right' };
+	document.addEventListener('keydown', function (e) {
+		var d = KEYS[e.key];
+		if (!d) return;
+		e.preventDefault();
+		queue = []; held = d;
+	});
+	document.addEventListener('keyup', function (e) { if (KEYS[e.key] === held) held = null; });
+	canvas.addEventListener('click', function (e) {
+		var r = canvas.getBoundingClientRect();
+		var tx = Math.floor((e.clientX - r.left) / r.width * COLS);
+		var ty = Math.floor((e.clientY - r.top) / r.height * ROWS);
+		queue = route(tx, ty);
+	});
+	document.querySelectorAll('.pad button').forEach(function (btn) {
+		var d = btn.getAttribute('data-dir');
+		btn.addEventListener('pointerdown', function () { queue = []; held = d; });
+		['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) {
+			btn.addEventListener(ev, function () { if (held === d) held = null; });
+		});
+	});
+
+	// --- Loop -------------------------------------------------------------
+	var last = performance.now();
+	function frame(now) {
+		var dt = now - last; last = now;
+		if (me.moving) {
+			me.t += STEP_MS ? dt / STEP_MS : 1;
+			if (me.t >= 1) { me.t = 1; arrived(); }
+		}
+		if (!me.moving && !leaving) {
+			if (queue.length) tryStep(queue.shift());
+			else if (held) tryStep(held);
+		}
+
+		ctx.drawImage(bg, 0, 0);
+		Object.keys(SIGNS).forEach(function (k) { portal(SIGNS[k].x * TILE, SIGNS[k].y * TILE, still ? 0 : now); });
+
+		// Depth order: row by row, left to right; the character is sorted by
+		// the row it is walking into when going down, so trees overlap it right.
+		var t = me.moving ? me.t : 1;
+		var cx = (me.fx + (me.x - me.fx) * t) * TILE, cy = (me.fy + (me.y - me.fy) * t) * TILE;
+		var meKey = Math.max(me.y, me.fy) * 100 + me.x;
+		var drewMe = false;
+		function drawMe() {
+			drewMe = true;
+			shadow(ctx, Math.round(cx + 8), Math.round(cy + 23), 8, 3);
+			var walk = me.moving ? (me.t < .5 ? (me.step % 2 ? 'a' : 'b') : 'stand') : 'stand';
+			var bob = me.moving && me.t < .5 ? 1 : 0;
+			// Drawn shifted up and left of its tile, like everything tall here.
+			ctx.drawImage(sprite(me.dir, walk), Math.round(cx - LIFT + 6), Math.round(cy - LIFT + 32 - 26 - bob));
+		}
+		for (var i = 0; i < OBJECTS.length; i++) {
+			var o = OBJECTS[i];
+			if (!drewMe && o.y * 100 + o.x > meKey) drawMe();
+			ctx.drawImage(objectSprites[o.kind], o.x * TILE - 32, o.y * TILE - 32);
+		}
+		if (!drewMe) drawMe();
+		requestAnimationFrame(frame);
+	}
+	requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

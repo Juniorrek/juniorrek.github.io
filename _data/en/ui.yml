@@ -13,6 +13,7 @@ sections:
   experience: Professional experience
   projects: Projects
   skills: Skills
+  skills_core: Core stack
   education: Education &amp; research
   courses: Courses &amp; certificates
   languages: Languages
@@ -24,8 +25,36 @@ actions:
   email_me: Email me
   more_github: More on GitHub
   lattes: Lattes CV
+  back_to_top: Back to top
   lattes_title: Brazilian national academic CV registry (CNPq)
 
 a11y:
   sections_nav: Sections
   language_nav: Language
+  style_nav: Page style
+  menu: Menu
+
+case:
+  label: Case
+  problem: Problem
+  approach: What I did
+  result: Result
+
+# The Retro (2000s) style (see _sass/theme-y2k.scss).
+style:
+  y2k: Retro
+  modern: Modern
+
+y2k:
+  ticker: "*** NEW!!! Case studies added *** 10,000+ users per year on the system I rebuilt *** p95 163 ms → 4 ms (local test) *** M.Sc. in Computer Science ***"
+  best_viewed: Best viewed in Internet Explorer 6 at 800x600
+  chest: Open the treasure chest
+  unlocked: You found the treasure! The game is now unlocked in the menu.
+
+# Game mode (_includes/game.html).
+game:
+  title: "Portfolio: the game"
+  hint: Walk with the arrow keys or WASD, or click a tile. Step on a sign, or click it, to open that section of the portfolio.
+  back: Back to the portfolio
+  link: Game
+  pad: Movement controls

@@ -1,45 +1,240 @@
+# Tradução de _data/en/experience.yml. O inglês é a fonte: altere lá primeiro.
+# Números iguais aos do CV; o JMeter sempre aparece como teste de carga local.
+
+- period: 2026 - Atual
+  role: Analista de TI Master (Engenheiro de Software Java)
+  org: Grupo SOS Docs
+  location:
+  summary: >-
+    Plataforma de gestão de documentos e processos da Câmara dos Deputados:
+    um sistema legado Java/Nuxeo de grande porte, com requisitos rígidos de
+    segurança e conformidade.
+  highlights:
+    - Construção de um <strong>painel de avisos na tela de login da plataforma</strong>, alimentado por um serviço externo de avisos, com cache, timeout e fallback no back-end e HTML sanitizado com DOMPurify no front-end. Em teste de carga local com JMeter, a <strong>latência p95 do endpoint foi de 163 ms para 4 ms</strong>.
+    - Ampliação da <strong>trilha de auditoria de conformidade</strong>, registrando ações antes não rastreadas, como eventos do fluxo de ciência e acesso a conteúdo sigiloso.
+    - Investigação e correção de <strong>bugs de regra de negócio</strong> na plataforma e na sua API de integração Spring Boot/Oracle, incluindo a ordenação de números de protocolo com uma chave SQL normalizada e as regras de inclusão de documentos em dossiês.
+    - Evolução da <strong>API REST de integração</strong> que outros sistemas usam para operar a plataforma, com novas operações, validação de entrada e status e erros claros para quem chama, além de log de falhas nas integrações com serviços externos para rastrear problemas em produção.
+    - Trabalho diário em toda a stack da plataforma, incluindo <strong>mensageria com RabbitMQ, OpenSearch e Keycloak</strong>.
+    - Em ramp-up na <strong>modernização do sistema</strong>, uma reescrita completa com Spring Boot 4, Spring Modulith, DDD e arquitetura hexagonal, estudando os registros de decisão de arquitetura (ADRs) com o time.
+  # Versões curtas, mostradas na página. As completas ficam em `highlights`;
+  # apague `highlights_short` para voltar a mostrá-las.
+  highlights_short:
+    - Construção de um <strong>painel de avisos na tela de login</strong> alimentado por um serviço externo, com cache e fallback; a p95 foi de 163 ms para 4 ms em teste de carga local.
+    - Ampliação da <strong>trilha de auditoria de conformidade</strong> para registrar ações antes não rastreadas.
+    - Correção de <strong>bugs de regra de negócio</strong> na plataforma e evolução da API REST de integração usada por outros sistemas, com operações validadas e log de falhas nas integrações externas.
+    - Em ramp-up na <strong>modernização do sistema</strong> (Spring Boot 4, Spring Modulith, DDD, arquitetura hexagonal).
+  tech: [Java 8/11/25, Nuxeo, Spring Boot, Oracle, RabbitMQ, Keycloak]
+  cases:
+    - id: case-notices
+      title: Avisos de um serviço externo na tela de login, com cache e fallback
+      metric: "p95 163 → 4 ms (teste local)"
+      problem: >-
+        A tela de login, usada por até cerca de 2.500 usuários únicos por dia
+        (em torno de 10 logins por minuto, raramente mais de 20), precisava
+        mostrar avisos publicados em um serviço externo. Chamá-lo a cada carregamento deixaria o tempo de resposta da
+        página, e a sua disponibilidade, dependentes de um sistema fora do
+        controle do time.
+      approach: >-
+        Coloquei um cache com fallback na frente da integração. Os avisos são
+        servidos do cache por 300 s; quando ele expira, o serviço é chamado de
+        novo com timeout de 3 s e, se a chamada falhar ou estourar o tempo, os
+        últimos avisos conhecidos são mantidos. Na página, o HTML dos avisos é
+        sanitizado com DOMPurify antes de ser exibido.
+      result: >-
+        Em vez de uma chamada ao serviço externo por login, cada servidor
+        passou a chamá-lo <strong>no máximo uma vez a cada 5 minutos</strong>, qualquer que
+        seja o tráfego. Em teste de carga local com JMeter (5 usuários, ~140
+        requisições), a <strong>latência p95 foi de 163 ms para 4 ms</strong> e a mediana de
+        81 ms para 2 ms.
+        Quando o serviço externo está lento ou fora do ar, a tela de login
+        continua mostrando os últimos avisos conhecidos.
+      chart:
+        title: Latência do endpoint, antes e depois
+        unit: ms
+        max: 163
+        before_label: Antes
+        after_label: Depois (cache + fallback)
+        caption: Teste de carga local com JMeter, 5 usuários simultâneos, ~140 requisições.
+        rows:
+          - { label: Mediana, before: 81, after: 2 }
+          - { label: p95, before: 163, after: 4 }
+      tech: [Java, Cache, JavaScript, DOMPurify, JMeter]
+
+    - id: case-audit
+      title: Uma trilha de auditoria mais completa para conteúdo sigiloso
+      problem: >-
+        A plataforma guarda documentos sigilosos sob regras rígidas de
+        conformidade, e a trilha de auditoria precisa responder quem fez o quê
+        com um documento e quando. Algumas ações relevantes não eram
+        registradas, e a trilha não separava quem de fato visualizou um
+        conteúdo sigiloso de quem foi barrado pela restrição.
+      approach: >-
+        Ampliei a trilha de auditoria para registrar essas ações. A
+        visualização de conteúdo sigiloso passou a ser registrada só quando o
+        usuário escolhe abri-lo, separada do acesso bloqueado por sigilo.
+        Eventos do fluxo de ciência, a inclusão e a retirada de documentos em
+        processos e o tipo de restrição aplicada ao limitar o acesso também
+        passaram a ser registrados.
+      result: >-
+        As auditorias agora conseguem <strong>saber quem de fato visualizou conteúdo
+        sigiloso</strong> e acompanhar o fluxo de um documento com menos lacunas.
+      tech: [Java, Nuxeo, Segurança, Trilha de auditoria, Conformidade]
+
 - period: 2018 - 2026
   role: Desenvolvedor Java Full Stack Sênior
   org: FUNPAR - UFPR
-  location: 
+  location:
   summary: >-
-    Plataformas de gestão de bolsas e auxílios para a Universidade Federal do
-    Paraná (UFPR), incluindo o sistema de Iniciação Científica utilizado por
-    ~1.000 professores e mais de 2.500 candidatos a bolsa por ano.
+    Plataformas de gestão de bolsas e auxílios da Universidade Federal do
+    Paraná (UFPR), incluindo o sistema de Iniciação Científica, que atende
+    <strong>mais de 10.000 usuários por ano</strong>.
   highlights:
-    - Reconstrução do sistema de Iniciação Científica do zero, substituindo uma aplicação legada por uma stack moderna Java/Spring e Vue.js, do levantamento de requisitos à entrega em produção.
-    - Construção de APIs REST com Java/Spring e front-ends responsivos com Vue.js.
-    - Integração de sistemas com a base Lattes do CNPq, processando o XML dos pesquisadores para automatizar a pontuação de produções no rankeamento de bolsas.
-    - Desenvolvimento de integrações REST entre sistemas para buscar e validar dados de bolsas entre plataformas da universidade.
-    - Levantamento de requisitos e estimativa de esforço para sistemas e módulos ligados aos editais de bolsas da universidade.
-    - Modelagem e otimização de esquemas de bancos de dados relacionais (Oracle, MySQL).
-  tech: [Java, Spring, Vue.js, JavaScript, APIs REST, Oracle, MySQL]
+    - Reconstrução do sistema de Iniciação Científica da universidade <strong>do zero como líder técnico de um time de 3 a 4 desenvolvedores</strong>, substituindo uma aplicação legada por Java/Spring e Vue.js e migrando em fases para que o sistema continuasse no ar durante os períodos de inscrição.
+    - Integração dos sistemas da universidade com a <strong>base Lattes do CNPq</strong>, processando o XML dos pesquisadores para automatizar a pontuação de produções nos rankings de bolsas.
+    - Desenvolvimento e manutenção de <strong>outras plataformas de gestão de bolsas e auxílios</strong>, com integrações REST para buscar e validar dados entre sistemas da universidade.
+    - Levantamento de requisitos e negociação de escopo diretamente com <strong>stakeholders não técnicos</strong> (professores e administração da universidade) em sistemas ligados aos editais de bolsas.
+    - <strong>Code review, onboarding e entrevistas técnicas</strong> para desenvolvedores júnior e pleno.
+    - Testes unitários e de integração com <strong>JUnit e Mockito</strong>, e modelagem de esquemas relacionais em Oracle e MySQL.
+  highlights_short:
+    - <strong>Reconstrução do sistema de Iniciação Científica</strong> como líder técnico de um time de 3 a 4 desenvolvedores (Spring e Vue.js), migrando em fases para que continuasse no ar nos períodos de inscrição.
+    - Integração com a <strong>base Lattes do CNPq</strong> para automatizar a pontuação de produções nos rankings de bolsas.
+    - Manutenção de <strong>outras plataformas de bolsas e auxílios</strong>, com integrações REST entre sistemas da universidade.
+    - Trabalho direto com <strong>stakeholders não técnicos</strong> em requisitos e escopo.
+    - <strong>Code review, onboarding e entrevistas técnicas</strong> para desenvolvedores júnior e pleno.
+    - Testes com <strong>JUnit e Mockito</strong>; modelagem relacional em Oracle e MySQL.
+  tech: [Java 7/8/11/17, Spring Boot, Vue.js, Oracle, JSF, JUnit]
+  cases:
+    - id: case-rebuild
+      title: Reconstrução do sistema de Iniciação Científica sem tirá-lo do ar
+      metric: "~3.000 professores · 7.500+ estudantes / ano"
+      problem: >-
+        O sistema legado era em JSF e tinha ficado difícil de manter e de
+        evoluir. Também era difícil montar o time: quem chegava geralmente
+        conhecia Java puro ou um pouco de Spring, não JSF. E ele não podia
+        simplesmente ser desligado, porque professores e estudantes dependem
+        dele nos períodos de inscrição de cada edital.
+      approach: >-
+        Como líder técnico de um time de 3 a 4 desenvolvedores, reconstruí o
+        sistema do zero, em fases, com back-end em Spring Boot e front-end em
+        Vue.js. O novo sistema estreou como piloto no edital de 2022, rodando
+        em paralelo ao legado. As funcionalidades foram liberadas aos poucos,
+        na ordem do próprio edital, começando pela inscrição e depois a
+        avaliação, cada uma entregue quando o edital precisava dela. A partir
+        daí, todo edital novo nasceu no sistema novo, e uma fase posterior
+        migrou os dados do legado.
+      result: >-
+        O sistema <strong>ficou no ar em todos os períodos de inscrição</strong> durante a
+        migração, que levou cerca de um ano, e hoje atende <strong>~3.000 professores e
+        mais de 7.500 estudantes por ano</strong>. Os usuários ganharam melhorias pelo
+        caminho, e o time ganhou um código mais fácil de manter e de receber
+        novos desenvolvedores.
+      flow:
+        title: Linha do tempo da migração
+        layout: timeline
+        steps:
+          - kicker: Antes de 2022
+            title: Sistema legado em JSF
+            note: Difícil de manter, evoluir e encontrar quem trabalhasse nele
+          - kicker: Edital 2022
+            title: Piloto em Spring Boot + Vue.js
+            note: Em paralelo ao sistema legado
+          - kicker: ~1 ano
+            title: Entregas incrementais
+            note: Na ordem do próprio edital; todo edital novo criado no sistema novo
+          - kicker: ~2024
+            title: Migração dos dados legados
+            note: Dados dos editais antigos trazidos para o sistema novo
+      tech: [Java, Spring Boot, Vue.js, Oracle]
+
+    - id: case-lattes
+      title: Pontuação automática de produções a partir da base Lattes do CNPq
+      problem: >-
+        Os rankings de bolsas dependem da produção de cada pesquisador. Os
+        critérios mudam de edital para edital, mas se baseiam em grande parte
+        no Qualis: um artigo em periódico A1, por exemplo, pontua mais do que
+        um em estrato inferior.
+      approach: >-
+        Integrei os sistemas da universidade à API do Lattes, baixando o
+        currículo de cada pesquisador em XML, extraindo as produções e
+        pontuando-as segundo os critérios do edital vigente.
+      result: >-
+        A pontuação de produções nos rankings de bolsas é <strong>calculada
+        automaticamente</strong> a partir do Lattes de cada pesquisador.
+      flow:
+        title: Do Lattes ao ranking
+        steps:
+          - kicker: 1
+            title: API do Lattes
+            note: Baixa o currículo do pesquisador em XML
+          - kicker: 2
+            title: Leitura do XML
+            note: Extrai produções, tipo e veículo
+          - kicker: 3
+            title: Pontuação
+            note: Aplica os critérios do edital, como o estrato Qualis (A1 pontua mais)
+          - kicker: 4
+            title: Ranking de bolsas
+      tech: [Java, XML, APIs REST]
 
 - period: 2025 - 2026
   role: Especialista em Treinamento e Avaliação de IA
   org: Revelo (Projetos de Treinamento de IA)
   summary: >-
-    Avaliação e melhoria de respostas de modelos de linguagem de grande escala em
-    tarefas de engenharia de software.
+    <strong>Avaliação e melhoria de respostas de modelos de linguagem</strong> de grande escala
+    em tarefas de engenharia de software.
   highlights:
     - Avaliação e melhoria de respostas de modelos de linguagem em tarefas de código em Python, Java e JavaScript, revisando correção, qualidade e segurança.
     - Aplicação de julgamento de engenharia de software e de práticas de TDD para avaliar código e raciocínio gerados por IA, contribuindo para o treinamento e alinhamento dos modelos.
-  tech: [LLMs, Python, Java, JavaScript]
+  highlights_short:
+    - <strong>Avaliação e melhoria de respostas de LLMs</strong> em tarefas de código em Python, Java e JavaScript.
+    - Aplicação de julgamento de engenharia e TDD para avaliar código gerado por IA, contribuindo para o treinamento dos modelos.
+  tech: [LLMs, Python, Java, JavaScript, TDD]
 
 - period: 2017 - 2018
-  role: Programador Júnior
+  role: Desenvolvedor Júnior
   org: Núcleo de Concursos - UFPR
-  location: 
+  location:
   summary: >-
-    Sistemas de apoio às provas de concurso e ao processo de validação de cotas
-    de ingresso da universidade.
+    Sistemas de apoio aos processos seletivos da universidade e ao processo de
+    ingresso por cotas.
   highlights:
-    - Construção de um sistema de gestão do processo de validação de cotas de ingresso da universidade - gravação das entrevistas dos candidatos pelo próprio sistema, revisão assíncrona pelas bancas avaliadoras e geração do resultado final (Java puro, JSP/Servlets).
-    - Desenvolvimento de funcionalidades para os sistemas de provas de concurso da universidade.
+    - Construção de um sistema para o <strong>processo de heteroidentificação</strong> da universidade, com gravação em vídeo das entrevistas dos candidatos dentro do sistema, avaliação assíncrona pelas bancas e geração do resultado final (Java puro, JSP/Servlets).
+    - Desenvolvimento de funcionalidades para os sistemas de processos seletivos da universidade (Java, JSP, JavaScript, Oracle).
+  highlights_short:
+    - Construção do <strong>sistema de heteroidentificação</strong>, com entrevistas gravadas, avaliação assíncrona pelas bancas e resultado final (Java, JSP/Servlets).
+    - Desenvolvimento de funcionalidades para os sistemas de processos seletivos (Java, JSP, JavaScript, Oracle).
   tech: [Java, JSP/Servlets, JavaScript, Oracle]
+  cases:
+    - id: case-quota
+      title: Heteroidentificação com entrevistas gravadas
+      problem: >-
+        Candidatos que ingressam por cotas raciais têm a autodeclaração
+        verificada por bancas de heteroidentificação. Entrevista, avaliação
+        das bancas e resultado precisavam acontecer em um só lugar.
+      approach: >-
+        Construí um sistema em que a entrevista do candidato é gravada em vídeo
+        dentro do próprio sistema, as bancas avaliam as gravações de forma
+        assíncrona e o resultado final é gerado ao fim do processo. Java puro
+        com JSP/Servlets.
+      result: >-
+        Todo o processo, da entrevista ao resultado final, passou a rodar em um
+        <strong>único sistema</strong>, e os membros das bancas podiam avaliar as gravações no
+        seu próprio tempo.
+      flow:
+        steps:
+          - kicker: 1
+            title: Entrevista
+            note: Gravada em vídeo dentro do sistema
+          - kicker: 2
+            title: Avaliação da banca
+            note: As bancas assistem e decidem de forma assíncrona
+          - kicker: 3
+            title: Resultado final
+            note: Gerado pelo sistema
+      tech: [Java, JSP/Servlets, Gravação de vídeo]
 
 - period: 2017
-  role: Estagiário
+  role: Trainee
   org: Langowski
   location: Curitiba, Brasil
   summary: >-

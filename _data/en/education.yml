@@ -1,47 +1,102 @@
 # Each degree carries the work produced during it. Software built for a degree
 # is described in projects.yml and linked from here with a "#projects" anchor,
-# so nothing is written twice.
+# so nothing is written twice. `result` is highlighted; `meta` is the small
+# print (advisor, defense date, authors).
 
 intro: >-
 
 items:
   - period: 2024 - 2025
-    degree: Specialization in Applied Artificial Intelligence
+    degree: Postgraduate Specialization in Applied Artificial Intelligence
     org: Universidade Federal do Paraná (UFPR)
     work:
       label: Final project
       name: NLP as a bridge between AI and Linguistics
       summary: >-
-        A study of natural language processing at the meeting point of
-        artificial intelligence and linguistics, exploring the impact of large
-        language models.
-      tech: [NLP, LLMs, Linguistics]
+        A technical report tracing AI from rule-based systems to machine
+        learning and deep learning, <strong>focused on natural language processing</strong>:
+        how it relates to linguistics, the challenges of ambiguity and context,
+        and the impact of large language models such as ChatGPT. It also
+        documents the projects built during the course.
+      meta: "Advisor: Prof. Dr. Rafaela Mantovani Fontana"
+      tech: [NLP, LLMs, Machine Learning, Deep Learning, Linguistics]
       links:
-        - label: Read the paper
+        - label: Read the report
           url: https://acervodigital.ufpr.br/handle/1884/99842
 
   - period: 2023 - 2024
-    degree: Specialization in Agile Software Development
+    degree: Postgraduate Specialization in Agile Software Development
     org: Universidade Federal do Paraná (UFPR)
     work:
       label: Final project
       name: Price Comparison App (Papa Preço)
       summary: >-
-        Applied Scrum practices to the design and delivery of a full product,
-        from backlog to release.
+        <strong>Applied Scrum practices</strong> to the design and delivery of a full product,
+        from backlog to release: a Flutter Android app backed by a Java/Spring
+        Boot API, <strong>now live on AWS</strong>.
+      meta: "Advisor: Prof. Dr. Razer Anthom Nizer Rojas Montaño"
+      tech: [Scrum, Flutter, Spring Boot]
       links:
         - label: See the app in Projects
           url: "#projects"
 
   - period: 2018 - 2020
-    degree: Master's Degree in Computer Science
+    degree: M.Sc. in Computer Science
     org: Universidade Federal do Paraná (UFPR)
     work:
       label: Dissertation
       name: Maximum clique in power-law graphs
       summary: >-
-        Graph theory, combinatorial optimization and probabilistic analysis of
-        greedy algorithms on power-law graphs.
+        Many real networks, from the web to social and biological networks,
+        follow a power law in their vertex degrees, and greedy algorithms are
+        known to work well on them in practice, with little theory explaining
+        why. This dissertation studies the <strong>maximum clique problem</strong> on such
+        graphs using a preferential attachment random graph model.
+      result: >-
+        Main result: a proof that, in power-law graphs grown by preferential
+        attachment, the probability of a clique appearing <strong>decays
+        exponentially with the clique size</strong> and is <strong>highest among the
+        highest-degree vertices</strong>, which helps explain why greedy algorithms
+        that start from those vertices perform well.
+      case:
+        id: case-proof
+        title: Inside the proof
+        problem: >-
+          Greedy algorithms for maximum clique, which start from the
+          highest-degree vertices, find optimal or near-optimal cliques on
+          power-law graphs in experiments, but there was little theory
+          explaining why.
+        approach: >-
+          Modeled the graphs with a preferential attachment random graph
+          model (Hofstad's PA<sub>t</sub>(m)): vertices arrive one at a time
+          and link to existing ones with probability proportional to their
+          degree, which produces a power-law degree distribution. First proved
+          a simple upper bound on each vertex's expected degree,
+          E[D<sub>i</sub>(t)] ≤ t/i, replacing the exact expression in Gamma
+          functions, then used it to bound the probability of each edge of a
+          clique and combined those bounds over its ℓ(ℓ−1)/2 edges.
+        result: >-
+          For the ℓ vertices starting at position k (in decreasing degree
+          order), the probability that they form a clique decays
+          exponentially with ℓ and falls as k grows:
+        formula: "Pr(E<sub>k,ℓ</sub>) = O(ℓ / k<sup>ℓ(ℓ−1)/2</sup>)"
+        line:
+          title: The bound by clique size, log scale
+          x_label: Clique size ℓ
+          xs: [3, 4, 5, 6]
+          y_min: -13.0
+          y_ticks: [0, -3, -6, -9, -12]
+          series:
+            - { label: "k = 2", ys: [-0.43, -1.2, -2.31, -3.74] }
+            - { label: "k = 4", ys: [-1.33, -3.01, -5.32, -8.25] }
+            - { label: "k = 8", ys: [-2.23, -4.82, -8.33, -12.77] }
+          caption: >-
+            Values of ℓ / k<sup>ℓ(ℓ−1)/2</sup>, the bound without its constant
+            factor. On a log scale exponential decay is a straight line; these
+            lines bend downward, so the bound falls at least exponentially as
+            cliques grow.
+        tech: [Probability, Random graphs, Asymptotic analysis]
+      meta: "Advisor: Prof. Dr. Murilo Vicente Gonçalves da Silva · Defended in Aug 2020"
       tech: [Graph Theory, Combinatorial Optimization, Probability, Algorithms]
       links:
         - label: Read the dissertation
@@ -50,17 +105,19 @@ items:
           url: "#projects"
 
   - period: 2015 - 2017
-    degree: Degree in Systems Analysis and Development
-    org: Universidade Federal do Paraná (UFPR)
+    degree: Technologist Degree in Systems Analysis and Development
+    org: Universidade Federal do Paraná (UFPR) · 3-year undergraduate program
     work:
       label: Final project
-      name: Artemis - text mining for research articles
+      name: Artemis, text mining for research articles
       summary: >-
-        Automatic term extraction, summarization and
-        similarity grouping over a corpus of scientific articles, and the
-        evaluation of how well those techniques actually help a researcher read
-        less and find more. Registered software.
-      tech: [Text Mining, NLP, Information Retrieval]
+        A system for analysing scientific articles at scale: automatic term
+        extraction, summarization and similarity grouping over a corpus, and
+        an evaluation of how well those techniques help a researcher read less
+        and find more. Built with Java, R and MySQL, and <strong>registered with INPI</strong>,
+        Brazil's patent and software registry, in 2018 (BR512018000585-3).
+      meta: "Team project with two classmates · Advisor: Prof. Dr. Rafaela Mantovani Fontana"
+      tech: [Text Mining, NLP, Information Retrieval, Java, R]
       links:
         - label: Read the paper
           url: https://acervodigital.ufpr.br/handle/1884/54046

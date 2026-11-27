@@ -1,0 +1,26 @@
+{%- comment -%}
+Language and page-style switches. Rendered twice: in the sidebar header
+(phones) and at the top of the content (desktop); CSS shows one of them.
+Usage: {% include switches.html class="..." %}
+{%- endcomment -%}
+<div class="{{ include.class }}">
+{%- if site.languages.size > 1 %}
+<nav class="lang-switch" aria-label="{{ ui.a11y.language_nav }}">
+    {%- for entry in site.languages %}
+    <a class="lang-option{% if entry.code == lang %} is-active{% endif %}"
+       href="{{ entry.url | relative_url }}"
+       hreflang="{{ entry.hreflang | default: entry.code }}"
+       lang="{{ entry.hreflang | default: entry.code }}"
+       {% if entry.code == lang %}aria-current="true"{% endif %}
+       title="{{ entry.name }}"><span class="lang-flag" aria-hidden="true">{{ entry.flag }}</span> {{ entry.short }}</a>
+    {%- endfor %}
+</nav>
+{%- endif %}
+<div class="lang-switch style-switch" role="group" aria-label="{{ ui.a11y.style_nav }}">
+    <button type="button" class="lang-option style-option" data-style="y2k">{{ ui.style.y2k }}</button>
+    <button type="button" class="lang-option style-option" data-style="modern">{{ ui.style.modern }}</button>
+    {%- if site.data.features.game %}
+    <a class="lang-option game-link" href="{{ page.home_url | default: '/' | append: 'game.html' | relative_url }}">{{ ui.game.link }}</a>
+    {%- endif %}
+</div>
+</div>

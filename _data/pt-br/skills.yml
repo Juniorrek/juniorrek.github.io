@@ -1,56 +1,111 @@
-- group: Programação
+# Items marked core are the main stack and are highlighted on the page.
+# Every tag used on an experience, project or education item appears here.
+- group: Linguagens
   items:
-    - Java
+    - { name: "Java (7 a 25)", core: true }
     - JavaScript
     - Python
     - Dart
+    - SQL
+    - XML
     - C/C++
     - Lua
-    - SQL
     - R
     - PHP
     - Shell Script
 
 - group: Back-end
   items:
-    - Spring / Spring Boot
+    - { name: "Spring Boot", core: true }
+    - { name: "APIs REST", core: true }
+    - Spring Data
+    - Spring Security
     - Hibernate / JPA
-    - APIs REST
-    - JasperReports
-    - JSP / Servlets
     - JSF
+    - JSP / Servlets
+    - Nuxeo
+    - JasperReports
+    - Cache
 
 - group: Front-end
   items:
-    - Vue.js
+    - { name: "Vue.js", core: true }
     - Nuxt
     - Angular
     - Flutter
     - HTML5 / CSS3
     - Bootstrap
     - jQuery
+    - DOMPurify
+    - D3.js
+    - Cytoscape.js
+    - Gravação de vídeo
 
-- group: Bancos de Dados
+- group: Bancos de dados
   items:
-    - Oracle
+    - { name: "Oracle", core: true }
+    - { name: "PostgreSQL", core: true }
     - MySQL
-    - PostgreSQL
     - PL/SQL
+    - Flyway
 
-- group: Ferramentas & Infra
+- group: Mensageria, busca e identidade
   items:
-    - Git
+    - RabbitMQ
+    - OpenSearch
+    - Keycloak
+
+- group: Testes
+  items:
+    - JUnit
+    - Mockito
+    - Testes unitários e de integração
+    - JMeter (teste de carga)
+
+- group: Infraestrutura
+  items:
     - Docker
-    - AWS
+    - Docker Compose
+    - AWS (EC2, Budgets)
+    - Caddy
+    - GitHub Actions
+    - Jenkins
+    - Git
     - Maven
     - Linux
 
+- group: IA e PLN
+  items:
+    - Claude Code
+    - Codex
+    - Avaliação de respostas de LLMs
+    - LLMs
+    - PLN
+    - Aprendizado de Máquina
+    - Aprendizado Profundo
+    - Mineração de Texto
+    - Recuperação de Informação
+    - Linguística
+
+- group: Ciência da computação
+  items:
+    - Algoritmos
+    - Estruturas de Dados
+    - Teoria dos Grafos
+    - Otimização Combinatória
+    - Probabilidade
+    - Grafos aleatórios
+    - Análise assintótica
+
 - group: Práticas
   items:
-    - Métodos Ágeis (Scrum, Kanban)
-    - UML
-    - MVC
-    - Levantamento de requisitos
-    - Estimativa de esforço
+    - Ágil (Scrum, Kanban)
     - Code review
     - TDD
+    - UML
+    - Levantamento de requisitos
+    - Estimativa de esforço
+    - Entrevistas técnicas
+    - Segurança
+    - Trilha de auditoria
+    - Conformidade
